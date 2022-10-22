@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistics and Quantitative Methods (Semester 2)",
+    "section": "",
+    "text": "Welcome to the main site of the course Statistics and Quantitative Methods (Semester 2).\nThis will be your go-to place throughout the semester.\nThis course is an introduction to study design, statistics and quantitative data analysis as commonly employed in linguistics, using the R software."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html#course-description",
+    "href": "index.html#course-description",
+    "title": "Statistics and Quantitative Methods (Semester 2)",
+    "section": "Course description",
+    "text": "Course description\nThe course will cover the basics of statistics and quantitative data analysis, and how to design studies that effectively address the intended research questions. Students will learn the principles of data visualisation and statistical modelling and develop the practical skills necessary to perform such analyses. The course will draw examples from different branches of linguistics and will provide students with hands-on experience in open science practices.\nThe course will teach students how to carry out Bayesian statistical inference using a variety of statistical models, and how to interpret results from traditional Null Hypothesis Significance Testing (i.e. p-values and confidence intervals)."
+  },
+  {
+    "objectID": "index.html#install-r-and-rstudio",
+    "href": "index.html#install-r-and-rstudio",
+    "title": "Statistics and Quantitative Methods (Semester 2)",
+    "section": "Install R and RStudio",
+    "text": "Install R and RStudio\nThe workshops require you to have R and RStudio installed on your laptop.\n\nTo install R, go to http://cloud.r-project.org/ and pick R (4.2.1) for your operating system (Linux, macOS, Windows).\nTo install RStudio, go to https://www.rstudio.com/products/rstudio/download/#download and download RStudio (Desktop) for your operating system."
+  }
+]

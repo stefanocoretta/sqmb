@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "SQMB"
+  navbar:
+    background: dark
+    left:
+      - href: index.qmd
+        text: Home
+
+format:
+  html:
+    theme: united
+    css: styles.css
+    toc: true
+
+
+

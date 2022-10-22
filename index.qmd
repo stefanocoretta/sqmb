@@ -1,0 +1,35 @@
+---
+title: "Statistics and Quantitative Methods (Semester 2)"
+---
+
+Welcome to the main site of the course *Statistics and Quantitative
+Methods* (Semester 2).
+
+This will be your go-to place throughout the semester.
+
+This course is an introduction to study design, statistics and
+quantitative data analysis as commonly employed in linguistics, using
+the R software.
+
+## Course description
+
+The course will cover the basics of **statistics and quantitative data
+analysis**, and how to **design studies** that effectively address the
+intended research questions. Students will learn the principles of
+**data visualisation and statistical modelling** and develop the
+practical skills necessary to perform such analyses. The course will
+draw examples from different branches of linguistics and will provide
+students with hands-on experience in open science practices.
+
+The course will teach students how to carry out Bayesian statistical inference using a variety of statistical models, and how to interpret results from traditional Null Hypothesis Significance Testing (i.e. *p*-values and confidence intervals).
+
+## Install R and RStudio
+
+The workshops require you to have R and RStudio installed on your
+laptop.
+
+- To **install R**, go to <http://cloud.r-project.org/> and pick R (4.2.1)
+  for your operating system (Linux, macOS, Windows).
+- To **install RStudio**, go to
+  <https://www.rstudio.com/products/rstudio/download/#download> and
+  download RStudio (Desktop) for your operating system.

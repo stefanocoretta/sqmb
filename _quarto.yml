@@ -1,6 +1,11 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+  resources:
+    - "slides/"
+    - "img/"
 
 website:
   title: "SQMB"
@@ -16,5 +21,5 @@ format:
     css: styles.css
     toc: true
 
-
+callout-icon: false
 

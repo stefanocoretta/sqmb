@@ -47,5 +47,19 @@
     "title": "Statistics and Quantitative Methods (Semester 2)",
     "section": "Install R and RStudio",
     "text": "Install R and RStudio\nThe workshops require you to have both R and RStudio installed on your laptop.\n\n\n\n\n\n\nInstallation instructions\n\n\n\nPlease, follow the instructions for Step 1 and 2 here: https://posit.co/download/rstudio-desktop/."
+  },
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "SQMB",
+    "section": "",
+    "text": "This course is an introduction to quantitative data analysis, as commonly employed in linguistics, using the R software.\nWe will cover the following topics:\n\nThe basics of quantitative data analysis.\nData preparation.\nData summaries.\nPrinciples of data visualisation.\nStatistical modelling with linear models.\nStatistical inference using Bayesian inference.\n\nAt completion of the course you will have gained the following skills:\n\nImport common data formats, tidy and transform data.\nChoosing and reporting appropriate summary measures.\nUsing compelling visualisations to communicate a specific message about patterns in the data.\nMaster linear models for different types of data (continuous measures and binary outcomes).\nUsing Bayesian inference to answer research questions and avoid common interpretation pitfalls.\n\nExamples from different branches of linguistics will be used to provide you with hands-on experience in quantitative data analysis and Open Research practices."
+  },
+  {
+    "objectID": "syllabus.html#weekly-plan",
+    "href": "syllabus.html#weekly-plan",
+    "title": "SQMB",
+    "section": "Weekly plan",
+    "text": "Weekly plan\n\nWeek 1"
   }
 ]

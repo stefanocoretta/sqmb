@@ -1,0 +1,27 @@
+## Overview
+
+This course is an introduction to **quantitative data analysis**, as commonly employed in linguistics, using the R software.
+
+We will cover the following **topics**:
+
+- The basics of quantitative data analysis.
+- Data preparation.
+- Data summaries.
+- Principles of **data visualisation**.
+- Statistical modelling with **linear models**.
+- Statistical inference using **Bayesian inference**.
+
+At completion of the course you will have gained the following **skills**:
+
+- Import common data formats, tidy and transform data.
+- Choosing and reporting appropriate summary measures.
+- Using compelling visualisations to communicate a specific message about patterns in the data.
+- Master linear models for different types of data (continuous measures and binary outcomes).
+- Using Bayesian inference to answer research questions and avoid common interpretation pitfalls.
+
+Examples from different branches of linguistics will be used to provide you with hands-on experience in quantitative data analysis and Open Research practices.
+
+## Weekly plan
+
+### Week 1
+

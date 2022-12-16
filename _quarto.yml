@@ -14,6 +14,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: syllabus.qmd
+        text: Syllabus
       - href: assessments.qmd
         text: Assessment
 

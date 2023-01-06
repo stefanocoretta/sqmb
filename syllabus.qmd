@@ -4,24 +4,71 @@ This course is an introduction to **quantitative data analysis**, as commonly em
 
 We will cover the following **topics**:
 
-- The basics of quantitative data analysis.
-- Data preparation.
-- Data summaries.
-- Principles of **data visualisation**.
-- Statistical modelling with **linear models**.
-- Statistical inference using **Bayesian inference**.
+-   The basics of quantitative data analysis.
+-   Data preparation.
+-   Data summaries.
+-   Principles of **data visualisation**.
+-   Statistical modelling with **linear models**.
+-   Statistical inference using **Bayesian inference**.
 
 At completion of the course you will have gained the following **skills**:
 
-- Import common data formats, tidy and transform data.
-- Choosing and reporting appropriate summary measures.
-- Using compelling visualisations to communicate a specific message about patterns in the data.
-- Master linear models for different types of data (continuous measures and binary outcomes).
-- Using Bayesian inference to answer research questions and avoid common interpretation pitfalls.
+-   Import common data formats, tidy and transform data.
+-   Choosing and reporting appropriate summary measures.
+-   Using compelling visualisations to communicate a specific message about patterns in the data.
+-   Master linear models for different types of data (continuous measures and binary outcomes).
+-   Using Bayesian inference to answer research questions and avoid common interpretation pitfalls.
 
 Examples from different branches of linguistics will be used to provide you with hands-on experience in quantitative data analysis and Open Research practices.
 
 ## Weekly plan
 
-### Week 1
+### Week 1: Quantitative methods and uncertainty
 
+::: {.callout-important collapse="false"}
+## Learning Objectives
+
+**Questions**
+
+-   What are knowledge and data?
+-   What is quantitative data analysis?
+-   How can we talk about uncertainty?
+-   Which are the limits of quantitative methods?
+
+**Skills**
+
+-   Think critically about "data".
+-   Interpret basic numeric summaries and plots.
+-   Use R to perform simple calculations and obtain numeric summaries.
+-   Master the basics of the programming language R Learn how to manage your analyses with scripts and RStudio.
+:::
+
+::: {.callout-note collapse="false"}
+## Homework
+
+**Intake form**
+
+- **You must complete the intake form before coming to the Tuesday lecture.**
+- The link to the form will be circulated via Learn.
+
+**Install R and RStudio**
+
+- If you with to use your own laptop for the workshops, instead of the Lab PCs, you need to install both R and RStudio.
+- **NOTE**: If you have installed either R or RStudio prior to January 2023, please make sure you delete both R and RStudio from your laptop.
+- Please, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
+
+:::
+
+::: {.callout-tip collapse="false"}
+## Materials
+
+- [Lecture slides]().
+:::
+
+::: {.callout-tip collapse="false"}
+## Suggested readings
+
+- S4LR Ch. 1 and R4DS [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html).
+- [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
+- [Jafar 2018](https://doi.org/10.1136/emermed-2017-207158). What is positionality and should it be expressed in quantitative studies?
+:::

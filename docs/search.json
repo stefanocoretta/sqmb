@@ -42,11 +42,11 @@
     "text": "Course description\nThe course will cover the basics of statistics and quantitative data analysis, and how to design studies that effectively address the intended research questions. Students will learn the principles of data visualisation and statistical modelling and develop the practical skills necessary to perform such analyses. The course will draw examples from different branches of linguistics and will provide students with hands-on experience in open science practices.\nThe course will teach students how to carry out Bayesian statistical inference using a variety of statistical models, and how to interpret results from traditional Null Hypothesis Significance Testing (i.e. p-values and confidence intervals)."
   },
   {
-    "objectID": "index.html#install-r-and-rstudio",
-    "href": "index.html#install-r-and-rstudio",
+    "objectID": "index.html#r-and-rstudio",
+    "href": "index.html#r-and-rstudio",
     "title": "Statistics and Quantitative Methods (Semester 2)",
-    "section": "Install R and RStudio",
-    "text": "Install R and RStudio\nThe workshops require you to have both R and RStudio installed on your laptop.\n\n\n\n\n\n\nInstallation instructions\n\n\n\nPlease, follow the instructions for Step 1 and 2 here: https://posit.co/download/rstudio-desktop/."
+    "section": "R and RStudio",
+    "text": "R and RStudio\nThe workshops will be held in the PPLS Computer Lab. The Lab is equipped with PCs running Windows and Ubuntu. The Lab PCs will have all the necessary software.\nYou can choose to use your own laptop instead of the Lab PCs.\nThis requires you to have both R and RStudio installed on your laptop.\n\n\n\n\n\n\nInstallation instructions\n\n\n\nNOTE: If you have installed either R or RStudio prior to January 2023, please delete both R and RStudio from your laptop and reinstall them.\nTo (re)install R and RStudio, follow the instructions for Step 1 and 2 here: https://posit.co/download/rstudio-desktop/."
   },
   {
     "objectID": "syllabus.html",
@@ -60,6 +60,6 @@
     "href": "syllabus.html#weekly-plan",
     "title": "SQMB",
     "section": "Weekly plan",
-    "text": "Weekly plan\n\nWeek 1"
+    "text": "Weekly plan\n\nWeek 1: Quantitative methods and uncertainty\n\n\n\n\n\n\nLearning Objectives\n\n\n\n\n\nQuestions\n\nWhat are knowledge and data?\nWhat is quantitative data analysis?\nHow can we talk about uncertainty?\nWhich are the limits of quantitative methods?\n\nSkills\n\nThink critically about “data”.\nInterpret basic numeric summaries and plots.\nUse R to perform simple calculations and obtain numeric summaries.\nMaster the basics of the programming language R Learn how to manage your analyses with scripts and RStudio.\n\n\n\n\n\n\n\n\n\n\nHomework\n\n\n\n\n\nIntake form\n\nYou must complete the intake form before coming to the Tuesday lecture.\nThe link to the form will be circulated via Learn.\n\nInstall R and RStudio\n\nIf you with to use your own laptop for the workshops, instead of the Lab PCs, you need to install both R and RStudio.\nNOTE: If you have installed either R or RStudio prior to January 2023, please make sure you delete both R and RStudio from your laptop.\nPlease, follow the instructions for Step 1 and 2 here: https://posit.co/download/rstudio-desktop/.\n\n\n\n\n\n\n\n\n\n\nMaterials\n\n\n\n\n\n\nLecture slides.\n\n\n\n\n\n\n\n\n\n\nSuggested readings\n\n\n\n\n\n\nS4LR Ch. 1 and R4DS Ch. 1, Ch. 2.\nDarwin Holmes 2020. Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide\nJafar 2018. What is positionality and should it be expressed in quantitative studies?"
   }
 ]

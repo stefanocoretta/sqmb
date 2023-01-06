@@ -1,28 +1,47 @@
 ---
-title: "Statistics and Quantitative Methods (S1)"
+title: "Statistics and Quantitative Methods (S2)"
 subtitle: "Week 1"
 author: "Dr Stefano Coretta"
 institute: "University of Edinburgh"
-date: "2022/09/20"
+date: "2023/01/17"
 output:
   xaringan::moon_reader:
     lib_dir: libs
     css:
       - ../../xaringan-themer.css
+      - ../../custom.css
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
       ratio: "16:9"
-      beforeInit: "../../assets/macros.js"
+      beforeInit: "../../macros.js"
 ---
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-library(tidyverse)
-theme_set(theme_dark())
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(outfile = "slides/xaringan-themer.css")
 ```
 
 # Before we begin...
@@ -30,23 +49,25 @@ use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 .pull-left[
 .f3[Complete the **SATS-36 questionnaire**.]
 
-.f3[https://www.soscisurvey.de/sqmf-sats/]
+.f3[https://www.soscisurvey.de/sqmb-sats/]
 ]
 
 .pull-right[
 .center[
-![](../../img/QR-Code-sqmf-sats.svg)
+![](../../../img/QR-Code-sqmb-sats-1.svg)
 ]
 ]
 
-
-???
-
-Photo by Emily Morter on Unsplash
 
 ---
 
-# News
+layout: true
+
+# This course
+
+---
+
+**News**
 
 - **SQM (Statistics and Quantitative Methods)** is an updated version of previous years' SED (Statistics and Experimental Design).
 
@@ -56,10 +77,29 @@ Photo by Emily Morter on Unsplash
 
 ---
 
+**Your feedback**
+
+- The course is very intense.
+  - Reduced course content and reordered some of it.
+
+- Not enough time during workshops. Workshops should be fully self-guided.
+  - Reduced workshop content.
+  - Tutor will assist during workshops.
+  - Workshops are fully self-guided.
+
+- Information is scattered.
+  - All info, week by week, on the [online syllabus](https://stefanocoretta.github.io/sqmb/syllabus.html).
+
+- More code on slides.
+  - Done!
+
+---
+
+layout: false
 class: middle
 
 .pull-left[
-![](../../img/Alice_par_John_Tenniel_25.png)
+![](../../../img/Alice_par_John_Tenniel_25.png)
 ]
 
 .pull-right[
@@ -76,24 +116,10 @@ class: middle
 
 ---
 
-# What (applied) statistics is NOT
-
-- Statistics is **not maths.**
-
-- Statistics is **not about hard truths.**
-
-- Statistics is **not a purely objective** endeavour.
-
-- Statistics is **not a substitute** of common sense and expert knowledge.
-
-- Statistics is **not just $p$-values** and significance testing.
-
----
-
 # Research methods
 
 .center[
-![:scale 60%](../../img/res-methods.png)
+![:scale 60%](../../../img/res-methods.png)
 ]
 
 ---
@@ -105,17 +131,18 @@ layout: true
 ---
 
 .center[
-![:scale 60%](../../img/res-process.png)
+![:scale 60%](../../../img/res-process.png)
 ]
 
 ---
 
 .center[
-![:scale 60%](../../img/res-process-data-ana.png)
+![:scale 60%](../../../img/res-process-data-ana.png)
 ]
 
 ---
 
+layour: false
 layout: true
 
 # Data analysis
@@ -123,13 +150,13 @@ layout: true
 ---
 
 .center[
-![:scale 80%](../../img/data-quant-qual.png)
+![:scale 80%](../../../img/data-quant-qual.png)
 ]
 
 ---
 
 .center[
-![:scale 80%](../../img/data-quant.png)
+![:scale 80%](../../../img/data-quant.png)
 ]
 
 ---
@@ -147,7 +174,7 @@ class: inverse right middle
 # Inference process
 
 .center[
-![:scale 40%](../../img/bro.png)
+![:scale 40%](../../../img/bro.png)
 ]
 
 ???
@@ -169,7 +196,7 @@ NOTE: *Population* can be a set of anything, not just a specific group of people
 # Inference process
 
 .center[
-![:scale 75%](../../img/inference.png)
+![:scale 75%](../../../img/inference.png)
 ]
 
 ???
@@ -205,7 +232,7 @@ EXTRA: Find out about Popper's view of falsification and fallibilism.
 # Uncertainty and variability
 
 .center[
-![](../../img/pliny.jpg)
+![](../../../img/pliny.jpg)
 ]
 
 ???
@@ -220,7 +247,7 @@ So we have to deal with:
 
 class: center, middle, inverse
 
-![](../../img/uncertainty.png)
+![](../../../img/uncertainty.png)
 
 ???
 
@@ -247,7 +274,7 @@ class: middle
 .pull-right[
 
 
-![:scale 90%](../../img/charles-deluvio-Mv9hjnEUHR4-unsplash.jpg)
+![:scale 90%](../../../img/charles-deluvio-Mv9hjnEUHR4-unsplash.jpg)
 ]
 
 ???
@@ -301,12 +328,26 @@ class: middle
 ]
 
 .pull-right[
-![](../../img/gollum-statistician.png)
+![](../../../img/gollum-statistician.png)
 ]
 
+---
+
+# What statistics is NOT
+
+- Statistics is **not maths.**
+
+- Statistics is **not about hard truths.**
+
+- Statistics is **not a purely objective** endeavour.
+
+- Statistics is **not a substitute** of common sense and expert knowledge.
+
+- Statistics is **not just $p$-values** and significance testing.
 
 
 ---
+
 layout: true
 
 # Many Analysts, One Data Set
@@ -315,7 +356,7 @@ layout: true
 
 .pull-left[
 .center[
-![:scale 60%](../../img/red-card.jpg)
+![:scale 60%](../../../img/red-card.jpg)
 ]
 ]
 
@@ -341,7 +382,7 @@ layout: true
 
 .pull-left[
 .center[
-![:scale 85%](../../img/forking-paths.png)
+![:scale 85%](../../../img/forking-paths.png)
 ]
 ]
 
@@ -370,7 +411,7 @@ layout: false
 
 class: bottom
 
-background-image: url(../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
+background-image: url(../../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
 background-size: cover
 
 # THE "NEW STATISTICS"
@@ -399,21 +440,28 @@ It addresses three problems ([Cumming 2014](https://doi.org/10.1177%2F0956797613
 
 --
 
-This course will introduce you to the *New Statistics* incrementally.
+This course will introduce you to the *New Statistics* approach incrementally.
+
+---
+
+# The *Bayesian New Statistics*
+
+[Kurschke and Liddell 2018](https://doi.org/10.3758/s13423-016-1221-4).
 
 ---
 
 # Course info
 
-- Check the Learn website **and** <https://stefanocoretta.github.io/sqmf/>.
+- Check the course website <https://stefanocoretta.github.io/sqmb/>.
 
 - Course announcements are sent via Learn.
 
 - **ASK FOR HELP**: It is OK not to be OK, and remember that you are not alone.
 
-  - Got to the PPLS UG or PG Hub (on SharePoint Online) > Support for students > Wellbeing and Health.
+  - Go to the PPLS UG or PG Hub (on SharePoint Online) > Support for students > Wellbeing and Health.
+  - Come to my office hours (book an appointment [here](https://outlook.office365.com/owa/calendar/Stefanosofficehours@uoe.onmicrosoft.com/bookings/)).
 
 - Assessment:
 
-  - **Formative assessments**: Three formative assessments due on Thursday.
-  - **Summative assessments**
+  - **Formative assessments**: Three formative assessments due on Thursdays.
+  - **Summative assessments**: Two summative assessments.

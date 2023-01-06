@@ -8,14 +8,14 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     css:
-      - ../../xaringan-themer.css
-      - ../../custom.css
+      - ../xaringan-themer.css
+      - ../custom.css
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
       ratio: "16:9"
-      beforeInit: "../../macros.js"
+      beforeInit: "../macros.js"
 ---
 
 ```{r setup, include=FALSE}
@@ -54,7 +54,7 @@ style_mono_light(outfile = "slides/xaringan-themer.css")
 
 .pull-right[
 .center[
-![](../../../img/QR-Code-sqmb-sats-1.svg)
+![](../../img/QR-Code-sqmb-sats-1.svg)
 ]
 ]
 
@@ -99,7 +99,7 @@ layout: false
 class: middle
 
 .pull-left[
-![](../../../img/Alice_par_John_Tenniel_25.png)
+![](../../img/Alice_par_John_Tenniel_25.png)
 ]
 
 .pull-right[
@@ -119,7 +119,7 @@ class: middle
 # Research methods
 
 .center[
-![:scale 60%](../../../img/res-methods.png)
+![:scale 60%](../../img/res-methods.png)
 ]
 
 ---
@@ -131,13 +131,13 @@ layout: true
 ---
 
 .center[
-![:scale 60%](../../../img/res-process.png)
+![:scale 60%](../../img/res-process.png)
 ]
 
 ---
 
 .center[
-![:scale 60%](../../../img/res-process-data-ana.png)
+![:scale 60%](../../img/res-process-data-ana.png)
 ]
 
 ---
@@ -150,13 +150,13 @@ layout: true
 ---
 
 .center[
-![:scale 80%](../../../img/data-quant-qual.png)
+![:scale 80%](../../img/data-quant-qual.png)
 ]
 
 ---
 
 .center[
-![:scale 80%](../../../img/data-quant.png)
+![:scale 80%](../../img/data-quant.png)
 ]
 
 ---
@@ -174,7 +174,7 @@ class: inverse right middle
 # Inference process
 
 .center[
-![:scale 40%](../../../img/bro.png)
+![:scale 40%](../../img/bro.png)
 ]
 
 ???
@@ -196,7 +196,7 @@ NOTE: *Population* can be a set of anything, not just a specific group of people
 # Inference process
 
 .center[
-![:scale 75%](../../../img/inference.png)
+![:scale 75%](../../img/inference.png)
 ]
 
 ???
@@ -232,7 +232,7 @@ EXTRA: Find out about Popper's view of falsification and fallibilism.
 # Uncertainty and variability
 
 .center[
-![](../../../img/pliny.jpg)
+![](../../img/pliny.jpg)
 ]
 
 ???
@@ -247,7 +247,7 @@ So we have to deal with:
 
 class: center, middle, inverse
 
-![](../../../img/uncertainty.png)
+![](../../img/uncertainty.png)
 
 ???
 
@@ -274,7 +274,7 @@ class: middle
 .pull-right[
 
 
-![:scale 90%](../../../img/charles-deluvio-Mv9hjnEUHR4-unsplash.jpg)
+![:scale 90%](../../img/charles-deluvio-Mv9hjnEUHR4-unsplash.jpg)
 ]
 
 ???
@@ -328,7 +328,7 @@ class: middle
 ]
 
 .pull-right[
-![](../../../img/gollum-statistician.png)
+![](../../img/gollum-statistician.png)
 ]
 
 ---
@@ -356,7 +356,7 @@ layout: true
 
 .pull-left[
 .center[
-![:scale 60%](../../../img/red-card.jpg)
+![:scale 60%](../../img/red-card.jpg)
 ]
 ]
 
@@ -382,7 +382,7 @@ layout: true
 
 .pull-left[
 .center[
-![:scale 85%](../../../img/forking-paths.png)
+![:scale 85%](../../img/forking-paths.png)
 ]
 ]
 
@@ -411,7 +411,7 @@ layout: false
 
 class: bottom
 
-background-image: url(../../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
+background-image: url(../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
 background-size: cover
 
 # THE "NEW STATISTICS"

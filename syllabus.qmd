@@ -62,7 +62,8 @@ Examples from different branches of linguistics will be used to provide you with
 ::: {.callout-tip collapse="false"}
 ## Materials
 
-- [Lecture slides]().
+- [Lecture slides](slides/w01/).
+- [Workshop tutorial](tutorials/tutorial-w01.qmd)
 :::
 
 ::: {.callout-tip collapse="false"}

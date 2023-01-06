@@ -1,0 +1,244 @@
+---
+title: "SQM tutorial - Week 1"
+editor: visual
+---
+
+## Why R?
+
+R can be used to **analyse all sorts of data**, from tabular data (also known as "spreadsheets"), textual data, geographic data and even images.
+
+![](../img/what-r-for.png)
+
+This course will focus on the analysis of tabular data, since all of the techniques relevant to this type of data also apply to the other types.
+
+![](../img/inclusive-community.png)
+
+The R community is a **very inclusive community** and it's easy to find help. There are several groups that promote R in minority/minoritised groups, like [R-Ladies](https://www.r-consortium.org/all-projects/r-ladies), [Africa R](https://r4africa.org), and [Rainbow R](https://rainbowr.netlify.app) just to mention a few.
+
+Moreover, R is **open source and free**!
+
+## R vs RStudio
+
+Beginners usually have trouble understanding the difference between R and RStudio.
+
+Let's use a car analogy.
+
+What makes the car go is the **engine** and you can control the engine through the **dashboard**.
+
+You can think of R as an engine and RStudio as the dashboard.
+
+![](../img/R_vs_RStudio_1.png)
+
+::: {.callout-tip icon="false"}
+### R
+
+-   R is a **programming language**.
+
+-   We use programming languages to **interact** with computers.
+
+-   You run **commands** written in a **console** and the related task is **executed**.
+:::
+
+::: {.callout-tip icon="false"}
+### RStudio
+
+-   RStudio is an Integrated Development Environment or **IDE**.
+
+-   It helps you using R more **efficiently**.
+
+-   It has a **graphical user interface** or GUI.
+:::
+
+The next section will give you a tour of RStudio.
+
+## RStudio
+
+![](../img/rstudio-1.png)
+
+![](../img/rstudio-2.png)
+
+![](../img/rstudio-3.png)
+
+![](../img/rstudio-4.png)
+
+![](../img/rstudio-5.png)
+
+![](../img/rstudio-6.png)
+
+1.  Open the RStudio preferences (macOS: `RStudio > Preferences...`, win: `Tools > Global options...`).
+
+2.  Un-tick `Restore .RData into workspace at startup`.
+
+3.  Select `Never` in `Save workspace to .RData on exit`.
+
+## R basics
+
+### R as a calculator
+
+Write the following in the `Console`, then press `ENTER`: `1 + 2`.
+
+Fantastic! You should see that the answer to the addition has been printed in the `Console`.
+
+Now, try running the same code again, but this time in the **code chunk** below. There are several ways you can run code in a code chunk: one is to click on the green triangle sign in the top right corner of the code chunk.
+
+Alternatively, you can also simply place the text cursor inside the code chunk in the line you want to run and hit `CTRL/CMD + ENTER` on your keyboard to run that line of code.
+
+```{r}
+1 + 2
+```
+
+You did it!
+
+Now, try some more operations. Feel free to add your own to the mix!
+
+```{r}
+67 - 13
+2 * 4
+268 / 43
+```
+
+You can also chain multiple operations.
+
+```{r}
+6 + 4 - 1 + 2
+4 * 2 + 3 * 2
+```
+
+### Variables
+
+> Forget-me-not.
+
+Most times, we want to store a certain value so that we can use it again later.
+
+We can achieve this by creating **variables**. A variable holds one or more values and it's stored in the computer memory for later use.
+
+You can create a variable by using the assignment operator `<-`.
+
+```{r}
+# Assign the value 156 to the variable my_num
+my_num <- 156
+
+# Oh, btw... These are comments, i.e. lines of code starting with a #.
+# Comments are skipped by R.
+```
+
+Check the list of variables in the `Environment` tab of the top-right panel of RStudio. You should see the `my_num` variable and its value there.
+
+Now, you can just call it back when you need it!
+
+```{r}
+my_num
+```
+
+Let's try some operations.
+
+```{r}
+income <- 1200
+expenses <- 500
+income - expenses
+```
+
+See? You can use operations with variables too!
+
+And you can also go all the way with variables.
+
+```{r}
+savings <- income - expenses
+```
+
+And check the value...
+
+```{r}
+savings
+```
+
+Variables can hold more than one item.
+
+Just use the combine `c()` function to create a **vector** containing multiple values. A vector is a variable containing values of the same type.
+
+The following are all numeric vectors.
+
+```{r}
+one_i <- 6
+# Vector with 2 values
+two_i <- c(6, 8)
+# Vector with 3 values
+three_i <- c(6, 8, 42)
+```
+
+Check the list of variables in the `Environment` tab. You will see now that before the values of `two_i` and `three_i` you get the vector type `num` for numeric.
+
+Note the following are the same:
+
+```{r}
+one_i <- 6
+one_i
+one_ii <- c(6)
+one_ii
+```
+
+### Functions
+
+> R can't function without... functions.
+
+**Functions** are operations performed on one or more *arguments*.
+
+A function in R has the form `function()` where:
+
+-   `function` is the name of the function, like `sum`.
+-   `()` are round parentheses, inside of which you write arguments, separated by commas.
+
+```{r}
+sum(3, 5)
+```
+
+The `sum()` function sums the number listed as arguments. Above, the arguments are `3` and `5`.
+
+And of course arguments can be vectors!
+
+```{r}
+my_nums <- c(3, 5, 7)
+
+sum(my_nums)
+mean(my_nums)
+```
+
+### Strings and logicals
+
+> Not just numbers.
+
+Variables work not only with numbers. They can also store **strings**. A string is basically a set of characters (a word, a sentence, a full text).
+
+In R, strings have to be **quoted** using double quotes `""`.
+
+Change the following strings to your name and surname
+
+```{r}
+name <- "Stefano"
+surname <- "Coretta"
+
+name
+```
+
+Strings can be used as arguments in functions, like numbers can.
+
+```{r}
+cat("My name is", name, surname)
+```
+
+Remember that you can reuse the same variable name to override the variable value.
+
+```{r}
+name <- "Raj"
+
+cat("My name is", name, surname)
+```
+
+You can combine multiple strings into a **character vector**, using `c()`.
+
+```{r}
+fruit <- c("apple", "oranges", "bananas")
+fruit
+```
+
+Check the Environment tab. Character vectors have `chr` before the values.

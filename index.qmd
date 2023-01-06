@@ -14,12 +14,18 @@ The course will cover the basics of **statistics and quantitative data analysis*
 
 The course will teach students how to carry out Bayesian statistical inference using a variety of statistical models, and how to interpret results from traditional Null Hypothesis Significance Testing (i.e. *p*-values and confidence intervals).
 
-## Install R and RStudio
+## R and RStudio
 
-The workshops require you to have **both R and RStudio** installed on your laptop.
+The workshops will be held in the PPLS Computer Lab. The Lab is equipped with PCs running Windows and Ubuntu. The Lab PCs will have all the necessary software.
+
+**You can choose to use your own laptop instead of the Lab PCs.**
+
+This requires you to have **both R and RStudio** installed on your laptop.
 
 ::: {.callout-tip icon="false"}
 ## Installation instructions
 
-Please, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
+**NOTE**: If you have installed either R or RStudio prior to January 2023, please delete both R and RStudio from your laptop and reinstall them.
+
+To (re)install R and RStudio, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
 :::

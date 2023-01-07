@@ -30,17 +30,17 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Questions**
 
--   What are knowledge and data?
 -   What is quantitative data analysis?
--   How can we talk about uncertainty?
+-   What is the inference process?
+-   How can we talk about uncertainty and variability?
 -   Which are the limits of quantitative methods?
 
 **Skills**
 
--   Think critically about "data".
--   Interpret basic numeric summaries and plots.
--   Use R to perform simple calculations and obtain numeric summaries.
--   Master the basics of the programming language R Learn how to manage your analyses with scripts and RStudio.
+-   Think critically about statistics, uncertainty and variability.
+-   Use R to perform simple calculations.
+-   Master the basics of the programming language R.
+-   Use RStudio.
 :::
 
 ::: {.callout-note collapse="false"}
@@ -63,7 +63,7 @@ Examples from different branches of linguistics will be used to provide you with
 ## Materials
 
 - [Lecture slides](slides/w01/).
-- [Workshop tutorial](tutorials/tutorial-w01.qmd)
+- [Workshop tutorial](tutorials/tutorial-w01.qmd).
 :::
 
 ::: {.callout-tip collapse="false"}
@@ -72,4 +72,12 @@ Examples from different branches of linguistics will be used to provide you with
 - S4LR Ch. 1 and R4DS [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html).
 - [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
 - [Jafar 2018](https://doi.org/10.1136/emermed-2017-207158). What is positionality and should it be expressed in quantitative studies?
+
+From the lecture:
+
+- [Silberzahn et al. 2018](https://doi.org/10.1177/2515245917747646
+). Many Analysts, One Data Set: Making Transparent How Variations in Analytic Choices Affect Results
+- [Coretta et al. (in principle)](https://doi.org/10.31234/osf.io/q8t2k). Multidimensional signals and analytic flexibility: Estimating degrees of freedom in human speech analyses
+- [Cumming 2014](https://doi.org/10.1177%2F0956797613504966). The New Statistics: Why and How
+- [Kurschke and Liddell 2018](https://doi.org/10.3758/s13423-016-1221-4). The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective
 :::

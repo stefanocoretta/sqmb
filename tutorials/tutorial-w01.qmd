@@ -53,19 +53,87 @@ The next section will give you a tour of RStudio.
 
 ## RStudio
 
+When you open RStudio, you can see the window is divided into 4 panels:
+
+-   Red (top-left): the file **Editor**.
+
+-   Blue (bottom-left): the **Console**.
+
+-   Green (top-right): the **Environment tab**.
+
+-   Purple (bottom-right): the **Files tab**.
+
 ![](../img/rstudio-1.png)
 
-![](../img/rstudio-2.png)
+The file **Editor** is where you can edit files, like you would in any text editor.
+
+The **Console** is where R commands can be executed. Think of this as the interface to R.
+
+The **Environment tab** lists the objects created with R, while in the **Files tab** you can navigate folders on your computer to get to files and open them in the file Editor.
+
+### RStudio projects
+
+RStudio is an IDE (see above) which allows you to work efficiently with R, all in one place.
+
+**Note** that files and data live in folders on your computer, outside of RStudio: do not think of RStudio as an app where you can save files in.
+
+All the files that you see in the Files tab are files on your computer and you can access them from the Finder or File Explorer as you would with any other file.
+
+In principle, you can open RStudio and then navigate to any folder or file on your computer.
+
+However, there is a more efficient way of working with RStudio: **RStudio Projects**.
+
+::: callout-tip
+#### RStudio Projects
+
+An **RStudio Project** is a folder on your computer that has an `.Rproj` file.
+:::
+
+You can create as many RStudio Projects as you wish, and I recommend to create one per project (your dissertation, a research project, etc...).
+
+We will create an RStudio Project for this course. You will be using this Project throughout the semester.
+
+To create an RStudio Project, click on the button that looks like a transparent light blue box with a plus, in the top-left corner of RStudio. A window like the one below will pop up.
 
 ![](../img/rstudio-3.png)
 
+Click on `New Directory` then `New Project`.
+
 ![](../img/rstudio-4.png)
+
+Now, this will create a new folder (aka directory) on your computer and will make that an RStudio Project.
+
+Give a name to your new project, something like the name of the course and year.
+
+Then you need to specify where to create this new folder/Project. Click on `Browse…` and navigate to the folder you want to create the new folder/Project in.
+
+When done, click on `Create Project`. RStudio will automatically open your new project.
 
 ![](../img/rstudio-5.png)
 
+You know you are in an RStudio Project because you can see the name of the Project in the top-right corner of RStudio.
+
+::: callout-note
+When working through these tutorials, always make sure you are in the course RStudio Project you just created.
+:::
+
+If your see `Project (none)` in the top-right corner, that means your **are not** in an RStudio Project.
+
+There are several ways of opening an RStudio Project:
+
+-   You can go to the RStudio Project folder in Finder or File Explorer and double click on the `Rproj` file.
+
+-   You can click on `File > Open Project` in the RStudio menu.
+
+-   You can click on the project name in the top-right corner of RStudio, which will bring up a list of projects. Click on the desired project to open it.
+
+### A few important settings
+
+Before moving on, there are a few important settings that you need to change.
+
 ![](../img/rstudio-6.png)
 
-1.  Open the RStudio preferences (macOS: `RStudio > Preferences...`, win: `Tools > Global options...`).
+1.  Open the RStudio preferences (macOS: `RStudio > Preferences...`, Windows: `Tools > Global options...`).
 
 2.  Un-tick `Restore .RData into workspace at startup`.
 
@@ -77,21 +145,13 @@ The next section will give you a tour of RStudio.
 
 Write the following in the `Console`, then press `ENTER`: `1 + 2`.
 
-Fantastic! You should see that the answer to the addition has been printed in the `Console`.
+Fantastic! You should see that the answer to the addition has been printed in the `Console`, like this:
 
-Now, try running the same code again, but this time in the **code chunk** below. There are several ways you can run code in a code chunk: one is to click on the green triangle sign in the top right corner of the code chunk.
+    [1] 3
 
-Alternatively, you can also simply place the text cursor inside the code chunk in the line you want to run and hit `CTRL/CMD + ENTER` on your keyboard to run that line of code.
+Now, try some more operations (write each of the following in the Console and press `ENTER`). Feel free to add your own to the mix!
 
-```{r}
-1 + 2
-```
-
-You did it!
-
-Now, try some more operations. Feel free to add your own to the mix!
-
-```{r}
+```{r eval=FALSE}
 67 - 13
 2 * 4
 268 / 43
@@ -99,7 +159,7 @@ Now, try some more operations. Feel free to add your own to the mix!
 
 You can also chain multiple operations.
 
-```{r}
+```{r eval=FALSE}
 6 + 4 - 1 + 2
 4 * 2 + 3 * 2
 ```
@@ -110,27 +170,31 @@ You can also chain multiple operations.
 
 Most times, we want to store a certain value so that we can use it again later.
 
-We can achieve this by creating **variables**. A variable holds one or more values and it's stored in the computer memory for later use.
+We can achieve this by creating **variables**.
 
-You can create a variable by using the assignment operator `<-`.
+::: callout-tip
+#### Variables
+
+A **variable** holds one or more values and it's stored in the computer memory for later use.
+:::
+
+You can create a variable by using the **assignment operator** `<-`.
+
+Let's assign the value `156` to the variable `my_num`.
 
 ```{r}
-# Assign the value 156 to the variable my_num
 my_num <- 156
-
-# Oh, btw... These are comments, i.e. lines of code starting with a #.
-# Comments are skipped by R.
 ```
 
-Check the list of variables in the `Environment` tab of the top-right panel of RStudio. You should see the `my_num` variable and its value there.
+Now, check the list of variables in the `Environment` tab of the top-right panel of RStudio. You should see the `my_num` variable and its value there.
 
-Now, you can just call it back when you need it!
+Now, you can just call the variable back when you need it! Write the following in the Console and press `ENTER`.
 
 ```{r}
 my_num
 ```
 
-Let's try some operations.
+Let's now try some operations using variables.
 
 ```{r}
 income <- 1200
@@ -152,7 +216,7 @@ And check the value...
 savings
 ```
 
-Variables can hold more than one item.
+Variables can hold more than one item or value.
 
 Just use the combine `c()` function to create a **vector** containing multiple values. A vector is a variable containing values of the same type.
 
@@ -203,13 +267,13 @@ sum(my_nums)
 mean(my_nums)
 ```
 
-### Strings and logicals
+### String and logical vectors
 
 > Not just numbers.
 
 Variables work not only with numbers. They can also store **strings**. A string is basically a set of characters (a word, a sentence, a full text).
 
-In R, strings have to be **quoted** using double quotes `""`.
+In R, strings have to be **quoted** using double quotes `" "`.
 
 Change the following strings to your name and surname
 

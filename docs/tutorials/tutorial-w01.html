@@ -171,13 +171,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#why-r" id="toc-why-r" class="nav-link active" data-scroll-target="#why-r">Why R?</a></li>
   <li><a href="#r-vs-rstudio" id="toc-r-vs-rstudio" class="nav-link" data-scroll-target="#r-vs-rstudio">R vs RStudio</a></li>
-  <li><a href="#rstudio-1" id="toc-rstudio-1" class="nav-link" data-scroll-target="#rstudio-1">RStudio</a></li>
+  <li><a href="#rstudio-1" id="toc-rstudio-1" class="nav-link" data-scroll-target="#rstudio-1">RStudio</a>
+  <ul class="collapse">
+  <li><a href="#rstudio-projects" id="toc-rstudio-projects" class="nav-link" data-scroll-target="#rstudio-projects">RStudio projects</a></li>
+  <li><a href="#a-few-important-settings" id="toc-a-few-important-settings" class="nav-link" data-scroll-target="#a-few-important-settings">A few important settings</a></li>
+  </ul></li>
   <li><a href="#r-basics" id="toc-r-basics" class="nav-link" data-scroll-target="#r-basics">R basics</a>
   <ul class="collapse">
   <li><a href="#r-as-a-calculator" id="toc-r-as-a-calculator" class="nav-link" data-scroll-target="#r-as-a-calculator">R as a calculator</a></li>
   <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
   <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
-  <li><a href="#strings-and-logicals" id="toc-strings-and-logicals" class="nav-link" data-scroll-target="#strings-and-logicals">Strings and logicals</a></li>
+  <li><a href="#string-and-logical-vectors" id="toc-string-and-logical-vectors" class="nav-link" data-scroll-target="#string-and-logical-vectors">String and logical vectors</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -256,58 +260,98 @@ RStudio
 </section>
 <section id="rstudio-1" class="level2">
 <h2 class="anchored" data-anchor-id="rstudio-1">RStudio</h2>
+<p>When you open RStudio, you can see the window is divided into 4 panels:</p>
+<ul>
+<li><p>Red (top-left): the file <strong>Editor</strong>.</p></li>
+<li><p>Blue (bottom-left): the <strong>Console</strong>.</p></li>
+<li><p>Green (top-right): the <strong>Environment tab</strong>.</p></li>
+<li><p>Purple (bottom-right): the <strong>Files tab</strong>.</p></li>
+</ul>
 <p><img src="../img/rstudio-1.png" class="img-fluid"></p>
-<p><img src="../img/rstudio-2.png" class="img-fluid"></p>
+<p>The file <strong>Editor</strong> is where you can edit files, like you would in any text editor.</p>
+<p>The <strong>Console</strong> is where R commands can be executed. Think of this as the interface to R.</p>
+<p>The <strong>Environment tab</strong> lists the objects created with R, while in the <strong>Files tab</strong> you can navigate folders on your computer to get to files and open them in the file Editor.</p>
+<section id="rstudio-projects" class="level3">
+<h3 class="anchored" data-anchor-id="rstudio-projects">RStudio projects</h3>
+<p>RStudio is an IDE (see above) which allows you to work efficiently with R, all in one place.</p>
+<p><strong>Note</strong> that files and data live in folders on your computer, outside of RStudio: do not think of RStudio as an app where you can save files in.</p>
+<p>All the files that you see in the Files tab are files on your computer and you can access them from the Finder or File Explorer as you would with any other file.</p>
+<p>In principle, you can open RStudio and then navigate to any folder or file on your computer.</p>
+<p>However, there is a more efficient way of working with RStudio: <strong>RStudio Projects</strong>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+RStudio Projects
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An <strong>RStudio Project</strong> is a folder on your computer that has an <code>.Rproj</code> file.</p>
+</div>
+</div>
+<p>You can create as many RStudio Projects as you wish, and I recommend to create one per project (your dissertation, a research project, etc…).</p>
+<p>We will create an RStudio Project for this course. You will be using this Project throughout the semester.</p>
+<p>To create an RStudio Project, click on the button that looks like a transparent light blue box with a plus, in the top-left corner of RStudio. A window like the one below will pop up.</p>
 <p><img src="../img/rstudio-3.png" class="img-fluid"></p>
+<p>Click on <code>New Directory</code> then <code>New Project</code>.</p>
 <p><img src="../img/rstudio-4.png" class="img-fluid"></p>
+<p>Now, this will create a new folder (aka directory) on your computer and will make that an RStudio Project.</p>
+<p>Give a name to your new project, something like the name of the course and year.</p>
+<p>Then you need to specify where to create this new folder/Project. Click on <code>Browse…</code> and navigate to the folder you want to create the new folder/Project in.</p>
+<p>When done, click on <code>Create Project</code>. RStudio will automatically open your new project.</p>
 <p><img src="../img/rstudio-5.png" class="img-fluid"></p>
+<p>You know you are in an RStudio Project because you can see the name of the Project in the top-right corner of RStudio.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When working through these tutorials, always make sure you are in the course RStudio Project you just created.</p>
+</div>
+</div>
+<p>If your see <code>Project (none)</code> in the top-right corner, that means your <strong>are not</strong> in an RStudio Project.</p>
+<p>There are several ways of opening an RStudio Project:</p>
+<ul>
+<li><p>You can go to the RStudio Project folder in Finder or File Explorer and double click on the <code>Rproj</code> file.</p></li>
+<li><p>You can click on <code>File &gt; Open Project</code> in the RStudio menu.</p></li>
+<li><p>You can click on the project name in the top-right corner of RStudio, which will bring up a list of projects. Click on the desired project to open it.</p></li>
+</ul>
+</section>
+<section id="a-few-important-settings" class="level3">
+<h3 class="anchored" data-anchor-id="a-few-important-settings">A few important settings</h3>
+<p>Before moving on, there are a few important settings that you need to change.</p>
 <p><img src="../img/rstudio-6.png" class="img-fluid"></p>
 <ol type="1">
-<li><p>Open the RStudio preferences (macOS: <code>RStudio &gt; Preferences...</code>, win: <code>Tools &gt; Global options...</code>).</p></li>
+<li><p>Open the RStudio preferences (macOS: <code>RStudio &gt; Preferences...</code>, Windows: <code>Tools &gt; Global options...</code>).</p></li>
 <li><p>Un-tick <code>Restore .RData into workspace at startup</code>.</p></li>
 <li><p>Select <code>Never</code> in <code>Save workspace to .RData on exit</code>.</p></li>
 </ol>
+</section>
 </section>
 <section id="r-basics" class="level2">
 <h2 class="anchored" data-anchor-id="r-basics">R basics</h2>
 <section id="r-as-a-calculator" class="level3">
 <h3 class="anchored" data-anchor-id="r-as-a-calculator">R as a calculator</h3>
 <p>Write the following in the <code>Console</code>, then press <code>ENTER</code>: <code>1 + 2</code>.</p>
-<p>Fantastic! You should see that the answer to the addition has been printed in the <code>Console</code>.</p>
-<p>Now, try running the same code again, but this time in the <strong>code chunk</strong> below. There are several ways you can run code in a code chunk: one is to click on the green triangle sign in the top right corner of the code chunk.</p>
-<p>Alternatively, you can also simply place the text cursor inside the code chunk in the line you want to run and hit <code>CTRL/CMD + ENTER</code> on your keyboard to run that line of code.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
+<p>Fantastic! You should see that the answer to the addition has been printed in the <code>Console</code>, like this:</p>
 <pre><code>[1] 3</code></pre>
-</div>
-</div>
-<p>You did it!</p>
-<p>Now, try some more operations. Feel free to add your own to the mix!</p>
+<p>Now, try some more operations (write each of the following in the Console and press <code>ENTER</code>). Feel free to add your own to the mix!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">67</span> <span class="sc">-</span> <span class="dv">13</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 54</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 8</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">268</span> <span class="sc">/</span> <span class="dv">43</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.232558</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dv">67</span> <span class="sc">-</span> <span class="dv">13</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="dv">4</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dv">268</span> <span class="sc">/</span> <span class="dv">43</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can also chain multiple operations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 11</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 14</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="variables" class="level3">
@@ -316,28 +360,38 @@ RStudio
 <p>Forget-me-not.</p>
 </blockquote>
 <p>Most times, we want to store a certain value so that we can use it again later.</p>
-<p>We can achieve this by creating <strong>variables</strong>. A variable holds one or more values and it’s stored in the computer memory for later use.</p>
-<p>You can create a variable by using the assignment operator <code>&lt;-</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign the value 156 to the variable my_num</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>my_num <span class="ot">&lt;-</span> <span class="dv">156</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Oh, btw... These are comments, i.e. lines of code starting with a #.</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Comments are skipped by R.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can achieve this by creating <strong>variables</strong>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<p>Check the list of variables in the <code>Environment</code> tab of the top-right panel of RStudio. You should see the <code>my_num</code> variable and its value there.</p>
-<p>Now, you can just call it back when you need it!</p>
+<div class="callout-caption-container flex-fill">
+Variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <strong>variable</strong> holds one or more values and it’s stored in the computer memory for later use.</p>
+</div>
+</div>
+<p>You can create a variable by using the <strong>assignment operator</strong> <code>&lt;-</code>.</p>
+<p>Let’s assign the value <code>156</code> to the variable <code>my_num</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>my_num</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>my_num <span class="ot">&lt;-</span> <span class="dv">156</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, check the list of variables in the <code>Environment</code> tab of the top-right panel of RStudio. You should see the <code>my_num</code> variable and its value there.</p>
+<p>Now, you can just call the variable back when you need it! Write the following in the Console and press <code>ENTER</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>my_num</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 156</code></pre>
 </div>
 </div>
-<p>Let’s try some operations.</p>
+<p>Let’s now try some operations using variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>expenses <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>income <span class="sc">-</span> expenses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="dv">1200</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>expenses <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>income <span class="sc">-</span> expenses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 700</code></pre>
 </div>
@@ -345,35 +399,35 @@ RStudio
 <p>See? You can use operations with variables too!</p>
 <p>And you can also go all the way with variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>savings <span class="ot">&lt;-</span> income <span class="sc">-</span> expenses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>savings <span class="ot">&lt;-</span> income <span class="sc">-</span> expenses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And check the value…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>savings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>savings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 700</code></pre>
 </div>
 </div>
-<p>Variables can hold more than one item.</p>
+<p>Variables can hold more than one item or value.</p>
 <p>Just use the combine <code>c()</code> function to create a <strong>vector</strong> containing multiple values. A vector is a variable containing values of the same type.</p>
 <p>The following are all numeric vectors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>one_i <span class="ot">&lt;-</span> <span class="dv">6</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector with 2 values</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>two_i <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector with 3 values</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>three_i <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>one_i <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector with 2 values</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>two_i <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector with 3 values</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>three_i <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check the list of variables in the <code>Environment</code> tab. You will see now that before the values of <code>two_i</code> and <code>three_i</code> you get the vector type <code>num</code> for numeric.</p>
 <p>Note the following are the same:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>one_i <span class="ot">&lt;-</span> <span class="dv">6</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>one_i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>one_i <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>one_i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>one_ii <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>one_ii</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>one_ii <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>one_ii</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
@@ -391,7 +445,7 @@ RStudio
 <li><code>()</code> are round parentheses, inside of which you write arguments, separated by commas.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">3</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">3</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8</code></pre>
 </div>
@@ -399,55 +453,55 @@ RStudio
 <p>The <code>sum()</code> function sums the number listed as arguments. Above, the arguments are <code>3</code> and <code>5</code>.</p>
 <p>And of course arguments can be vectors!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>my_nums <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(my_nums)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>my_nums <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(my_nums)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(my_nums)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(my_nums)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5</code></pre>
 </div>
 </div>
 </section>
-<section id="strings-and-logicals" class="level3">
-<h3 class="anchored" data-anchor-id="strings-and-logicals">Strings and logicals</h3>
+<section id="string-and-logical-vectors" class="level3">
+<h3 class="anchored" data-anchor-id="string-and-logical-vectors">String and logical vectors</h3>
 <blockquote class="blockquote">
 <p>Not just numbers.</p>
 </blockquote>
 <p>Variables work not only with numbers. They can also store <strong>strings</strong>. A string is basically a set of characters (a word, a sentence, a full text).</p>
-<p>In R, strings have to be <strong>quoted</strong> using double quotes <code>""</code>.</p>
+<p>In R, strings have to be <strong>quoted</strong> using double quotes <code>" "</code>.</p>
 <p>Change the following strings to your name and surname</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"Stefano"</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>surname <span class="ot">&lt;-</span> <span class="st">"Coretta"</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"Stefano"</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>surname <span class="ot">&lt;-</span> <span class="st">"Coretta"</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Stefano"</code></pre>
 </div>
 </div>
 <p>Strings can be used as arguments in functions, like numbers can.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"My name is"</span>, name, surname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"My name is"</span>, name, surname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>My name is Stefano Coretta</code></pre>
 </div>
 </div>
 <p>Remember that you can reuse the same variable name to override the variable value.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"Raj"</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"My name is"</span>, name, surname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"Raj"</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"My name is"</span>, name, surname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>My name is Raj Coretta</code></pre>
 </div>
 </div>
 <p>You can combine multiple strings into a <strong>character vector</strong>, using <code>c()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"apple"</span>, <span class="st">"oranges"</span>, <span class="st">"bananas"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>fruit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fruit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"apple"</span>, <span class="st">"oranges"</span>, <span class="st">"bananas"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>fruit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "apple"   "oranges" "bananas"</code></pre>
 </div>

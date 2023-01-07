@@ -173,7 +173,7 @@ Most times, we want to store a certain value so that we can use it again later.
 We can achieve this by creating **variables**.
 
 ::: callout-tip
-#### Variables
+#### Variable
 
 A **variable** holds one or more values and it's stored in the computer memory for later use.
 :::
@@ -193,6 +193,14 @@ Now, you can just call the variable back when you need it! Write the following i
 ```{r}
 my_num
 ```
+
+A variable like `my_num` is also called a **numeric vector**: i.e. a vector that contains a number (hence numeric).
+
+::: callout-tip
+#### Vector
+
+A **vector** is an R object that contains one or more values of the same type.
+:::
 
 Let's now try some operations using variables.
 
@@ -216,9 +224,9 @@ And check the value...
 savings
 ```
 
-Variables can hold more than one item or value.
+Vectors can hold more than one item or value.
 
-Just use the combine `c()` function to create a **vector** containing multiple values. A vector is a variable containing values of the same type.
+Just use the combine `c()` function to create a vector containing multiple values.
 
 The following are all numeric vectors.
 
@@ -230,9 +238,15 @@ two_i <- c(6, 8)
 three_i <- c(6, 8, 42)
 ```
 
-Check the list of variables in the `Environment` tab. You will see now that before the values of `two_i` and `three_i` you get the vector type `num` for numeric.
+Check the list of variables in the `Environment` tab. You will see now that before the values of `two_i` and `three_i` you get the vector type `num` for numeric. (If the vector has only one value, you don't see the type in the `Enviroment` list but it is still of a particular type).
 
-Note the following are the same:
+::: callout-tip
+#### Numeric vector
+
+A **numeric vector** is a vector that holds one or more numeric values.
+:::
+
+Note that the following are the same:
 
 ```{r}
 one_i <- 6
@@ -243,14 +257,20 @@ one_ii
 
 ### Functions
 
-> R can't function without... functions.
+> R cannot function without... functions.
 
-**Functions** are operations performed on one or more *arguments*.
+::: callout-tip
+#### Function
+
+A **function** is an operation performed on one or more **arguments**.
+:::
 
 A function in R has the form `function()` where:
 
 -   `function` is the name of the function, like `sum`.
 -   `()` are round parentheses, inside of which you write arguments, separated by commas.
+
+Let's see an example:
 
 ```{r}
 sum(3, 5)
@@ -271,11 +291,13 @@ mean(my_nums)
 
 > Not just numbers.
 
-Variables work not only with numbers. They can also store **strings**. A string is basically a set of characters (a word, a sentence, a full text).
+We have seen that variables can hold numeric vectors. But vectors are not restricted to being numeric. They can also store **strings**.
+
+A string is basically a set of characters (a word, a sentence, a full text).
 
 In R, strings have to be **quoted** using double quotes `" "`.
 
-Change the following strings to your name and surname
+Change the following strings to your name and surname. Remember to keep the double quotes
 
 ```{r}
 name <- "Stefano"
@@ -300,9 +322,30 @@ cat("My name is", name, surname)
 
 You can combine multiple strings into a **character vector**, using `c()`.
 
+::: callout-tip
+#### Character vector
+
+A **character vector** is a vector that holds one or more strings.
+:::
+
 ```{r}
 fruit <- c("apple", "oranges", "bananas")
 fruit
 ```
 
 Check the Environment tab. Character vectors have `chr` before the values.
+
+Another type of vector is one that contains either `TRUE` or `FALSE`. Vectors of this type are called **logical vectors** and they are listed as `logi` in the `Environment` tab.
+
+::: callout-tip
+#### Logical vector
+
+A **logical vector** is a vector that holds one or more `TRUE` or `FALSE` values.
+:::
+
+```{r}
+groceries <- c("apple", "flour", "margarine", "sugar")
+in_pantry <- c(TRUE, TRUE, FALSE, TRUE)
+```
+
+`TRUE` and `FALSE` values must be written in all capitals and *without* double quotes (they are not strings!).

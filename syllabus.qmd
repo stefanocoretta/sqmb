@@ -26,7 +26,7 @@ Examples from different branches of linguistics will be used to provide you with
 ### Week 1: Quantitative methods and uncertainty
 
 ::: {.callout-important collapse="false"}
-## Learning Objectives
+#### Learning Objectives
 
 **Questions**
 
@@ -44,7 +44,7 @@ Examples from different branches of linguistics will be used to provide you with
 :::
 
 ::: {.callout-note collapse="false"}
-## Homework
+#### Homework
 
 **Intake form**
 
@@ -60,14 +60,14 @@ Examples from different branches of linguistics will be used to provide you with
 :::
 
 ::: {.callout-tip collapse="false"}
-## Materials
+#### Materials
 
 - [Lecture slides](slides/w01/).
 - [Workshop tutorial](tutorials/tutorial-w01.qmd).
 :::
 
 ::: {.callout-tip collapse="false"}
-## Suggested readings
+#### Suggested readings
 
 - S4LR Ch. 1 and R4DS [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html).
 - [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
@@ -80,4 +80,24 @@ From the lecture:
 - [Coretta et al. (in principle)](https://doi.org/10.31234/osf.io/q8t2k). Multidimensional signals and analytic flexibility: Estimating degrees of freedom in human speech analyses
 - [Cumming 2014](https://doi.org/10.1177%2F0956797613504966). The New Statistics: Why and How
 - [Kurschke and Liddell 2018](https://doi.org/10.3758/s13423-016-1221-4). The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective
+:::
+
+### Week 2: Data wrangling
+
+::: {.callout-important collapse="true"}
+#### Learning Objectives
+
+**Questions**
+
+- What are the types of statistical variables?
+- Which summary measures are appropriate for which types of variables?
+- What are common measures central tendency?
+- What are common measures of dispersion?
+
+**Skills**
+
+-   Import tabular data in R.
+-   Filter and mutate data with tidyverse.
+-   Obtain mean, median, mode, range and standard deviation.
+-   Use R scripts to keep code.
 :::

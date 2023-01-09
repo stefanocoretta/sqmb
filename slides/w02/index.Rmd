@@ -1,0 +1,67 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 2"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2023/01/17"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+```
+
+When we ask a research question, we collect a sample y from population. y is a variable.
+
+What is a variable?
+
+What is a statistical variable?
+
+When you observe or measure something, you are taking note of the value of a variable.
+
+It's called variable because varies (ha!).
+
+The opposite of a variable is a constant.
+
+There are different types of variables. The first distinction we talk about is numeric vs categorical.
+
+Numeric can be continuous or discrete. Categorical can only be discrete.
+
+Operationalisation. We can operationalise something as numeric or categorical.
+
+Examples of operationalisation.
+
+---
+
+Summarise variables.
+
+Measures of central tendency and dispersion.
+

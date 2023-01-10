@@ -96,10 +96,10 @@ From the lecture:
 
 **Skills**
 
+-   Organise files efficiently.
 -   Import tabular data in R.
--   Filter and mutate data with tidyverse.
 -   Obtain mean, median, mode, range and standard deviation.
--   Use R scripts to keep code.
+-   Use R scripts to save and reuse code.
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -109,4 +109,69 @@ From the lecture:
 <!-- - [Workshop tutorial](tutorials/tutorial-w02.qmd). -->
 - Workshop files (right-click and download):
   - [shallow.csv](data/shallow.csv)
+:::
+
+### Week 3: Data visualisation
+
+::: {.callout-important collapse="true"}
+#### Learning Objectives
+
+**Questions**
+
+- What are the principles of good data visualisation?
+- Which are the main components of a plot?
+- Which are the appropriate plots for different types of data?
+- How can we visualise uncertainty?
+
+
+**Skills**
+
+- Create common types of plots with ggplot2.
+- Use colour and shape to effectively convey meaning.
+- Describe a plot in writing and comment on observable patterns.
+- Filter and mutate data.
+:::
+
+
+### Week 4: Linear models, Basics I
+
+::: {.callout-important collapse="true"}
+#### Learning Objectives
+
+**Questions**
+
+- What are statistical models useful for?
+- What are statistical populations, samples and distributions?
+- What are statistical variables and which type of relationships exist between variables?
+- What is a linear model and which are its components?
+
+
+**Skills**
+
+- Fit a linear model with one continuous outcome variable and one continuous predictor with `brm()`.
+- Interpret the summary of the model and understand the meaning of the reported coefficients.
+- Plot and diagnose linear models.
+- Describe the model specification and results in writing.
+:::
+
+
+### Week 5: Linear models, Basics II
+
+::: {.callout-important collapse="true"}
+#### Learning Objectives
+
+**Questions**
+
+- How can we use linear models with categorical (rather than continuous) predictors?
+- Why do we need to code categorical predictors as numbers? And which are the most common coding methods?
+- How can we represent a linear model using a formula?
+- How do you interpret a linear model with both continuous and categorical predictors?
+
+
+**Skills**
+
+- Master contrast coding in R for categorical predictors.
+- Fit, interpret and plot linear models with continuous and categorical predictors.
+- Understand treatment and sum coding.
+- Advanced reporting of model specification and results.
 :::

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>SQMB - SQM tutorial - Week 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SQMB</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html">
+ <span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../assessments.html">
+ <span class="menu-text">Assessment</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#reading-files" id="toc-reading-files" class="nav-link active" data-scroll-target="#reading-files">Reading files</a>
+  <ul class="collapse">
+  <li><a href="#files-folder-and-file-extensions" id="toc-files-folder-and-file-extensions" class="nav-link" data-scroll-target="#files-folder-and-file-extensions">Files, folder and file extensions</a></li>
+  <li><a href="#file-paths" id="toc-file-paths" class="nav-link" data-scroll-target="#file-paths">File paths</a></li>
+  </ul></li>
+  <li><a href="#import-data-from-files" id="toc-import-data-from-files" class="nav-link" data-scroll-target="#import-data-from-files">Import data from files</a>
+  <ul class="collapse">
+  <li><a href="#download-the-data-file" id="toc-download-the-data-file" class="nav-link" data-scroll-target="#download-the-data-file">Download the data file</a></li>
+  <li><a href="#about-shallow.csv" id="toc-about-shallow.csv" class="nav-link" data-scroll-target="#about-shallow.csv">About <code>shallow.csv</code></a></li>
+  <li><a href="#import-the-data" id="toc-import-the-data" class="nav-link" data-scroll-target="#import-the-data">Import the data</a></li>
+  <li><a href="#view-the-data" id="toc-view-the-data" class="nav-link" data-scroll-target="#view-the-data">View the data</a></li>
+  </ul></li>
+  <li><a href="#r-scripts" id="toc-r-scripts" class="nav-link" data-scroll-target="#r-scripts">R scripts</a></li>
+  <li><a href="#data-transformation" id="toc-data-transformation" class="nav-link" data-scroll-target="#data-transformation">Data transformation</a>
+  <ul class="collapse">
+  <li><a href="#summary-measures" id="toc-summary-measures" class="nav-link" data-scroll-target="#summary-measures">Summary measures</a></li>
+  <li><a href="#count-occurrences" id="toc-count-occurrences" class="nav-link" data-scroll-target="#count-occurrences">Count occurrences</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">SQM tutorial - Week 2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="reading-files" class="level2">
+<h2 class="anchored" data-anchor-id="reading-files">Reading files</h2>
+<p>In the tutorial last week you’ve been playing around with R and variables.</p>
+<p><strong>But what if you want to import data in R?</strong></p>
+<p>Easy! You can use the <code>read_csv()</code> function to read a <code>.csv</code> (comma separated value) file. But before we dive in, let’s first talk about some computer basics. (You can skip this section if it’s too basic for you)</p>
+<section id="files-folder-and-file-extensions" class="level3">
+<h3 class="anchored" data-anchor-id="files-folder-and-file-extensions">Files, folder and file extensions</h3>
+<p>Files saved on your computer live in a specific place. For example, if you download a file from a browser (like Google Chrome, Safari or Firefox), the file is normally saved in the <code>Download</code> folder.</p>
+<p>But where does the <code>Download</code> folder live? Usually, in your user folder! The user folder normally is the name of your account or a name you picked when you created your computer account. In my case, my user folder is simply called <code>ste</code>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+User folder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <strong>user folder</strong> is the folder with the name of your account.</p>
+</div>
+</div>
+<p>So, let’s assume I download a file, let’s say <code>big_data.csv</code>, in the <code>Download</code> folder of my user folder.</p>
+<p>Now we can represent the location of the <code>big_data.csv</code> file like so:</p>
+<pre><code>ste/
+└── Downloads/
+    └── big_data.csv</code></pre>
+<p>To mark that <code>ste</code> and <code>Downloads</code> are folders, we add a final forward slash <code>/</code>. That simply means “hey! I am a folder!”. <code>big_data.csv</code> is a file, so it doesn’t have a final <code>/</code>.</p>
+<p>Instead, the file name <code>big_data.csv</code> has a <strong>file extension</strong>. The file extension is <code>.csv</code>. A file extension marks the type of file: in this the <code>big_data</code> file is a <code>.csv</code> file, a comma separated value file (we will see an example of what that looks like later).</p>
+<p>Different file type have different file extensions:</p>
+<ul>
+<li>Excel files: <code>.xlsx</code>.</li>
+<li>Plain text files: <code>.txt</code>.</li>
+<li>Images: <code>.png</code>, <code>.jpg</code>, <code>.gif</code>.</li>
+<li>Audio: <code>.mp3</code>, <code>.wav</code>.</li>
+<li>Video: <code>.mp4</code>, <code>.mov</code>, <code>.avi</code>.</li>
+<li>Etc…</li>
+</ul>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+File extension
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A file extension is a sequence of letters that indicates the type of a file and it’s separated with a <code>.</code> from the file name.</p>
+</div>
+</div>
+</section>
+<section id="file-paths" class="level3">
+<h3 class="anchored" data-anchor-id="file-paths">File paths</h3>
+<p>Now, we can use an alternative, more succinct way, to represent the location of the <code>big_data.csv</code>:</p>
+<p><code>ste/Downloads/big_data.csv</code></p>
+<p>This is called a <strong>file path</strong>! It’s the path through folders that lead you to the file. Folders are separated by <code>/</code> and the file is marked with the extension <code>.csv</code>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+File path
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A <strong>file path</strong> indicates the location of a file on a computer as a path through folders that lead you to the file.</p>
+</div>
+</div>
+<p>Now the million pound question: where does <code>ste/</code> live on my computer???</p>
+<p>User folders are located in different places depending on the operating system you are using:</p>
+<ul>
+<li><p>On <strong>macOS</strong>: the user folder is in <code>/Users/</code>.</p>
+<ul>
+<li>You will notice that the is a forward slash also before the name of the folder. That is because the <code>/Users/</code> folder is a top folder, i.e.&nbsp;there are no folders further up in the hierarchy of folders.</li>
+<li>This means that the full path for the <code>big_data.csv</code> file on a computer running macOS would be: <code>/Users/ste/Downloads/big_data.csv</code>.</li>
+</ul></li>
+<li><p>On <strong>Windows</strong>: the user folder is in <code>C:/Users/</code></p>
+<ul>
+<li>You will notice that <code>C</code> is followed by a colon <code>:</code>. That is because <code>C</code> is a drive, which contains files and folders. <code>C:</code> is not contained by any other folder, i.e.&nbsp;there are no other folders above <code>C:</code> in the hierarchy of folders.</li>
+<li>This means that the full path for the <code>big_data.csv</code> file on a Windows computer would be: <code>C:/Users/ste/Downloads/big_data.csv</code>.</li>
+</ul></li>
+</ul>
+<p>When a file path starts from a top-most folder, we call that path the <strong>absolute</strong> file path.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Absolute path
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An <strong>absolute path</strong> is a file path that starts with a top-most folder.</p>
+</div>
+</div>
+<p>There is another type of file paths, called <strong>relative</strong> paths. A relative path is a partial file path, relative to a specific folder. You will learn how to use relative paths below, when we will go through importing files in R.</p>
+<p>Importing files in R is very easy with the tidyverse packages. You just need to know the file type (very often the file extension helps) and the location of the file (i.e.&nbsp;the file path).</p>
+<p>The next section shows you how to import data in R!</p>
+</section>
+</section>
+<section id="import-data-from-files" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-from-files">Import data from files</h2>
+<p>For this tutorial, we will use the data from this paper: Song et al.&nbsp;2020. <em>Second language users exhibit shallow morphological processing</em>. DOI: <a href="https://doi.org/10.1017/S0272263120000170">10.1017/S0272263120000170</a>.</p>
+<section id="download-the-data-file" class="level3">
+<h3 class="anchored" data-anchor-id="download-the-data-file">Download the data file</h3>
+<p>To download the file with the data right-click on the following link and download the file: <a href="data/shallow.csv">shallow.csv</a>. (Note that tutorial files are also linked in the <a href="syllabus.qmd">Syllabus</a>)</p>
+<p>Create a folder in the RStudio project of the course called <code>data</code> and move the downloaded file into that folder.</p>
+<p>I strongly recommend that you keep the course RStudio project folder as organised as possible. The Open Science Framework has the following recommendations that apply very well to any type of research project.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Organising files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Use <strong>one folder</strong> per project. This will also be your RStudio project folder.</p></li>
+<li><p>Separate <strong>raw data</strong> from <strong>derived data</strong>.</p></li>
+<li><p>Separate <strong>code</strong> from <strong>data</strong>.</p></li>
+<li><p>Make <strong>raw data read-only</strong>.</p></li>
+</ul>
+</div>
+</div>
+<p>To learn more about this, check the OSF page <a href="https://help.osf.io/article/147-organizing-files">Organising files</a>.</p>
+<p>In brief, what these recommendations mean is that you want a folder for your research project, and inside the folder two folders: one for data and one for code.</p>
+<p>The <code>data/</code> folder could further contain <code>raw/</code> for raw data (data that should not be lost or changed, for example collected data or annotations) and <code>derived/</code> for data that derives from the raw data, for example through automated data processing.</p>
+<p>I usually also have a separate folder called <code>figs/</code> or <code>img/</code> where I save plots. Of course which folders you will have it’s ultimately up to you and needs will vary depending on the project and field!</p>
+<p>The rest of the tutorial will assume that you have created a folder called <code>data/</code> and that <code>shallow.csv</code> is in that folder.</p>
+<p>I recommend you to start being very organised with your files from now, whether it’s for this course or your dissertation or else. I also suggest to avoid overly nested structures (for example, avoid having one folder for each week for this course).</p>
+</section>
+<section id="about-shallow.csv" class="level3">
+<h3 class="anchored" data-anchor-id="about-shallow.csv">About <code>shallow.csv</code></h3>
+<p><code>shallow.csv</code> is a <code>.csv</code> file. It looks like this (the following is just an excerpt from the file, specifically the first 5 lines):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Group,ID,List,Target,ACC,RT,logRT,Critical_Filler,Word_Nonword,Relation_type,Branching</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,banoshment,1,423,6.0474,Filler,Nonword,Phonological,NA</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unawareness,1,603,6.4019,Critical,Word,Unrelated,Left</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unholiness,1,739,6.6053,Critical,Word,Constituent,Left</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,bictimize,1,510,6.2344,Filler,Nonword,Phonological,NA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A <code>.csv</code> file is basically a format to save tabular data (i.e.&nbsp;data that looks like a table). To separate each column, a <code>.csv</code> file uses a comma <code>,</code> (hence the name “comma separated values”).</p>
+<p>The first line of the file indicates the names of the columns of the table:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Group,ID,List,Target,ACC,RT,logRT,Critical_Filler,Word_Nonword,Relation_type,Branching</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There are 11 columns.</p>
+<p>Then, the rest of the file contains the other rows of the table, with values for each of the 11 columns. Of course, separated by commas.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,banoshment,1,423,6.0474,Filler,Nonword,Phonological,NA</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unawareness,1,603,6.4019,Critical,Word,Unrelated,Left</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unholiness,1,739,6.6053,Critical,Word,Constituent,Left</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,bictimize,1,510,6.2344,Filler,Nonword,Phonological,NA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>shallow.csv</code> file should be placed in the <code>tutorials/</code> folder of the <code>r-mini/</code> folder.</p>
+<p>Now, let’s import the data!</p>
+</section>
+<section id="import-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="import-the-data">Import the data</h3>
+<p>Importing <code>.csv</code> files is very easy. You can use the <code>read_csv()</code> function from the tidyverse.</p>
+<p>The <code>read_csv()</code> function only requires you to specify the file path.</p>
+<p>On my computer, the file path of <code>shallow.csv</code> is <code>/Users/ste/r-mini/tutorials/shallow.csv</code>, but on your computer the file path will be different, of course.</p>
+<p>Also, note that it is not enough to use the <code>read_csv()</code> function. You also must assign the output of the <code>read_csv()</code> function (i.e.&nbsp;the data we are reading) to a variable, using the assignment arrow <code>&lt;-</code>.</p>
+<p>And since the <code>read_csv()</code> is a function from the tidyverse, you first need to attach the tidyverse with <code>library(tidyverse)</code> (remember, you need to attach packages <strong>only once</strong> in a single Rmarkdown file).</p>
+<p>So, putting all together:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/ste/r-mini/tutorials/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Fantastic!</p>
+</section>
+<section id="view-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="view-the-data">View the data</h3>
+<p>Now we can view the data.</p>
+<p>The easiest way is to click on the name of the data listed in the Environment tab, in the top-right panel of RStudio.</p>
+<p>You will see a nicely formatted table, as you would in something like Excel.</p>
+<p>Data tables in R (i.e.&nbsp;spreadsheet-like data) are called <strong>data frames</strong> or <strong>tibbles</strong>.</p>
+<p>The <code>shallow</code> data frame contains 6500 observations and 11 columns (called variables in the Environment tab). The 11 columns are the following</p>
+<ul>
+<li><code>Group</code>: <code>L1</code> vs <code>L2</code> speakers of English.</li>
+<li><code>ID</code>: Subject unique ID.</li>
+<li><code>List</code>: Word list (A to F).</li>
+<li><code>Target</code>: Target word in the lexical decision trial.</li>
+<li><code>ACC</code>: Lexical decision response accuracy (<code>0</code> incorrect response, <code>1</code> correct response).</li>
+<li><code>RT</code>: Reaction times of response in milliseconds.</li>
+<li><code>logRT</code>: Logged reaction times.</li>
+<li><code>Critical_Filler</code>: Whether the trial was a <code>filler</code> or <code>critical</code>.</li>
+<li><code>Word_Nonword</code>: Whether the Target was a real <code>Word</code> or a <code>Nonword</code>.</li>
+<li><code>Relation_type</code>: The type of relation between prime and target word (<code>Unrelated</code>, <code>NonCostituent</code>, <code>Constituent</code>, <code>Phonological</code>).</li>
+<li><code>Brancing</code>: Constituent syntactic branching, <code>Left</code> and <code>Right</code> (shout out to Charlie Puth).</li>
+</ul>
+<p>Great stuff! See how easy it was to import data?</p>
+<p>You can easily import other file types as long as they are tabular (i.e.&nbsp;spreadsheet-like), like Excel files.</p>
+<p>For Excel files (i.e.&nbsp;files with a <code>.xls</code> or <code>.xlsx</code> extension), you need to attach the readxl package with <code>library(readxl)</code> and use the <code>read_excel()</code> function.</p>
+</section>
+</section>
+<section id="r-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="r-scripts">R scripts</h2>
+</section>
+<section id="data-transformation" class="level2">
+<h2 class="anchored" data-anchor-id="data-transformation">Data transformation</h2>
+<p><strong>Data transformation</strong> is a fundamental aspect of data analysis.</p>
+<p>After the data you need to use is imported into R, you will have to filter rows, create new columns, or join data frames, among many other transformation operations.</p>
+<p>In this tutorial we will see how to obtain summary measures.</p>
+<section id="summary-measures" class="level3">
+<h3 class="anchored" data-anchor-id="summary-measures">Summary measures</h3>
+</section>
+<section id="count-occurrences" class="level3">
+<h3 class="anchored" data-anchor-id="count-occurrences">Count occurrences</h3>
+<p>We can use the <code>count()</code> function to count the number of occurrences for each value of a specific column. Let’s count how many trials are correct, i.e.&nbsp;let’s count occurrences in the <code>accuracy</code> column.</p>
+<p>The function <code>count()</code> takes the name of tibble and the name of column you want to count values in.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(accuracy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>How many correct responses are there in the <code>shallow_filt</code> tibble?</p>
+<p>Note that you can add multiple column names, separated by commas, to get counts for the combinations of values of each column.</p>
+<p>Try to get counts of the combination of <code>accuracy</code> and <code>Group</code>. Replace <code>...</code> with the right code.</p>
+<p><strong>HINT</strong>: In <code>count()</code>, include the names of the two columns you want to get counts of, separated by commas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shallow_filt <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Yay!</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

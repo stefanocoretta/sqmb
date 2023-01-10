@@ -101,3 +101,12 @@ From the lecture:
 -   Obtain mean, median, mode, range and standard deviation.
 -   Use R scripts to keep code.
 :::
+
+::: {.callout-tip collapse="true"}
+#### Materials
+
+<!-- - [Lecture slides](slides/w02/). -->
+<!-- - [Workshop tutorial](tutorials/tutorial-w02.qmd). -->
+- Workshop files (right-click and download):
+  - [shallow.csv](data/shallow.csv)
+:::

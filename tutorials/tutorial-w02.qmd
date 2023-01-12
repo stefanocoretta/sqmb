@@ -98,7 +98,7 @@ For this tutorial, we will use the data from this paper: Song et al. 2020. *Seco
 
 ### Download the data file
 
-To download the file with the data right-click on the following link and download the file: [shallow.csv](data/shallow.csv). (Note that tutorial files are also linked in the [Syllabus](syllabus.qmd))
+To download the file with the data right-click on the following link and download the file: [shallow.csv](data/shallow.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd))
 
 Create a folder in the RStudio project of the course called `data` and move the downloaded file into that folder.
 
@@ -412,6 +412,63 @@ Are there differences in accuracy between the L1 and L2 group?
 
 ### Grouping data
 
+Sometimes you might want to get summary measures for one variable depending on different values of another variable.
+
+You can use the `group_by()` function, together with `summarise()` to achieve that. Let's see how it works.
+
+```{r}
+#| label: group
+
+group_by(shallow, Group) %>%
+  summarise(
+    RT_mean = mean(RT),
+    RT_sd = sd(RT)
+  )
+
+```
+
+The `group_by()` function takes at least two arguments:
+
+-   The name of the tibble to group.
+
+-   The name of the columns to group the tibble by, separated by commas.
+
+Here we are grouping `shallow` by `Group`.
+
+If you are baffled by that `%>%`, keep on reading.
+
+### What the pipe?!
+
+Wait, what is that thing, `%>%`?
+
+It's called a **pipe**. Think of a pipe as a teleporter.
+
+In the code above we are chaning two functions together using the pipe opeartor `%>%`. The output of the first function (`group_by()`) is "teleported" into the second function `summarise()`.
+
+The pipe `%>%` teleports the output of the preceding function as the first argument of the following function.
+The output of `group_by` is a (groupped) tibble, and `summarise()` needs a tibble as its first argument.
+
+That's why the code above works!
+
+In fact, you can even use a pipe for the tibble of `group_by()`, like so:
+
+```{r}
+#| label: pipe
+
+shallow %>%
+  group_by(Group) %>%
+    summarise(
+      RT_mean = mean(RT),
+      RT_sd = sd(RT)
+    )
+
+```
+
+You see that the output of the code is the same here as it is above.
+
+Don't worry too much if the concept of the pipe is not clear yet.
+It should become clearer later.
+
 ## Summary
 
 You made it! You completed this week's tutorial.
@@ -426,4 +483,8 @@ Here's a summary of the R functions you learnt.
 `summarise()` allows you to calculate measures of central tendency and dispersion.
 
 `count()` lets you count the number of occurrences of levels in a categorical variable.
+
+`group_by()` allows you to group a tibble according to one or more variables.
+
+The pipe `%>%` can be used to chain multiple functions.
 :::

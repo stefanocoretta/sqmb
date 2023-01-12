@@ -196,6 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#summary-measures" id="toc-summary-measures" class="nav-link" data-scroll-target="#summary-measures">Summary measures</a></li>
   <li><a href="#count-occurrences" id="toc-count-occurrences" class="nav-link" data-scroll-target="#count-occurrences">Count occurrences</a></li>
   <li><a href="#grouping-data" id="toc-grouping-data" class="nav-link" data-scroll-target="#grouping-data">Grouping data</a></li>
+  <li><a href="#what-the-pipe" id="toc-what-the-pipe" class="nav-link" data-scroll-target="#what-the-pipe">What the pipe?!</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
@@ -329,7 +330,7 @@ Absolute path
 <p>For this tutorial, we will use the data from this paper: Song et al.&nbsp;2020. <em>Second language users exhibit shallow morphological processing</em>. DOI: <a href="https://doi.org/10.1017/S0272263120000170">10.1017/S0272263120000170</a>.</p>
 <section id="download-the-data-file" class="level3">
 <h3 class="anchored" data-anchor-id="download-the-data-file">Download the data file</h3>
-<p>To download the file with the data right-click on the following link and download the file: <a href="data/shallow.csv">shallow.csv</a>. (Note that tutorial files are also linked in the <a href="syllabus.qmd">Syllabus</a>)</p>
+<p>To download the file with the data right-click on the following link and download the file: <a href="data/shallow.csv">shallow.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>)</p>
 <p>Create a folder in the RStudio project of the course called <code>data</code> and move the downloaded file into that folder.</p>
 <p>I strongly recommend that you keep the course RStudio project folder as organised as possible. The Open Science Framework has the following recommendations that apply very well to any type of research project.</p>
 <div class="callout-note callout callout-style-default no-icon callout-captioned">
@@ -605,6 +606,57 @@ Hint
 </section>
 <section id="grouping-data" class="level3">
 <h3 class="anchored" data-anchor-id="grouping-data">Grouping data</h3>
+<p>Sometimes you might want to get summary measures for one variable depending on different values of another variable.</p>
+<p>You can use the <code>group_by()</code> function, together with <code>summarise()</code> to achieve that. Let’s see how it works.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(shallow, Group) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Group"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RT_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RT_sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"L1","2":"789.0297","3":"238.5789"},{"1":"L2","2":"930.4581","3":"316.5679"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The <code>group_by()</code> function takes at least two arguments:</p>
+<ul>
+<li><p>The name of the tibble to group.</p></li>
+<li><p>The name of the columns to group the tibble by, separated by commas.</p></li>
+</ul>
+<p>Here we are grouping <code>shallow</code> by <code>Group</code>.</p>
+<p>If you are baffled by that <code>%&gt;%</code>, keep on reading.</p>
+</section>
+<section id="what-the-pipe" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-pipe">What the pipe?!</h3>
+<p>Wait, what is that thing, <code>%&gt;%</code>?</p>
+<p>It’s called a <strong>pipe</strong>. Think of a pipe as a teleporter.</p>
+<p>In the code above we are chaning two functions together using the pipe opeartor <code>%&gt;%</code>. The output of the first function (<code>group_by()</code>) is “teleported” into the second function <code>summarise()</code>.</p>
+<p>The pipe <code>%&gt;%</code> teleports the output of the preceding function as the first argument of the following function. The output of <code>group_by</code> is a (groupped) tibble, and <code>summarise()</code> needs a tibble as its first argument.</p>
+<p>That’s why the code above works!</p>
+<p>In fact, you can even use a pipe for the tibble of <code>group_by()</code>, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Group"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RT_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RT_sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"L1","2":"789.0297","3":"238.5789"},{"1":"L2","2":"930.4581","3":"316.5679"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>You see that the output of the code is the same here as it is above.</p>
+<p>Don’t worry too much if the concept of the pipe is not clear yet. It should become clearer later.</p>
 </section>
 </section>
 <section id="summary" class="level2">
@@ -621,6 +673,8 @@ Hint
 <p><code>read_csv()</code> reads <code>.csv</code> files in R.</p>
 <p><code>summarise()</code> allows you to calculate measures of central tendency and dispersion.</p>
 <p><code>count()</code> lets you count the number of occurrences of levels in a categorical variable.</p>
+<p><code>group_by()</code> allows you to group a tibble according to one or more variables.</p>
+<p>The pipe <code>%&gt;%</code> can be used to chain multiple functions.</p>
 </div>
 </div>
 </div>

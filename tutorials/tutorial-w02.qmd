@@ -177,7 +177,9 @@ And since the `read_csv()` is a function from the tidyverse, you first need to a
 
 So, putting all together, here's the code. **Remember to change the file path to match the path of the file on your computer**.
 
-```{r import-shallow, eval=FALSE}
+```{r}
+#| label: read-example
+#| eval: false
 library(tidyverse)
 
 # CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER
@@ -262,7 +264,9 @@ Now we only need one package, tidyverse, but in most cases you will need more th
 
 Go ahead, write the following code in the top of the `tutorial-w02.R` script.
 
-```{r code, eval=FALSE}
+```{r}
+#| label: read-shallow
+#| message: false
 library(tidyverse)
 
 shallow <- read_csv("./data/shallow.csv")
@@ -310,28 +314,116 @@ In this tutorial we will learn how to obtain summary measures and how to count o
 
 ### Summary measures
 
+During the lecture, we have learnt two types of measures.
+
+::: callout-tip
+#### Summary measures
+
+**Measures of central tendency** (mean, median, mode) indicate the typical or central value of a sample.
+
+**Measures of dispersion** (standard deviation, variance, range) indicate the dispersion of the sample values around the central tendency value.
+:::
+
+When you work with data, you always want to get summary measures for most of the variables in the data.
+
+Data reports usually include summary measures. It is also important to understand which summary measure is appropriate for which type of variable.
+
+We have covered this in the lecture, so we won't go over it again here. Instead, you will learn how to obtain summary measures using the `summarise()` function.
+
+`summarise()` takes at least two arguments:
+
+-   The data frame to summarise.
+
+-   One or more summary function.
+
+For example, let's get the mean the reaction time column `RT`. Easy!
+
+```{r}
+#| label: mean
+
+summarise(shallow, RT_mean = mean(RT))
+
+```
+
+Great! The mean reaction times of the entire sample is 867 ms.
+
+What if we want also the standard deviation? Easy!
+
+```{r}
+#| label: sd
+
+summarise(shallow, RT_mean = mean(RT), RT_sd = sd(RT))
+
+```
+
+Now we know that reaction times are on average 867 ms long and have a standard deviation of about 293 ms (rounded to the nearest integer).
+
+Let's go all the way and also get the minimum and maximum RT values.
+
+```{r}
+#| label: minmax
+
+summarise(
+  shallow,
+  RT_mean = mean(RT), RT_sd = sd(RT),
+  RT_min = min(RT), RT_max = max(RT)
+)
+
+```
+
+Fab! When writing a data report, you could write something like this.
+
+> Reaction times are on average 867 ms long (SD = 293 ms), with values ranging from 0 to 1994 ms.
+
+In some cases, you will want to use the `median()` instead of the `mean()`. Note that R has a `mode()` function, but alas this is not the statistical mode. To get the mode of a categorical variable you can just count the occurrences of the values of that variable and the value that occurs the most is the mode!
+
 ### Count occurrences
 
-We can use the `count()` function to count the number of occurrences for each value of a specific column. Let's count how many trials are correct, i.e. let's count occurrences in the `accuracy` column.
+We can use the `count()` function to count the number of occurrences for each value of a specific column. Let's count how many trials are correct, i.e. let's count occurrences in the `ACC` column.
+
+Accuracy has been coded with `0` for incorrect and `1` for correct. We will see how this is not an ideal, although very common way, of coding binary variables. For now let's keep it as is.
 
 The function `count()` takes the name of tibble and the name of column you want to count values in.
 
 ```{r count-corr, eval=FALSE}
-shallow %>%
-  count(accuracy)
+#| label: count-corr
+
+count(shallow, ACC)
+
 ```
 
-How many correct responses are there in the `shallow_filt` tibble?
+How many *correct* responses are there in the `shallow` tibble?
 
-Note that you can add multiple column names, separated by commas, to get counts for the combinations of values of each column.
+Note that you can add **multiple column names, separated by commas**, to get counts for the combinations of values of each column.
 
-Try to get counts of the combination of `accuracy` and `Group`. Replace `...` with the right code.
-
-**HINT**: In `count()`, include the names of the two columns you want to get counts of, separated by commas.
+Try to get counts of the combination of `ACC` and `Group` (`L1` vs `L2` participants). Replace `...` with the right code.
 
 ```{r count-corr-group, eval=FALSE}
-shallow_filt %>%
-  count(...)
+count(shallow, ...)
 ```
 
-Yay!
+::: {.callout-tip collapse="true"}
+#### Hint
+
+In `count()`, include the names of the two columns you want to get counts of, separated by commas.
+:::
+
+Are there differences in accuracy between the L1 and L2 group?
+
+### Grouping data
+
+## Summary
+
+You made it! You completed this week's tutorial.
+
+Here's a summary of the R functions you learnt.
+
+::: {.callout-note appearance="minimal"}
+`library()` attaches R packages.
+
+`read_csv()` reads `.csv` files in R.
+
+`summarise()` allows you to calculate measures of central tendency and dispersion.
+
+`count()` lets you count the number of occurrences of levels in a categorical variable.
+:::

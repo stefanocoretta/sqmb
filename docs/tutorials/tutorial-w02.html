@@ -122,6 +122,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -192,7 +195,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#summary-measures" id="toc-summary-measures" class="nav-link" data-scroll-target="#summary-measures">Summary measures</a></li>
   <li><a href="#count-occurrences" id="toc-count-occurrences" class="nav-link" data-scroll-target="#count-occurrences">Count occurrences</a></li>
+  <li><a href="#grouping-data" id="toc-grouping-data" class="nav-link" data-scroll-target="#grouping-data">Grouping data</a></li>
   </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -495,27 +500,132 @@ Tip
 <p>In this tutorial we will learn how to obtain summary measures and how to count occurrences using the <code>summarise()</code> and <code>count()</code> functions.</p>
 <section id="summary-measures" class="level3">
 <h3 class="anchored" data-anchor-id="summary-measures">Summary measures</h3>
+<p>During the lecture, we have learnt two types of measures.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Summary measures
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Measures of central tendency</strong> (mean, median, mode) indicate the typical or central value of a sample.</p>
+<p><strong>Measures of dispersion</strong> (standard deviation, variance, range) indicate the dispersion of the sample values around the central tendency value.</p>
+</div>
+</div>
+<p>When you work with data, you always want to get summary measures for most of the variables in the data.</p>
+<p>Data reports usually include summary measures. It is also important to understand which summary measure is appropriate for which type of variable.</p>
+<p>We have covered this in the lecture, so we won’t go over it again here. Instead, you will learn how to obtain summary measures using the <code>summarise()</code> function.</p>
+<p><code>summarise()</code> takes at least two arguments:</p>
+<ul>
+<li><p>The data frame to summarise.</p></li>
+<li><p>One or more summary function.</p></li>
+</ul>
+<p>For example, let’s get the mean the reaction time column <code>RT</code>. Easy!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["RT_mean"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"867.3592"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Great! The mean reaction times of the entire sample is 867 ms.</p>
+<p>What if we want also the standard deviation? Easy!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["RT_mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RT_sd"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"867.3592","2":"292.9682"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Now we know that reaction times are on average 867 ms long and have a standard deviation of about 293 ms (rounded to the nearest integer).</p>
+<p>Let’s go all the way and also get the minimum and maximum RT values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  shallow,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_min =</span> <span class="fu">min</span>(RT), <span class="at">RT_max =</span> <span class="fu">max</span>(RT)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["RT_mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RT_sd"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RT_min"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["RT_max"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"867.3592","2":"292.9682","3":"0","4":"1994"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Fab! When writing a data report, you could write something like this.</p>
+<blockquote class="blockquote">
+<p>Reaction times are on average 867 ms long (SD = 293 ms), with values ranging from 0 to 1994 ms.</p>
+</blockquote>
+<p>In some cases, you will want to use the <code>median()</code> instead of the <code>mean()</code>. Note that R has a <code>mode()</code> function, but alas this is not the statistical mode. To get the mode of a categorical variable you can just count the occurrences of the values of that variable and the value that occurs the most is the mode!</p>
 </section>
 <section id="count-occurrences" class="level3">
 <h3 class="anchored" data-anchor-id="count-occurrences">Count occurrences</h3>
-<p>We can use the <code>count()</code> function to count the number of occurrences for each value of a specific column. Let’s count how many trials are correct, i.e.&nbsp;let’s count occurrences in the <code>accuracy</code> column.</p>
+<p>We can use the <code>count()</code> function to count the number of occurrences for each value of a specific column. Let’s count how many trials are correct, i.e.&nbsp;let’s count occurrences in the <code>ACC</code> column.</p>
+<p>Accuracy has been coded with <code>0</code> for incorrect and <code>1</code> for correct. We will see how this is not an ideal, although very common way, of coding binary variables. For now let’s keep it as is.</p>
 <p>The function <code>count()</code> takes the name of tibble and the name of column you want to count values in.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(accuracy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ACC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>How many correct responses are there in the <code>shallow_filt</code> tibble?</p>
-<p>Note that you can add multiple column names, separated by commas, to get counts for the combinations of values of each column.</p>
-<p>Try to get counts of the combination of <code>accuracy</code> and <code>Group</code>. Replace <code>...</code> with the right code.</p>
-<p><strong>HINT</strong>: In <code>count()</code>, include the names of the two columns you want to get counts of, separated by commas.</p>
+<p>How many <em>correct</em> responses are there in the <code>shallow</code> tibble?</p>
+<p>Note that you can add <strong>multiple column names, separated by commas</strong>, to get counts for the combinations of values of each column.</p>
+<p>Try to get counts of the combination of <code>ACC</code> and <code>Group</code> (<code>L1</code> vs <code>L2</code> participants). Replace <code>...</code> with the right code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>shallow_filt <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Yay!</p>
-
-
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In <code>count()</code>, include the names of the two columns you want to get counts of, separated by commas.</p>
+</div>
+</div>
+</div>
+<p>Are there differences in accuracy between the L1 and L2 group?</p>
 </section>
+<section id="grouping-data" class="level3">
+<h3 class="anchored" data-anchor-id="grouping-data">Grouping data</h3>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>You made it! You completed this week’s tutorial.</p>
+<p>Here’s a summary of the R functions you learnt.</p>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><code>library()</code> attaches R packages.</p>
+<p><code>read_csv()</code> reads <code>.csv</code> files in R.</p>
+<p><code>summarise()</code> allows you to calculate measures of central tendency and dispersion.</p>
+<p><code>count()</code> lets you count the number of occurrences of levels in a categorical variable.</p>
+</div>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

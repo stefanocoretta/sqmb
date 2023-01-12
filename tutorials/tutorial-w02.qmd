@@ -86,7 +86,7 @@ When a file path starts from a top-most folder, we call that path the **absolute
 An **absolute path** is a file path that starts with a top-most folder.
 :::
 
-There is another type of file paths, called **relative** paths. A relative path is a partial file path, relative to a specific folder. You will learn how to use relative paths below, when we will go through importing files in R.
+There is another type of file paths, called **relative** paths. A relative path is a partial file path, relative to a specific folder. You will learn how to use relative paths below, when we will go through importing files in R using R scripts.
 
 Importing files in R is very easy with the tidyverse packages. You just need to know the file type (very often the file extension helps) and the location of the file (i.e. the file path).
 
@@ -132,7 +132,7 @@ I recommend you to start being very organised with your files from now, whether 
 
 `shallow.csv` is a `.csv` file. It looks like this (the following is just an excerpt from the file, specifically the first 5 lines):
 
-```txt
+``` txt
 Group,ID,List,Target,ACC,RT,logRT,Critical_Filler,Word_Nonword,Relation_type,Branching
 L1,L1_01,A,banoshment,1,423,6.0474,Filler,Nonword,Phonological,NA
 L1,L1_01,A,unawareness,1,603,6.4019,Critical,Word,Unrelated,Left
@@ -144,7 +144,7 @@ A `.csv` file is basically a format to save tabular data (i.e. data that looks l
 
 The first line of the file indicates the names of the columns of the table:
 
-```txt
+``` txt
 Group,ID,List,Target,ACC,RT,logRT,Critical_Filler,Word_Nonword,Relation_type,Branching
 ```
 
@@ -152,7 +152,7 @@ There are 11 columns.
 
 Then, the rest of the file contains the other rows of the table, with values for each of the 11 columns. Of course, separated by commas.
 
-```txt
+``` txt
 L1,L1_01,A,banoshment,1,423,6.0474,Filler,Nonword,Phonological,NA
 L1,L1_01,A,unawareness,1,603,6.4019,Critical,Word,Unrelated,Left
 L1,L1_01,A,unholiness,1,739,6.6053,Critical,Word,Constituent,Left
@@ -167,15 +167,15 @@ Now, let's import the data!
 
 Importing `.csv` files is very easy. You can use the `read_csv()` function from the tidyverse.
 
-The `read_csv()` function only requires you to specify the file path.
+The `read_csv()` function only requires you to specify the file path as a string (remember, strings are quoted between `" ")`.
 
 On my computer, the file path of `shallow.csv` is `/Users/ste/r-mini/tutorials/shallow.csv`, but on your computer the file path will be different, of course.
 
 Also, note that it is not enough to use the `read_csv()` function. You also must assign the output of the `read_csv()` function (i.e. the data we are reading) to a variable, using the assignment arrow `<-`.
 
-And since the `read_csv()` is a function from the tidyverse, you first need to attach the tidyverse with `library(tidyverse)` (remember, you need to attach packages **only once** in a single Rmarkdown file).
+And since the `read_csv()` is a function from the tidyverse, you first need to attach the tidyverse with `library(tidyverse)` (remember, you need to attach packages **only once** per session).
 
-So, putting all together:
+So, putting all together, here's the code. **Remember to change the file path to match the path of the file on your computer**.
 
 ```{r import-shallow, eval=FALSE}
 library(tidyverse)
@@ -190,13 +190,13 @@ Fantastic!
 
 Now we can view the data.
 
-The easiest way is to click on the name of the data listed in the Environment tab, in the top-right panel of RStudio.
+The easiest way is to click on the name of the data listed in the `Environment` tab, in the top-right panel of RStudio.
 
 You will see a nicely formatted table, as you would in something like Excel.
 
 Data tables in R (i.e. spreadsheet-like data) are called **data frames** or **tibbles**.
 
-The `shallow` data frame contains 6500 observations and 11 columns (called variables in the Environment tab). The 11 columns are the following
+The `shallow` data frame contains 6500 observations and 11 columns (called variables in the `Environment` tab). The 11 columns are the following:
 
 -   `Group`: `L1` vs `L2` speakers of English.
 -   `ID`: Subject unique ID.
@@ -216,7 +216,89 @@ You can easily import other file types as long as they are tabular (i.e. spreads
 
 For Excel files (i.e. files with a `.xls` or `.xlsx` extension), you need to attach the readxl package with `library(readxl)` and use the `read_excel()` function.
 
+We will use `.csv` files throughout the course and I recommend that you use this format for your work too!
+
 ## R scripts
+
+So far, you've been asked to write code in the `Console` and run it there.
+
+But this is not very efficient. Every time you need to write the code and execute it in the right order and it quickly becomes very difficult to keep track of everything when things start getting more involved.
+
+A solution is to use **R scripts**.
+
+::: callout-tip
+#### R script
+
+An **R script** is a file with the `.R` extension that contains R code.
+:::
+
+For the rest of this tutorial, you will write all code in an R script.
+
+### Create an R script
+
+First, create a folder called `code` in your RStudio project folder. This will be the folder where you will save all of your R scripts.
+
+Now, to create a new R script, look at the top-left corner of RStudio: the first button to the left looks like a white sheet with a green plus sign. This is the `New file` button. Click on that and you will see a few options to create a new file.
+
+Click on `R Script`. A new empty R script will be created and will open in the File Editor window of RStudio.
+
+![](/img/new-script-button.png)
+
+**Note** that creating an R script does not automatically saves it on your computer. To do so, either use the keyboard short-cut `CMD+S`/`CTRL+S` or click on the floppy disk icon in the menu below the file tab.
+
+![](/img/%20save-button.png)
+
+Save the file inside the `code/` folder with the following name: `tutorial-w02.R`.
+
+Remember that all the files of your RStudio project don't live inside RStudio but on your computer. So you can always access them from the Finder or File Explorer!
+
+### Write code
+
+Now, let's start filling up that script!
+
+Generally, you start the script with calls to `library()` to load all the packages you need for the script.
+
+Now we only need one package, tidyverse, but in most cases you will need more than one! The best practice is to attach all of packages first, in the top of your script. Please, get in the habit of doing this from now, so that you can keep your scripts tidy and pretty!
+
+Go ahead, write the following code in the top of the `tutorial-w02.R` script.
+
+```{r code, eval=FALSE}
+library(tidyverse)
+
+shallow <- read_csv("./data/shallow.csv")
+```
+
+Wait, what is that `"./data/shallow.csv"`? That's a **relative path**. We briefly mentioned relative paths above, but let's understand the details now.
+
+### Relative paths
+
+::: callout-tip
+A **relative path** is a file path that is relative to a folder, which is represented by `./`
+:::
+
+When you are using R scripts in RStudio projects, the `./` folder paths are relative to is the project folder! This is true whichever the name of the folder/project and whichever it's location on your computer.
+
+For example, if your project it's called `awesome_proj` and it's in `Downloads/stuff/`, then if you write `./data/results.csv` you really mean `Downloads/stuff/awesome_proj/data/results.csv`!
+
+The code `read_csv("./data/shallow.csv")` above will work because you are using an RStudio project and inside the project folder there is a folder called `data/` and in it there's the `shallow.csv` file.
+
+So from now on I encourage you to use RStudio projects, R scripts and relative paths always!
+
+The benefit of doing so is that, if you move your project or rename it, or if you share the project with somebody, all the paths will just work because they are relative!
+
+### Run the script!
+
+Finally, the time has come to **run the script**.
+
+There are several ways of doing this. The most straightforward is to click on the `Run` button. You can find this in the top-right corner of the script window.
+
+![](/img/run-button.png)
+
+An alternative way is to place the text cursor on the line of code you want to run and then press `CMD+ENTER`/`CTRL+ENTER`. This will run the line of code and move the text cursor to the next line of code.
+
+You can even select multiple lines of code (as you would select text) and press `CMD+ENTER`/`CTRL+ENTER` to run multiple lines of code!
+
+Now that you know how to use R scripts and run code in them, I will assume that you will keep writing new code in your script and run it from there!
 
 ## Data transformation
 
@@ -224,7 +306,7 @@ For Excel files (i.e. files with a `.xls` or `.xlsx` extension), you need to att
 
 After the data you need to use is imported into R, you will have to filter rows, create new columns, or join data frames, among many other transformation operations.
 
-In this tutorial we will see how to obtain summary measures.
+In this tutorial we will learn how to obtain summary measures and how to count occurrences using the `summarise()` and `count()` functions.
 
 ### Summary measures
 

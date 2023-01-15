@@ -145,12 +145,16 @@ layout: true
 
 ---
 
+
+
+---
+
 layout: false
 
 # Operationalisation
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-We can operationalise something as a numeric or a categorical variable.
+We can **operationalise** something as a numeric or a categorical variable.
 ]
 
 --
@@ -169,7 +173,40 @@ Think of ways to operationalise the following:
 
 ---
 
+layout: true
+
 # Summary measures
 
-Measures of central tendency and dispersion.
+---
+
+.center[
+![](../../img/data-summ.png)
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+We can summarise variables using **summary measures**.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+There are two types of summary measures.
+
+**Measures of central tendency**
+
+- Measures of central tendency indicate the **typical or central value** of a sample. 
+
+**Measures of dispersion**
+
+- Measures of dispersion indicate the **spread or dispersion** of the sample values around the central tendency value.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Always report a measure of central tendency together with a measure of dispersion!**
+]
 

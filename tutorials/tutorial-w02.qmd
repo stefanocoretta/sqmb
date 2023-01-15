@@ -445,8 +445,7 @@ It's called a **pipe**. Think of a pipe as a teleporter.
 
 In the code above we are chaning two functions together using the pipe opeartor `%>%`. The output of the first function (`group_by()`) is "teleported" into the second function `summarise()`.
 
-The pipe `%>%` teleports the output of the preceding function as the first argument of the following function.
-The output of `group_by` is a (groupped) tibble, and `summarise()` needs a tibble as its first argument.
+The pipe `%>%` teleports the output of the preceding function as the first argument of the following function. The output of `group_by` is a (groupped) tibble, and `summarise()` needs a tibble as its first argument.
 
 That's why the code above works!
 
@@ -466,8 +465,7 @@ shallow %>%
 
 You see that the output of the code is the same here as it is above.
 
-Don't worry too much if the concept of the pipe is not clear yet.
-It should become clearer later.
+Don't worry too much if the concept of the pipe is not clear yet. It should become clearer later.
 
 ## Summary
 

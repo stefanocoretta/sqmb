@@ -71,9 +71,9 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Main textbooks**
 
-- Statistics for Linguists with R, by Bodo Winter (S4LR) Ch. 1. [via library]
-- R for Data Science (R4DS) [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html). [online book]
-- Statistical (Re)thinking, by Richard McElreath, Ch. 1. [via library]
+- Statistics for Linguists with R, by Bodo Winter (**S4LR**) Ch. 1. [via library]
+- R for Data Science (**R4DS**) [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html). [online book]
+- Statistical (Re)thinking, by Richard McElreath (**SReT**), Ch. 1. [via library]
 
 **Papers**
 

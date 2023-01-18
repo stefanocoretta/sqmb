@@ -53,19 +53,15 @@ The next section will give you a tour of RStudio.
 
 ## RStudio
 
-When you open RStudio, you can see the window is divided into 4 panels:
+When you open RStudio, you can see the window is divided into 3 panels:
 
--   Red (top-left): the file **Editor**.
-
--   Blue (bottom-left): the **Console**.
+-   Blue (left): the **Console**.
 
 -   Green (top-right): the **Environment tab**.
 
 -   Purple (bottom-right): the **Files tab**.
 
-![](../img/rstudio-1.png)
-
-The file **Editor** is where you can edit files, like you would in any text editor.
+![](/img/rstudio-1-2.png)
 
 The **Console** is where R commands can be executed. Think of this as the interface to R.
 
@@ -133,11 +129,13 @@ Before moving on, there are a few important settings that you need to change.
 
 ![](../img/rstudio-6.png)
 
-1.  Open the RStudio preferences (macOS: `RStudio > Preferences...`, Windows: `Tools > Global options...`).
+1.  Open the RStudio preferences (`Tools > Global options...`).
 
 2.  Un-tick `Restore .RData into workspace at startup`.
 
 3.  Select `Never` in `Save workspace to .RData on exit`.
+
+4.  Click `OK` to confirm the changes.
 
 ## R basics
 

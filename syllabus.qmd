@@ -69,11 +69,18 @@ Examples from different branches of linguistics will be used to provide you with
 ::: {.callout-tip collapse="false"}
 #### Suggested readings
 
-- S4LR Ch. 1 and R4DS [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html).
+**Main textbooks**
+
+- Statistics for Linguists with R, by Bodo Winter (**S4LR**) Ch. 1. [via library]
+- R for Data Science (**R4DS**) [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html). [online book]
+- Statistical (Re)thinking, by Richard McElreath (**SReT**), Ch. 1. [via library]
+
+**Papers**
+
 - [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
 - [Jafar 2018](https://doi.org/10.1136/emermed-2017-207158). What is positionality and should it be expressed in quantitative studies?
 
-From the lecture:
+**From the lecture**
 
 - [Silberzahn et al. 2018](https://doi.org/10.1177/2515245917747646
 ). Many Analysts, One Data Set: Making Transparent How Variations in Analytic Choices Affect Results

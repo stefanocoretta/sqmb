@@ -145,6 +145,35 @@ layout: true
 
 ---
 
+.bg-washed-blue.b--purple.ba.bw2.br3.shadow-5.ph4.mt1[
+**Numeric continuous variable**: *between any two values there is an infinite number of values*.
+
+- The variable can take on any positive and negative number, including 0.
+
+- The variable can take on any positive number only.
+
+- **Proportions** and **percentages**: The variable can take on any number between 0 and 1.
+]
+
+--
+
+.bg-washed-blue.b--purple.ba.bw2.br3.shadow-5.ph4.mt1[
+**Numeric discrete variable**: *between any two consecutive values there are no other values*.
+
+- **Counts**: The variable can take only on any positive integer number.
+]
+
+--
+
+.bg-washed-yellow.b--gold.ba.bw2.br3.shadow-5.ph4.mt1[
+**Categorical (discrete) variable**.
+
+- **Binary** or **dichotomous**: The variable can take only one of two values.
+
+- The variable can take any of three of more values.
+
+- **Ordinal**: The variable can take any of three of more values and the values have a natural order.
+]
 
 
 ---
@@ -209,4 +238,57 @@ There are two types of summary measures.
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 **Always report a measure of central tendency together with a measure of dispersion!**
 ]
+
+---
+
+layout: false
+
+# Measures of central tendency
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Mean**
+
+$$\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} = \frac{x_1 + ... + x_n}{n}$$
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Median**
+
+$$\text{if } n \text{ is odd, } x_\frac{n+1}{2}$$
+
+$$\text{if } n \text{ is even,  } \frac{x_\frac{n}{2} + x_\frac{n}{2}}{2}$$
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Mode**
+
+The most common value.
+]
+
+---
+
+# Measures of dispersion
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Range**
+
+$$ max(x) - min(x)$$
+
+The difference between the largest and smallest value.
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Standard deviation**
+
+$$\text{SD} = \sqrt{\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n+1}} = \sqrt{\frac{(x_1 - \bar{x})^2 + ... + (x_n - \bar{x})^2}{n+1}}$$
+]
+
+--
 

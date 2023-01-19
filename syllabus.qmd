@@ -142,6 +142,17 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 4: Linear models, Basics I
 
+::: {.callout-warning collapse="false"}
+#### Formative assessment 1
+
+- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
+
+- We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
+
+- GitHub Classroom invitation links will be circulated via Learn.
+
+:::
+
 ::: {.callout-important collapse="true"}
 #### Learning Objectives
 

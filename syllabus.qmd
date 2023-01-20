@@ -112,10 +112,19 @@ Examples from different branches of linguistics will be used to provide you with
 ::: {.callout-tip collapse="true"}
 #### Materials
 
-<!-- - [Lecture slides](slides/w02/). -->
+- [Lecture slides](slides/w02/).
 - [Workshop tutorial](tutorials/tutorial-w02.qmd).
 - Workshop files (right-click and download):
   - [shallow.csv](data/shallow.csv)
+:::
+
+::: {.callout-tip collapse="false"}
+#### Suggested readings
+
+**Main textbooks**
+
+- **S4LR** Ch. 3. [via library]
+- **R4DS** [Ch. 4](https://r4ds.had.co.nz/workflow-basics.html) and [Ch. 5](https://r4ds.had.co.nz/transform.html). [online book]
 :::
 
 ### Week 3: Data visualisation

@@ -3,7 +3,7 @@ title: "Statistics and Quantitative Methods (S2)"
 subtitle: "Week 2"
 author: "Dr Stefano Coretta"
 institute: "University of Edinburgh"
-date: "2023/01/17"
+date: "2023/01/24"
 output:
   xaringan::moon_reader:
     lib_dir: libs

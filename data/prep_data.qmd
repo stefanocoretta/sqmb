@@ -18,7 +18,7 @@ library(tidyverse)
 languages <- read_csv("https://raw.githubusercontent.com/glottolog/glottolog-cldf/c8eefe82b4c87f3c566a8e5181bacf714661e18e/cldf/languages.csv")
 values <- read_csv("https://raw.githubusercontent.com/glottolog/glottolog-cldf/c8eefe82b4c87f3c566a8e5181bacf714661e18e/cldf/values.csv")
 
-glot_aes <- values %>%
+glot_status <- values %>%
   filter(Parameter_ID == "aes") %>%
   mutate(
     status = str_remove(Code_ID, "aes-"),
@@ -26,10 +26,10 @@ glot_aes <- values %>%
   ) %>%
   left_join(y = languages, by = c("Language_ID" = "ID"))
 
-write_csv(glot_aes, "./data/glot_aes.csv")
+write_csv(glot_status, "./data/glot_status.csv")
 
-glot_med <- values %>%
-  filter(Parameter_ID == "med") %>%
-  mutate(MED = str_remove(Code_ID, "med-")) %>%
-  left_join(y = languages, by = c("Language_ID" = "ID"))
+# glot_med <- values %>%
+#   filter(Parameter_ID == "med") %>%
+#   mutate(MED = str_remove(Code_ID, "med-")) %>%
+#   left_join(y = languages, by = c("Language_ID" = "ID"))
 ```

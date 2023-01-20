@@ -33,3 +33,80 @@ saveRDS(glot_status, "./data/glot_status.rds")
 #   mutate(MED = str_remove(Code_ID, "med-")) %>%
 #   left_join(y = languages, by = c("Language_ID" = "ID"))
 ```
+
+## Vowel formants
+
+```{r}
+#| label: formants
+
+f_ita_pol <- read_csv("https://raw.githubusercontent.com/stefanocoretta/coretta2018itapol/master/data-raw/aggregated/formants-series.csv") %>%
+  select(everything(), gender = sex)
+
+write_csv(f_ita_pol, "data/formants.csv")
+
+```
+
+## Infant gestures
+
+Data from *A Cross-Cultural Analysis of Early Prelinguistic Gesture Development and Its Relationship to Language Development*.
+
+```{r}
+#| label: gestures
+
+gestures <- read_csv("https://raw.githubusercontent.com/stefanocoretta/infant-gestures/master/data/gestures.csv") %>%
+  mutate(id = as.numeric(as.factor(paste(dyad, task, gesture))))
+
+write_csv(gestures, "data/gestures.csv")
+```
+
+## Politeness
+
+```{r}
+#| label: polite
+
+polite <- read_csv("https://raw.githubusercontent.com/learnB4SS/learnB4SS/main/data-raw/polite.csv") %>%
+  arrange(index) %>%
+  select(-index, -years_in_ger)
+
+write_csv(polite, "data/polite.csv")
+```
+
+## MALD 1.1
+
+## Massive Auditory Lexical Decision 1.1
+
+```{r}
+#| label: mald
+
+mald_file <- "./data/MALD1_1_AllData.Rda"
+if (file.exists(mald_file)) {
+  cli::cli_alert_success("MALD file found!")
+  load(mald_file)
+} else {
+  cli::cli_alert_warning("MALD file not found! Downloading...")
+  download.file(
+    "https://era.library.ualberta.ca/items/3344343b-2b4a-4b8c-af8e-8bd829c76472/view/eada02c5-6259-4225-8204-13ce86e1cd2d/MALD1_1_AllData.Rda",
+   mald_file 
+  )
+  load(mald_file)
+}
+
+set.seed(943874)
+
+subj <- sample(unique(dat$Subject), 50)
+
+mald_1_1 <- dat %>%
+  filter(Subject %in% subj, RT > 0) %>%
+  select(Subject, Item, IsWord, PhonLev, RT, ACC) %>%
+  mutate(
+    IsWord = factor(IsWord, levels = c("TRUE", "FALSE")),
+    ACC = ifelse(ACC, "correct", "incorrect"),
+    ACC = factor(ACC, levels = c("incorrect", "correct")),
+    RT_log = log(RT)
+  ) %>%
+  group_by(Subject) %>%
+  slice_sample(n = 100) %>%
+  ungroup()
+
+saveRDS(mald_1_1, "data/mald_1_1.rds")
+```

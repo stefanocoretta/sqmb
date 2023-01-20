@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
   fig.width=7, fig.height=5, fig.retina=3,
   out.width = "60%", fig.align = "center",
   cache = FALSE,
-  echo = TRUE,
+  echo = FALSE,
   message = FALSE, 
   warning = FALSE,
   hiline = TRUE
@@ -44,6 +44,10 @@ options(show.signif.stars = FALSE)
 
 ```{r read-data}
 glot_status <- readRDS("data/glot_status.rds")
+formants <- read_csv("data/formants.csv")
+gestures <- read_csv("data/gestures.csv")
+polite <- read_csv("data/polite.csv")
+mald_1_1 <- readRDS("data/mald_1_1.rds")
 ```
 
 
@@ -244,8 +248,8 @@ layout: true
 
 ---
 
-```{r ip-line}
-f_ita_pol %>%
+```{r forms-line}
+formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -255,8 +259,8 @@ f_ita_pol %>%
 
 ---
 
-```{r ip-point}
-f_ita_pol %>%
+```{r forms-point}
+formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -266,8 +270,8 @@ f_ita_pol %>%
 
 ---
 
-```{r ip-line-point}
-f_ita_pol %>%
+```{r forms-line-point}
+formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -645,6 +649,7 @@ Can you see what difference it makes to use box plots only?
 
 # Summary
 
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 - Carefully think about which type of variable you are working with: **continuous or discrete**?
 
 - The type of variable allows you to select appropriate types of plots. Your **go-to plots** are:
@@ -656,3 +661,4 @@ Can you see what difference it makes to use box plots only?
   - Violin plots.
 
 - Be mindful of the **DOs and DON'Ts** of plotting.
+]

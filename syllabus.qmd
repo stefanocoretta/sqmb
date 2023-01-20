@@ -148,6 +148,14 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
+::: {.callout-tip collapse="true"}
+#### Materials
+
+- [Lecture slides](slides/w03/).
+<!-- - [Workshop tutorial](tutorials/tutorial-w02.qmd). -->
+<!-- - Workshop files (right-click and download): -->
+<!--   - [shallow.csv](data/shallow.csv) -->
+:::
 
 ### Week 4: Linear models, Basics I
 

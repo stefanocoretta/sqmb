@@ -26,7 +26,7 @@ glot_status <- values %>%
   ) %>%
   left_join(y = languages, by = c("Language_ID" = "ID"))
 
-write_csv(glot_status, "./data/glot_status.csv")
+saveRDS(glot_status, "./data/glot_status.rds")
 
 # glot_med <- values %>%
 #   filter(Parameter_ID == "med") %>%

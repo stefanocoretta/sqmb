@@ -1,0 +1,35 @@
+---
+title: "Prepare data"
+author: "Stefano Coretta"
+editor: visual
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+```
+
+## Glottolog data
+
+```{r}
+#| label: glottolog
+
+languages <- read_csv("https://raw.githubusercontent.com/glottolog/glottolog-cldf/c8eefe82b4c87f3c566a8e5181bacf714661e18e/cldf/languages.csv")
+values <- read_csv("https://raw.githubusercontent.com/glottolog/glottolog-cldf/c8eefe82b4c87f3c566a8e5181bacf714661e18e/cldf/values.csv")
+
+glot_status <- values %>%
+  filter(Parameter_ID == "aes") %>%
+  mutate(
+    status = str_remove(Code_ID, "aes-"),
+    status = factor(status, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
+  ) %>%
+  left_join(y = languages, by = c("Language_ID" = "ID"))
+
+saveRDS(glot_status, "./data/glot_status.rds")
+
+# glot_med <- values %>%
+#   filter(Parameter_ID == "med") %>%
+#   mutate(MED = str_remove(Code_ID, "med-")) %>%
+#   left_join(y = languages, by = c("Language_ID" = "ID"))
+```

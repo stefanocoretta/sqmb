@@ -1,4 +1,5 @@
 *.DS_Store
+data/MALD1_1_AllData.Rda
 
 .Rproj.user
 .Rhistory

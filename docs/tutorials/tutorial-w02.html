@@ -301,7 +301,7 @@ File path
 <ul>
 <li><p>On <strong>macOS</strong>: the user folder is in <code>/Users/</code>.</p>
 <ul>
-<li>You will notice that the is a forward slash also before the name of the folder. That is because the <code>/Users/</code> folder is a top folder, i.e.&nbsp;there are no folders further up in the hierarchy of folders.</li>
+<li>You will notice that there is a forward slash also before the name of the folder. That is because the <code>/Users/</code> folder is a top folder, i.e.&nbsp;there are no folders further up in the hierarchy of folders.</li>
 <li>This means that the full path for the <code>big_data.csv</code> file on a computer running macOS would be: <code>/Users/ste/Downloads/big_data.csv</code>.</li>
 </ul></li>
 <li><p>On <strong>Windows</strong>: the user folder is in <code>C:/Users/</code></p>
@@ -379,7 +379,7 @@ Organising files
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unawareness,1,603,6.4019,Critical,Word,Unrelated,Left</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,unholiness,1,739,6.6053,Critical,Word,Constituent,Left</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,bictimize,1,510,6.2344,Filler,Nonword,Phonological,NA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The <code>shallow.csv</code> file should be placed in the <code>tutorials/</code> folder of the <code>r-mini/</code> folder.</p>
+<p>The <code>shallow.csv</code> file should be placed in the <code>data/</code> folder of the course RStudio project.</p>
 <p>Now, let’s import the data!</p>
 <p>Importing <code>.csv</code> files is very easy. You can use the <code>read_csv()</code> function from a collection of R packages known as the <a href="https://www.tidyverse.org">tidyverse</a>.</p>
 <p>But what are R packages? Find out in the following section.</p>
@@ -428,11 +428,18 @@ R library and packages
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fortune</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Andrew Thomas: ...and if something goes wrong here it is probably not WinBUGS
-since that has been running for more than 10 years...
-Peter Green (from the back): ... and it still hasn't converged!
-   -- Andrew Thomas and Peter Green (during the talk about 'BRugs')
-      gR 2003, Aalborg (September 2003)</code></pre>
+Before we get too carried away with this thread could you all please consider
+how the sd function calculates its result? [...] I'll tell you, it takes the
+square root of the variance. How is the variance calculated for a numeric
+vector? First you calculate the mean *using floating point arithmetic* in which
+it is not necessarily true that N * k / N == k [...] Most of those tests [for
+numerical accuracy] end in a check using the all.equal function which checks if
+the relative difference is less than a threshold. That's about the best that
+you can do with floating point arithmetic.
+Here endeth the sermon.
+   -- Douglas Bates (after a discussion why sd(rep(0.001, 15)) is not
+      necessarily exactly 0)
+      R-help (March 2004)</code></pre>
 </div>
 </div>
 <p>To learn what a function does, you can check its documentation by typing the function name preceded by a <code>?</code> question mark. Type <code>?function</code> in the Console and hit ENTER to see the function documentation.</p>
@@ -453,7 +460,7 @@ Peter Green (from the back): ... and it still hasn't converged!
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/ste/r-mini/tutorials/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/ste/sqmb/data/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Fantastic!</p>
 </section>
@@ -475,7 +482,7 @@ Peter Green (from the back): ... and it still hasn't converged!
 <li><code>Critical_Filler</code>: Whether the trial was a <code>filler</code> or <code>critical</code>.</li>
 <li><code>Word_Nonword</code>: Whether the Target was a real <code>Word</code> or a <code>Nonword</code>.</li>
 <li><code>Relation_type</code>: The type of relation between prime and target word (<code>Unrelated</code>, <code>NonCostituent</code>, <code>Constituent</code>, <code>Phonological</code>).</li>
-<li><code>Brancing</code>: Constituent syntactic branching, <code>Left</code> and <code>Right</code> (shout out to Charlie Puth).</li>
+<li><code>Branching</code>: Constituent syntactic branching, <code>Left</code> and <code>Right</code> (shout out to Charlie Puth).</li>
 </ul>
 <p>Great stuff! See how easy it was to import data?</p>
 <p>You can easily import other file types as long as they are tabular (i.e.&nbsp;spreadsheet-like), like Excel files.</p>
@@ -576,7 +583,7 @@ Summary measures
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>Measures of central tendency</strong> (mean, median, mode) indicate the typical or central value of a sample.</p>
-<p><strong>Measures of dispersion</strong> (standard deviation, variance, range) indicate the dispersion of the sample values around the central tendency value.</p>
+<p><strong>Measures of dispersion</strong> (standard deviation, range) indicate the dispersion of the sample values around the central tendency value.</p>
 </div>
 </div>
 <p>When you work with data, you always want to get summary measures for most of the variables in the data.</p>
@@ -719,6 +726,24 @@ Hint
 </div>
 </div>
 <p>You see that the output of the code is the same here as it is above.</p>
+<p>For comparison, this is what the code would look like without the pipe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>grouped_shallow <span class="ot">&lt;-</span> <span class="fu">group_by</span>(shallow, Group)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  grouped_shallow,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Group"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RT_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RT_sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"L1","2":"789.0297","3":"238.5789"},{"1":"L2","2":"930.4581","3":"316.5679"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
 <p>Don’t worry too much if the concept of the pipe is not clear yet. It should become clearer later.</p>
 </section>
 </section>

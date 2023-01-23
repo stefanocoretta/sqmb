@@ -70,7 +70,7 @@ User folders are located in different places depending on the operating system y
 
 -   On **macOS**: the user folder is in `/Users/`.
 
-    -   You will notice that the is a forward slash also before the name of the folder. That is because the `/Users/` folder is a top folder, i.e. there are no folders further up in the hierarchy of folders.
+    -   You will notice that there is a forward slash also before the name of the folder. That is because the `/Users/` folder is a top folder, i.e. there are no folders further up in the hierarchy of folders.
     -   This means that the full path for the `big_data.csv` file on a computer running macOS would be: `/Users/ste/Downloads/big_data.csv`.
 
 -   On **Windows**: the user folder is in `C:/Users/`
@@ -159,7 +159,7 @@ L1,L1_01,A,unholiness,1,739,6.6053,Critical,Word,Constituent,Left
 L1,L1_01,A,bictimize,1,510,6.2344,Filler,Nonword,Phonological,NA
 ```
 
-The `shallow.csv` file should be placed in the `tutorials/` folder of the `r-mini/` folder.
+The `shallow.csv` file should be placed in the `data/` folder of the course RStudio project.
 
 Now, let's import the data!
 
@@ -249,7 +249,7 @@ Run the code in the Console to read the data.
 library(tidyverse)
 
 # CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER
-shallow <- read_csv("/Users/ste/r-mini/tutorials/shallow.csv")
+shallow <- read_csv("/Users/ste/sqmb/data/shallow.csv")
 ```
 
 Fantastic!
@@ -276,7 +276,7 @@ The `shallow` data frame contains 6500 observations and 11 columns (called varia
 -   `Critical_Filler`: Whether the trial was a `filler` or `critical`.
 -   `Word_Nonword`: Whether the Target was a real `Word` or a `Nonword`.
 -   `Relation_type`: The type of relation between prime and target word (`Unrelated`, `NonCostituent`, `Constituent`, `Phonological`).
--   `Brancing`: Constituent syntactic branching, `Left` and `Right` (shout out to Charlie Puth).
+-   `Branching`: Constituent syntactic branching, `Left` and `Right` (shout out to Charlie Puth).
 
 Great stuff! See how easy it was to import data?
 
@@ -387,7 +387,7 @@ During the lecture, we have learnt two types of measures.
 
 **Measures of central tendency** (mean, median, mode) indicate the typical or central value of a sample.
 
-**Measures of dispersion** (standard deviation, variance, range) indicate the dispersion of the sample values around the central tendency value.
+**Measures of dispersion** (standard deviation, range) indicate the dispersion of the sample values around the central tendency value.
 :::
 
 When you work with data, you always want to get summary measures for most of the variables in the data.
@@ -530,6 +530,21 @@ shallow %>%
 ```
 
 You see that the output of the code is the same here as it is above.
+
+For comparison, this is what the code would look like without the pipe.
+
+```{r}
+#| label: no-pipe
+
+grouped_shallow <- group_by(shallow, Group)
+
+summarise(
+  grouped_shallow,
+  RT_mean = mean(RT),
+  RT_sd = sd(RT)
+)
+
+```
 
 Don't worry too much if the concept of the pipe is not clear yet. It should become clearer later.
 

@@ -172,15 +172,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#reading-files" id="toc-reading-files" class="nav-link active" data-scroll-target="#reading-files">Reading files</a>
+  <li><a href="#some-basics" id="toc-some-basics" class="nav-link active" data-scroll-target="#some-basics">Some basics</a>
   <ul class="collapse">
   <li><a href="#files-folder-and-file-extensions" id="toc-files-folder-and-file-extensions" class="nav-link" data-scroll-target="#files-folder-and-file-extensions">Files, folder and file extensions</a></li>
   <li><a href="#file-paths" id="toc-file-paths" class="nav-link" data-scroll-target="#file-paths">File paths</a></li>
   </ul></li>
-  <li><a href="#import-data-from-files" id="toc-import-data-from-files" class="nav-link" data-scroll-target="#import-data-from-files">Import data from files</a>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The data</a>
   <ul class="collapse">
   <li><a href="#download-the-data-file" id="toc-download-the-data-file" class="nav-link" data-scroll-target="#download-the-data-file">Download the data file</a></li>
   <li><a href="#about-shallow.csv" id="toc-about-shallow.csv" class="nav-link" data-scroll-target="#about-shallow.csv">About <code>shallow.csv</code></a></li>
+  </ul></li>
+  <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
+  <li><a href="#import-and-view-data" id="toc-import-and-view-data" class="nav-link" data-scroll-target="#import-and-view-data">Import and view data</a>
+  <ul class="collapse">
   <li><a href="#import-the-data" id="toc-import-the-data" class="nav-link" data-scroll-target="#import-the-data">Import the data</a></li>
   <li><a href="#view-the-data" id="toc-view-the-data" class="nav-link" data-scroll-target="#view-the-data">View the data</a></li>
   </ul></li>
@@ -222,8 +226,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="reading-files" class="level2">
-<h2 class="anchored" data-anchor-id="reading-files">Reading files</h2>
+<section id="some-basics" class="level2">
+<h2 class="anchored" data-anchor-id="some-basics">Some basics</h2>
 <p>In the tutorial last week you’ve been playing around with R and variables.</p>
 <p><strong>But what if you want to import data in R?</strong></p>
 <p>Easy! You can use the <code>read_csv()</code> function to read a <code>.csv</code> (comma separated value) file. But before we dive in, let’s first talk about some computer basics. (You can skip this section if it’s too basic for you)</p>
@@ -320,13 +324,13 @@ Absolute path
 <p>An <strong>absolute path</strong> is a file path that starts with a top-most folder.</p>
 </div>
 </div>
-<p>There is another type of file paths, called <strong>relative</strong> paths. A relative path is a partial file path, relative to a specific folder. You will learn how to use relative paths below, when we will go through importing files in R using R scripts.</p>
+<p>There is another type of file paths, called <strong>relative</strong> paths. A relative path is a partial file path, relative to a specific folder. You will learn how to use relative paths below, when we will go through importing files in R using R scripts below.</p>
 <p>Importing files in R is very easy with the tidyverse packages. You just need to know the file type (very often the file extension helps) and the location of the file (i.e.&nbsp;the file path).</p>
-<p>The next section shows you how to import data in R!</p>
+<p>The next sections will teach you how to import data in R!</p>
 </section>
 </section>
-<section id="import-data-from-files" class="level2">
-<h2 class="anchored" data-anchor-id="import-data-from-files">Import data from files</h2>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The data</h2>
 <p>For this tutorial, we will use the data from this paper: Song et al.&nbsp;2020. <em>Second language users exhibit shallow morphological processing</em>. DOI: <a href="https://doi.org/10.1017/S0272263120000170">10.1017/S0272263120000170</a>.</p>
 <section id="download-the-data-file" class="level3">
 <h3 class="anchored" data-anchor-id="download-the-data-file">Download the data file</h3>
@@ -377,27 +381,86 @@ Organising files
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>L1,L1_01,A,bictimize,1,510,6.2344,Filler,Nonword,Phonological,NA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>shallow.csv</code> file should be placed in the <code>tutorials/</code> folder of the <code>r-mini/</code> folder.</p>
 <p>Now, let’s import the data!</p>
+<p>Importing <code>.csv</code> files is very easy. You can use the <code>read_csv()</code> function from a collection of R packages known as the <a href="https://www.tidyverse.org">tidyverse</a>.</p>
+<p>But what are R packages? Find out in the following section.</p>
 </section>
+</section>
+<section id="r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="r-packages">R packages</h2>
+<p>When you install R, a <strong>library</strong> of packages is also installed. <strong>Packages</strong> are like plug-ins, they provide R with extra functionalities. The default <strong>R library</strong> contains all of the base R packages.</p>
+<p>You can check all of the currently installed packages in the bottom-right panel of RStudio, in the <strong>Packages</strong> tab.</p>
+<p>If you want to find the path of the R library on your computer, type <code>.libPaths()</code> in the Console. The function returns (i.e.&nbsp;outputs) the path or paths where your R library is.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+R library and packages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>The <strong>R library</strong> contains the base R packages and all user-installed packages.</p></li>
+<li><p><strong>R packages</strong> provide R with extra functionalities and are installed into the R library.</p></li>
+</ul>
+</div>
+</div>
+<section id="install-packages" class="level4">
+<h4 class="anchored" data-anchor-id="install-packages">Install packages</h4>
+<p>You can install extra packages in the R library in two ways:</p>
+<ol type="1">
+<li>You can use the <code>install.packages()</code> function.</li>
+<li>Or you can go the <code>Packages</code> tab in the bottom-right panel of RStudio and click on <code>Install</code>.</li>
+</ol>
+<p>Go ahead and try to install a package using the second method. Install the <code>fortunes</code> package. After installing you will see that the package fortunes is listed in the Packages tab.</p>
+<p><strong>You need to install a package ONLY ONCE!</strong> Once installed, it’s there for ever, saved in the R library. You will be able to use all of your installed packages in any RStudio project you create.</p>
+</section>
+<section id="attach-packages" class="level4">
+<h4 class="anchored" data-anchor-id="attach-packages">Attach packages</h4>
+<p>Now, to use a package you need to <strong>attach</strong> the package with the <code>library()</code> function. <strong>You need to attach the package you want to use once per R session.</strong></p>
+<p>Let’s attach the fortunes package. Run the following code in the Console.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fortunes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now you can use the functions provided by the attached package. Try it out!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fortune</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Andrew Thomas: ...and if something goes wrong here it is probably not WinBUGS
+since that has been running for more than 10 years...
+Peter Green (from the back): ... and it still hasn't converged!
+   -- Andrew Thomas and Peter Green (during the talk about 'BRugs')
+      gR 2003, Aalborg (September 2003)</code></pre>
+</div>
+</div>
+<p>To learn what a function does, you can check its documentation by typing the function name preceded by a <code>?</code> question mark. Type <code>?function</code> in the Console and hit ENTER to see the function documentation.</p>
+</section>
+</section>
+<section id="import-and-view-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-and-view-data">Import and view data</h2>
 <section id="import-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="import-the-data">Import the data</h3>
-<p>Importing <code>.csv</code> files is very easy. You can use the <code>read_csv()</code> function from the tidyverse.</p>
-<p>The <code>read_csv()</code> function only requires you to specify the file path as a string (remember, strings are quoted between <code>" ")</code>.</p>
-<p>On my computer, the file path of <code>shallow.csv</code> is <code>/Users/ste/r-mini/tutorials/shallow.csv</code>, but on your computer the file path will be different, of course.</p>
+<p>To import data in R we will use the <code>read_csv()</code> function from the <a href="https://readr.tidyverse.org">readr</a> package, one of the tidyverse packages.</p>
+<p>The <code>read_csv()</code> function only requires you to specify the file path as a string (remember, strings are quoted between <code>" "</code>.</p>
+<p>On my computer, the file path of <code>shallow.csv</code> is <code>/Users/ste/sqmb/data/shallow.csv</code>, but on your computer the file path will be different, of course.</p>
 <p>Also, note that it is not enough to use the <code>read_csv()</code> function. You also must assign the output of the <code>read_csv()</code> function (i.e.&nbsp;the data we are reading) to a variable, using the assignment arrow <code>&lt;-</code>.</p>
-<p>And since the <code>read_csv()</code> is a function from the tidyverse, you first need to attach the tidyverse with <code>library(tidyverse)</code> (remember, you need to attach packages <strong>only once</strong> per session).</p>
-<p>So, putting all together, here’s the code. <strong>Remember to change the file path to match the path of the file on your computer</strong>.</p>
+<p>And since the <code>read_csv()</code> is a function from the tidyverse, you first need to attach the tidyverse packages with <code>library(tidyverse)</code> (remember, you need to attach packages <strong>only once</strong> per session).</p>
+<p>This will attach a set of the tidyverse packages that are commonly used in most data analysis applications, including readr. Of course, you can also attach the individual packages directly: <code>library(readr)</code>. If you use <code>library(tidyverse)</code> there is no need to attach tidyverse individual packages.</p>
+<p>So, putting all together, here’s the code. <strong>Remember to change the file path to match the path of the file on your computer</strong>. Run the code in the Console to read the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/ste/r-mini/tutorials/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CHANGE THE FILE PATH TO MATCH THE PATH ON YOUR COMPUTER</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"/Users/ste/r-mini/tutorials/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Fantastic!</p>
 </section>
 <section id="view-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="view-the-data">View the data</h3>
 <p>Now we can view the data.</p>
-<p>The easiest way is to click on the name of the data listed in the <code>Environment</code> tab, in the top-right panel of RStudio.</p>
+<p>The easiest way is to click on the name of the data listed in the <strong>Environment</strong> tab, in the top-right panel of RStudio.</p>
 <p>You will see a nicely formatted table, as you would in something like Excel.</p>
 <p>Data tables in R (i.e.&nbsp;spreadsheet-like data) are called <strong>data frames</strong> or <strong>tibbles</strong>.</p>
 <p>The <code>shallow</code> data frame contains 6500 observations and 11 columns (called variables in the <code>Environment</code> tab). The 11 columns are the following:</p>
@@ -416,13 +479,13 @@ Organising files
 </ul>
 <p>Great stuff! See how easy it was to import data?</p>
 <p>You can easily import other file types as long as they are tabular (i.e.&nbsp;spreadsheet-like), like Excel files.</p>
-<p>For Excel files (i.e.&nbsp;files with a <code>.xls</code> or <code>.xlsx</code> extension), you need to attach the readxl package with <code>library(readxl)</code> and use the <code>read_excel()</code> function.</p>
+<p>For Excel files (i.e.&nbsp;files with a <code>.xls</code> or <code>.xlsx</code> extension), you need to attach the <a href="https://readxl.tidyverse.org">readxl</a> package with <code>library(readxl)</code> and use the <code>read_excel()</code> function.</p>
 <p>We will use <code>.csv</code> files throughout the course and I recommend that you use this format for your work too!</p>
 </section>
 </section>
 <section id="r-scripts" class="level2">
 <h2 class="anchored" data-anchor-id="r-scripts">R scripts</h2>
-<p>So far, you’ve been asked to write code in the <code>Console</code> and run it there.</p>
+<p>So far, you’ve been asked to write code in the <strong>Console</strong> and run it there.</p>
 <p>But this is not very efficient. Every time you need to write the code and execute it in the right order and it quickly becomes very difficult to keep track of everything when things start getting more involved.</p>
 <p>A solution is to use <strong>R scripts</strong>.</p>
 <div class="callout-tip callout callout-style-default no-icon callout-captioned">
@@ -457,9 +520,9 @@ R script
 <p>Now we only need one package, tidyverse, but in most cases you will need more than one! The best practice is to attach all of packages first, in the top of your script. Please, get in the habit of doing this from now, so that you can keep your scripts tidy and pretty!</p>
 <p>Go ahead, write the following code in the top of the <code>tutorial-w02.R</code> script.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/shallow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Wait, what is that <code>"./data/shallow.csv"</code>? That’s a <strong>relative path</strong>. We briefly mentioned relative paths above, but let’s understand the details now.</p>
 </section>
@@ -518,7 +581,7 @@ Summary measures
 </div>
 <p>When you work with data, you always want to get summary measures for most of the variables in the data.</p>
 <p>Data reports usually include summary measures. It is also important to understand which summary measure is appropriate for which type of variable.</p>
-<p>We have covered this in the lecture, so we won’t go over it again here. Instead, you will learn how to obtain summary measures using the <code>summarise()</code> function.</p>
+<p>We have covered this in the lecture, so we won’t go over it again here. Instead, you will learn how to obtain summary measures using the <code>summarise()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> tidyverse package.</p>
 <p><code>summarise()</code> takes at least two arguments:</p>
 <ul>
 <li><p>The data frame to summarise.</p></li>
@@ -526,7 +589,7 @@ Summary measures
 </ul>
 <p>For example, let’s get the mean the reaction time column <code>RT</code>. Easy!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -539,7 +602,7 @@ Summary measures
 <p>Great! The mean reaction times of the entire sample is 867 ms.</p>
 <p>What if we want also the standard deviation? Easy!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -552,11 +615,11 @@ Summary measures
 <p>Now we know that reaction times are on average 867 ms long and have a standard deviation of about 293 ms (rounded to the nearest integer).</p>
 <p>Let’s go all the way and also get the minimum and maximum RT values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  shallow,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_min =</span> <span class="fu">min</span>(RT), <span class="at">RT_max =</span> <span class="fu">max</span>(RT)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  shallow,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_min =</span> <span class="fu">min</span>(RT), <span class="at">RT_max =</span> <span class="fu">max</span>(RT)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -574,20 +637,20 @@ Summary measures
 </section>
 <section id="count-occurrences" class="level3">
 <h3 class="anchored" data-anchor-id="count-occurrences">Count occurrences</h3>
-<p>We can use the <code>count()</code> function to count the number of occurrences for each value of a specific column. Let’s count how many trials are correct, i.e.&nbsp;let’s count occurrences in the <code>ACC</code> column.</p>
+<p>We can use the <code>count()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> tidyverse package to count the number of occurrences for each value of a specific column. Let’s count how many trials are correct, i.e.&nbsp;let’s count occurrences in the <code>ACC</code> column.</p>
 <p>Accuracy has been coded with <code>0</code> for incorrect and <code>1</code> for correct. We will see how this is not an ideal, although very common way, of coding binary variables. For now let’s keep it as is.</p>
 <p>The function <code>count()</code> takes the name of tibble and the name of column you want to count values in.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ACC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ACC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>How many <em>correct</em> responses are there in the <code>shallow</code> tibble?</p>
 <p>Note that you can add <strong>multiple column names, separated by commas</strong>, to get counts for the combinations of values of each column.</p>
 <p>Try to get counts of the combination of <code>ACC</code> and <code>Group</code> (<code>L1</code> vs <code>L2</code> participants). Replace <code>...</code> with the right code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout-tip callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -596,7 +659,7 @@ Hint
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>In <code>count()</code>, include the names of the two columns you want to get counts of, separated by commas.</p>
 </div>
@@ -607,13 +670,13 @@ Hint
 <section id="grouping-data" class="level3">
 <h3 class="anchored" data-anchor-id="grouping-data">Grouping data</h3>
 <p>Sometimes you might want to get summary measures for one variable depending on different values of another variable.</p>
-<p>You can use the <code>group_by()</code> function, together with <code>summarise()</code> to achieve that. Let’s see how it works.</p>
+<p>You can use the <code>group_by()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> tidyverse package, together with <code>summarise()</code> to achieve that. Let’s see how it works.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(shallow, Group) <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(shallow, Group) <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -640,12 +703,12 @@ Hint
 <p>That’s why the code above works!</p>
 <p>In fact, you can even use a pipe for the tibble of <code>group_by()</code>, like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">

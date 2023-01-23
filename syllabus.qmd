@@ -25,7 +25,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 1: Quantitative methods and uncertainty
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -43,7 +43,7 @@ Examples from different branches of linguistics will be used to provide you with
 -   Use RStudio.
 :::
 
-::: {.callout-note collapse="false"}
+::: {.callout-note collapse="true"}
 #### Homework
 
 **Intake form**
@@ -59,14 +59,14 @@ Examples from different branches of linguistics will be used to provide you with
 
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 - [Lecture slides](slides/w01/).
 - [Workshop tutorial](tutorials/tutorial-w01.qmd).
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Suggested readings
 
 **Main textbooks**
@@ -91,7 +91,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 2: Data wrangling
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -129,7 +129,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 3: Data visualisation
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -148,7 +148,7 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 - [Lecture slides](slides/w03/).

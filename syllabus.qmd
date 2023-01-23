@@ -153,8 +153,8 @@ Examples from different branches of linguistics will be used to provide you with
 
 - [Lecture slides](slides/w03/).
 <!-- - [Workshop tutorial](tutorials/tutorial-w02.qmd). -->
-<!-- - Workshop files (right-click and download): -->
-<!--   - [shallow.csv](data/shallow.csv) -->
+- Workshop files (right-click and download):
+  - [polite.csv](data/polite.csv)
 :::
 
 ### Week 4: Linear models, Basics I

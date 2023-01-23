@@ -428,18 +428,12 @@ R library and packages
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fortune</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Before we get too carried away with this thread could you all please consider
-how the sd function calculates its result? [...] I'll tell you, it takes the
-square root of the variance. How is the variance calculated for a numeric
-vector? First you calculate the mean *using floating point arithmetic* in which
-it is not necessarily true that N * k / N == k [...] Most of those tests [for
-numerical accuracy] end in a check using the all.equal function which checks if
-the relative difference is less than a threshold. That's about the best that
-you can do with floating point arithmetic.
-Here endeth the sermon.
-   -- Douglas Bates (after a discussion why sd(rep(0.001, 15)) is not
-      necessarily exactly 0)
-      R-help (March 2004)</code></pre>
+Have you ever wanted to write a book, but not known where to start? Now is a
+very good time to jump in, because there is currently a very simple recipe for
+success: just put R in the title and you will have to beat the publishers off
+with a stick!
+   -- Paul Murrell
+      ASA Statistical Computing &amp; Graphics Newsletter 17(2) (November 2006)</code></pre>
 </div>
 </div>
 <p>To learn what a function does, you can check its documentation by typing the function name preceded by a <code>?</code> question mark. Type <code>?function</code> in the Console and hit ENTER to see the function documentation.</p>
@@ -561,7 +555,17 @@ Tip
 <p><img src="../img/run-button.png" class="img-fluid"></p>
 <p>An alternative way is to place the text cursor on the line of code you want to run and then press <code>CMD+ENTER</code>/<code>CTRL+ENTER</code>. This will run the line of code and move the text cursor to the next line of code.</p>
 <p>You can even select multiple lines of code (as you would select text) and press <code>CMD+ENTER</code>/<code>CTRL+ENTER</code> to run multiple lines of code!</p>
-<p>Now that you know how to use R scripts and run code in them, I will assume that you will keep writing new code in your script and run it from there!</p>
+<p>Now that you know how to use R scripts and run code in them, I will assume that you will keep writing new code from this tutorial in your script and run it from there!</p>
+<p>Just another tip: sometimes we might want to add a few lines of text in our script, for example to take notes.</p>
+<p>You can add so-called <strong>comments</strong> in R scripts, simply by starting a line with <code>#</code>.</p>
+<p>For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a comment. Let's add 6 + 3.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="sc">+</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="data-transformation" class="level2">
@@ -596,7 +600,7 @@ Summary measures
 </ul>
 <p>For example, let’s get the mean the reaction time column <code>RT</code>. Easy!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -609,7 +613,7 @@ Summary measures
 <p>Great! The mean reaction times of the entire sample is 867 ms.</p>
 <p>What if we want also the standard deviation? Easy!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(shallow, <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -622,11 +626,11 @@ Summary measures
 <p>Now we know that reaction times are on average 867 ms long and have a standard deviation of about 293 ms (rounded to the nearest integer).</p>
 <p>Let’s go all the way and also get the minimum and maximum RT values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  shallow,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_min =</span> <span class="fu">min</span>(RT), <span class="at">RT_max =</span> <span class="fu">max</span>(RT)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  shallow,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT), <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_min =</span> <span class="fu">min</span>(RT), <span class="at">RT_max =</span> <span class="fu">max</span>(RT)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -648,13 +652,13 @@ Summary measures
 <p>Accuracy has been coded with <code>0</code> for incorrect and <code>1</code> for correct. We will see how this is not an ideal, although very common way, of coding binary variables. For now let’s keep it as is.</p>
 <p>The function <code>count()</code> takes the name of tibble and the name of column you want to count values in.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ACC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ACC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>How many <em>correct</em> responses are there in the <code>shallow</code> tibble?</p>
 <p>Note that you can add <strong>multiple column names, separated by commas</strong>, to get counts for the combinations of values of each column.</p>
 <p>Try to get counts of the combination of <code>ACC</code> and <code>Group</code> (<code>L1</code> vs <code>L2</code> participants). Replace <code>...</code> with the right code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(shallow, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout-tip callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
@@ -679,11 +683,11 @@ Hint
 <p>Sometimes you might want to get summary measures for one variable depending on different values of another variable.</p>
 <p>You can use the <code>group_by()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> tidyverse package, together with <code>summarise()</code> to achieve that. Let’s see how it works.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(shallow, Group) <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(shallow, Group) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -710,12 +714,12 @@ Hint
 <p>That’s why the code above works!</p>
 <p>In fact, you can even use a pipe for the tibble of <code>group_by()</code>, like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Group) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -728,13 +732,13 @@ Hint
 <p>You see that the output of the code is the same here as it is above.</p>
 <p>For comparison, this is what the code would look like without the pipe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>grouped_shallow <span class="ot">&lt;-</span> <span class="fu">group_by</span>(shallow, Group)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  grouped_shallow,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>grouped_shallow <span class="ot">&lt;-</span> <span class="fu">group_by</span>(shallow, Group)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  grouped_shallow,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_mean =</span> <span class="fu">mean</span>(RT),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">RT_sd =</span> <span class="fu">sd</span>(RT)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">

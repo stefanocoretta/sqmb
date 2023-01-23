@@ -368,7 +368,20 @@ An alternative way is to place the text cursor on the line of code you want to r
 
 You can even select multiple lines of code (as you would select text) and press `CMD+ENTER`/`CTRL+ENTER` to run multiple lines of code!
 
-Now that you know how to use R scripts and run code in them, I will assume that you will keep writing new code in your script and run it from there!
+Now that you know how to use R scripts and run code in them, I will assume that you will keep writing new code from this tutorial in your script and run it from there!
+
+Just another tip: sometimes we might want to add a few lines of text in our script, for example to take notes.
+
+You can add so-called **comments** in R scripts, simply by starting a line with `#`.
+
+For example:
+
+```{r}
+#| label: comments
+
+# This is a comment. Let's add 6 + 3.
+6 + 3
+```
 
 ## Data transformation
 

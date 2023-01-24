@@ -129,7 +129,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 3: Data visualisation
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -148,7 +148,7 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 - [Lecture slides](slides/w03/).

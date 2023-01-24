@@ -109,7 +109,7 @@ Examples from different branches of linguistics will be used to provide you with
 -   Use R scripts to save and reuse code.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 - [Lecture slides](slides/w02/).

@@ -39,6 +39,12 @@ options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
 options(show.signif.stars = FALSE)
 ```
 
+class: center middle reverse
+
+# TURN MIC ON!
+
+---
+
 layout: true
 
 ## Sample $y$

@@ -169,51 +169,42 @@ But what are R packages? Find out in the following section.
 
 ## R packages
 
-When you install R, a **library** of packages is also installed.
-**Packages** are like plug-ins, they provide R with extra functionalities.
-The default **R library** contains all of the base R packages.
+When you install R, a **library** of packages is also installed. **Packages** are like plug-ins, they provide R with extra functionalities. The default **R library** contains all of the base R packages.
 
 You can check all of the currently installed packages in the bottom-right panel of RStudio, in the **Packages** tab.
 
-If you want to find the path of the R library on your computer, type `.libPaths()` in the Console.
-The function returns (i.e. outputs) the path or paths where your R library is.
+If you want to find the path of the R library on your computer, type `.libPaths()` in the Console. The function returns (i.e. outputs) the path or paths where your R library is.
 
 ::: callout-tip
 #### R library and packages
 
-- The **R library** contains the base R packages and all user-installed packages.
+-   The **R library** contains the base R packages and all user-installed packages.
 
-- **R packages** provide R with extra functionalities and are installed into the R library.
+-   **R packages** provide R with extra functionalities and are installed into the R library.
 :::
 
 #### Install packages
 
 You can install extra packages in the R library in two ways:
 
-1. You can use the `install.packages()` function.
-2. Or you can go the `Packages` tab in the bottom-right panel of RStudio and click on `Install`.
+1.  You can use the `install.packages()` function.
+2.  Or you can go the `Packages` tab in the bottom-right panel of RStudio and click on `Install`.
 
-Go ahead and try to install a package using the second method.
-Install the `fortunes` package.
-After installing you will see that the package fortunes is listed in the Packages tab.
+Go ahead and try to install a package using the second method. Install the `fortunes` package. After installing you will see that the package fortunes is listed in the Packages tab.
 
-**You need to install a package ONLY ONCE!** Once installed, it's there for ever, saved in the R library.
-You will be able to use all of your installed packages in any RStudio project you create.
+**You need to install a package ONLY ONCE!** Once installed, it's there for ever, saved in the R library. You will be able to use all of your installed packages in any RStudio project you create.
 
 #### Attach packages
 
-Now, to use a package you need to **attach** the package with the `library()` function.
-**You need to attach the package you want to use once per R session.**
+Now, to use a package you need to **attach** the package with the `library()` function. **You need to attach the package you want to use once per R session.**
 
-Let's attach the fortunes package.
-Run the following code in the Console.
+Let's attach the fortunes package. Run the following code in the Console.
 
 ```{r fortunes}
 library(fortunes)
 ```
 
-Now you can use the functions provided by the attached package.
-Try it out!
+Now you can use the functions provided by the attached package. Try it out!
 
 ```{r fortune}
 fortune()
@@ -235,13 +226,9 @@ Also, note that it is not enough to use the `read_csv()` function. You also must
 
 And since the `read_csv()` is a function from the tidyverse, you first need to attach the tidyverse packages with `library(tidyverse)` (remember, you need to attach packages **only once** per session).
 
-This will attach a set of the tidyverse packages that are commonly used in most data analysis applications, including readr.
-Of course, you can also attach the individual packages directly: `library(readr)`.
-If you use `library(tidyverse)` there is no need to attach tidyverse individual packages.
+This will attach a set of the tidyverse packages that are commonly used in most data analysis applications, including readr. Of course, you can also attach the individual packages directly: `library(readr)`. If you use `library(tidyverse)` there is no need to attach tidyverse individual packages.
 
-So, putting all together, here's the code.
-**Remember to change the file path to match the path of the file on your computer**.
-Run the code in the Console to read the data.
+So, putting all together, here's the code. **Remember to change the file path to match the path of the file on your computer**. Run the code in the Console to read the data.
 
 ```{r}
 #| label: read-example

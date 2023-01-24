@@ -378,6 +378,14 @@
         "withr"
       ]
     },
+    "fortunes": {
+      "Package": "fortunes",
+      "Version": "1.5-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d031a520bc2c989180c772dbc6851088",
+      "Requirements": []
+    },
     "fs": {
       "Package": "fs",
       "Version": "1.5.2",

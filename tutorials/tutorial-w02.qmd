@@ -98,7 +98,7 @@ For this tutorial, we will use the data from this paper: Song et al. 2020. *Seco
 
 ### Download the data file
 
-To download the file with the data right-click on the following link and download the file: [shallow.csv](data/shallow.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd))
+To download the file with the data right-click on the following link and download the file: [shallow.csv](../data/shallow.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd))
 
 Create a folder in the RStudio project of the course called `data` and move the downloaded file into that folder.
 
@@ -187,10 +187,10 @@ If you want to find the path of the R library on your computer, type `.libPaths(
 
 You can install extra packages in the R library in two ways:
 
-1.  You can use the `install.packages()` function.
+1.  You can use the `install.packages()` function. This function takes the name of package you want to install as a string, for example `install.packages("cowsay")`
 2.  Or you can go the `Packages` tab in the bottom-right panel of RStudio and click on `Install`.
 
-Go ahead and try to install a package using the second method. Install the `fortunes` package. After installing you will see that the package fortunes is listed in the Packages tab.
+Go ahead and try to install a package using the second method. Install the fortunes package (remember to quote the name of the package). After installing you will see that the package fortunes is listed in the Packages tab.
 
 **You need to install a package ONLY ONCE!** Once installed, it's there for ever, saved in the R library. You will be able to use all of your installed packages in any RStudio project you create.
 
@@ -198,7 +198,7 @@ Go ahead and try to install a package using the second method. Install the `fort
 
 Now, to use a package you need to **attach** the package with the `library()` function. **You need to attach the package you want to use once per R session.**
 
-Let's attach the fortunes package. Run the following code in the Console.
+Let's attach the fortunes package. Run the following code in the Console. Note that while `install.packages("fortunes")` takes the name of the package as a string, `library(fortunes)` takes the name of the package without quotes.
 
 ```{r fortunes}
 library(fortunes)

@@ -334,7 +334,7 @@ Absolute path
 <p>For this tutorial, we will use the data from this paper: Song et al.&nbsp;2020. <em>Second language users exhibit shallow morphological processing</em>. DOI: <a href="https://doi.org/10.1017/S0272263120000170">10.1017/S0272263120000170</a>.</p>
 <section id="download-the-data-file" class="level3">
 <h3 class="anchored" data-anchor-id="download-the-data-file">Download the data file</h3>
-<p>To download the file with the data right-click on the following link and download the file: <a href="data/shallow.csv">shallow.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>)</p>
+<p>To download the file with the data right-click on the following link and download the file: <a href="../data/shallow.csv">shallow.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>)</p>
 <p>Create a folder in the RStudio project of the course called <code>data</code> and move the downloaded file into that folder.</p>
 <p>I strongly recommend that you keep the course RStudio project folder as organised as possible. The Open Science Framework has the following recommendations that apply very well to any type of research project.</p>
 <div class="callout-note callout callout-style-default no-icon callout-captioned">
@@ -410,16 +410,16 @@ R library and packages
 <h4 class="anchored" data-anchor-id="install-packages">Install packages</h4>
 <p>You can install extra packages in the R library in two ways:</p>
 <ol type="1">
-<li>You can use the <code>install.packages()</code> function.</li>
+<li>You can use the <code>install.packages()</code> function. This function takes the name of package you want to install as a string, for example <code>install.packages("cowsay")</code></li>
 <li>Or you can go the <code>Packages</code> tab in the bottom-right panel of RStudio and click on <code>Install</code>.</li>
 </ol>
-<p>Go ahead and try to install a package using the second method. Install the <code>fortunes</code> package. After installing you will see that the package fortunes is listed in the Packages tab.</p>
+<p>Go ahead and try to install a package using the second method. Install the fortunes package (remember to quote the name of the package). After installing you will see that the package fortunes is listed in the Packages tab.</p>
 <p><strong>You need to install a package ONLY ONCE!</strong> Once installed, it’s there for ever, saved in the R library. You will be able to use all of your installed packages in any RStudio project you create.</p>
 </section>
 <section id="attach-packages" class="level4">
 <h4 class="anchored" data-anchor-id="attach-packages">Attach packages</h4>
 <p>Now, to use a package you need to <strong>attach</strong> the package with the <code>library()</code> function. <strong>You need to attach the package you want to use once per R session.</strong></p>
-<p>Let’s attach the fortunes package. Run the following code in the Console.</p>
+<p>Let’s attach the fortunes package. Run the following code in the Console. Note that while <code>install.packages("fortunes")</code> takes the name of the package as a string, <code>library(fortunes)</code> takes the name of the package without quotes.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fortunes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -428,9 +428,9 @@ R library and packages
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fortune</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-You should try things; R won't break.
-   -- Duncan Murdoch (encouraging a user to explore R's graphical capabilities)
-      R-help (May 2016)</code></pre>
+When in doubt, keep adding slashes until it works.
+   -- Joran Elias (on how to escape a backslash in R)
+      Stackoverflow (March 2015)</code></pre>
 </div>
 </div>
 <p>To learn what a function does, you can check its documentation by typing the function name preceded by a <code>?</code> question mark. Type <code>?function</code> in the Console and hit ENTER to see the function documentation.</p>

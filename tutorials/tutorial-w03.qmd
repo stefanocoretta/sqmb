@@ -77,6 +77,26 @@ An Rmd file usually has three main parts:
 
 Each Rmd file has to start with a preamble, but you can include as many code chunks and as much text as you wish, in any order.
 
+### Render Rmd files to HTML
+
+You can render an Rmd file into a nicely formatted HTML file.
+
+To render an Rmd file, just click on the **Knit** button and an HTML file will be created and saved in the same location of the Rmd file.
+
+![](/img/knit.png)
+
+It will also be shown in the Viewer pane, in the bottom-right panel of RStudio.
+
+![](/img/rendered.png)
+
+Rendering Rmd files is not restricted to HTML, but also PDFs and even Word documents!
+
+This is very handy when you are writing an analysis report you need to share with others.
+
+### How to run code
+
+The first code chunk in
+
 ## Plotting basics
 
 Plotting data in R is easy once you understand the basics.

@@ -1,9 +1,18 @@
 ---
 title: "SQM tutorial - Week 3"
 editor: visual
-execute: 
-  eval: false
+execute:
+  cache: true
 ---
+
+```{r}
+#| label: packages
+#| echo: false
+#| message: false
+
+library(tidyverse)
+
+```
 
 ## Rmarkdown
 
@@ -95,7 +104,31 @@ This is very handy when you are writing an analysis report you need to share wit
 
 ### How to run code
 
-The first code chunk in
+The first code chunk in an Rmd file is a special one: it's called `setup` and it's where you attach all the packages needed for running the code in the file.
+
+It also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.
+
+The line `knitr::opts_chunk$set(echo = TRUE)` sets the option `echo` to `TRUE`. The `echo` option let's you decide whether you want the R code printed (echoed) in the rendered Rmd file. When `echo = TRUE` the code is printed, when `echo = FALSE` the code is not printed.
+
+Now go ahead and add `library(tidyverse)` in the line next to the `knitr::opts_chunk` line.
+
+To run the code of a code chunk you can use different approaches:
+
+-   Click on the green arrow to the right of the code chunk to run the entire code chunk.
+
+-   Alternatively, place the text cursor inside the code chunk and press `CMD/CTRL + SHIFT + ENTER`.
+
+-   You can also run line by line as you do in an R script by placing the text cursor on the line you want to run and press `CMD/CTRL + ENTER`.
+
+Now delete everything after the `setup` code chunk and write a new level-2 heading after the chunk. (Remember to leave an empty line between the chunk and the heading.)
+
+![](/img/rmd-setup.png)
+
+You will use this Rmd file to write text and code for this tutorial. To insert a new code chunk, you can click on the `Insert a new code chunk` button and then select `R`, or you can press `ALT + CMD/CTRL + I`.
+
+![](/img/rmd-new-chunk.png)
+
+A new R code chunk will be inserted at the text cursor position.
 
 ## Plotting basics
 
@@ -143,23 +176,45 @@ Instead we can use the tidyverse package [ggplot2](https://ggplot2.tidyverse.org
 
 The tidyverse package [ggplot2](https://ggplot2.tidyverse.org) provides users with a consistent set of functions to create captivating graphics.
 
-Remember: To be able to use the functions in a package, you first need to **attach the package**. We can attach it with `library(tidyverse)`, which will also attach other useful tidyverse packages.
-
-Add the following line in a code chunk in the Rmd file you created and then run the code to attach the tidyverse, including ggplot2.
-
-```{r}
-#| label: tidy-load
-
-library(tidyverse)
-```
+Remember: To be able to use the functions in a package, you first need to **attach the package**. We have already attached the `library(tidyverse)` packages, among which there is ggplot2, so you don't need to do anything else.
 
 ### The `polite` data
 
 We will use the `polite` data to learn the basics of plotting using ggplot.
 
-The data comes from the paper by Winter and Grawunder. 2020. *The phonetic profile of Korean formal and informal speech registers*.\* DOI: [10.1016/j.wocn.2012.08.006](https://doi.org/10.1016/j.wocn.2012.08.006)
+The data comes from the paper by Winter and Grawunder. 2020. *The phonetic profile of Korean formal and informal speech registers*. DOI: [10.1016/j.wocn.2012.08.006](https://doi.org/10.1016/j.wocn.2012.08.006)
 
-To download the file with the data right-click on the following link and download the file: [polite.csv](data/polite.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
+To download the file with the data right-click on the following link and download the file: [polite.csv](../data/polite.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
+
+With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the \[here\](https://here.r-lib.org) package (remember how to install packages?) and **add the following line in the setup chunk**, just after the first line of code.
+
+``` r
+knitr::opts_knit$set(root.dir = here::here())
+```
+
+Now rerun the setup code chunk to set the new option.
+
+This will set the working directory for the Rmd file to the project working directory.
+
+Finally, **create a new code chunk, add the following line of code and then run the code chunk to read the data**.
+
+```{r}
+#| label: polite
+#| message: false
+
+polite <- read_csv("data/polite.csv")
+
+```
+
+In this tutorial we will use the following columns:
+
+-   `f0mn`: mean f0 (fundamental frequency).
+
+-   `H1H2`: difference between H2 and H1 (second and first harmonic).
+
+-   `gender`: speaker's gender.
+
+-   `musicstudent`: whether the speaker is a music student (`yes`) or not (`no`).
 
 ### A basic plot
 
@@ -175,7 +230,11 @@ Note that the `mapping` argument is always specified with `aes()`.
 
 In the following bare plot, we are just mapping the mean f0 (`f0`) to the *x*-axis and the H2-H1 difference to the *y*-axis, from the `polite` data frame.
 
-```{r bare-plot, exercise=TRUE, exercise.setup = "tidy-load"}
+**Create a new code chunk, copy the following code and run it.** From this point on I will assume you'll create a new code chunk and run the code yourself, without explicit instructions.
+
+```{r}
+#| label: bare-plot
+
 ggplot(
   data = polite,
   mapping = aes(x = f0mn, y = H1H2)
@@ -192,9 +251,12 @@ Data is represented with **geometries**, or `geom`s for short. `geom`s are added
 
 For this plot, you want to use `geom_point()`. This geom simply adds point to the plot based on the data in the `polite` data frame.
 
-Add the geom to the following code and run it.
+Replace `...` with the geom in the following code and run it.
 
-```{r first-plot, exercise=TRUE, exercise.setup = "tidy-load"}
+```{r}
+#| label: first-plot
+#| eval: false
+
 ggplot(
   data = polite,
   mapping = aes(x = f0mn, y = H1H2)
@@ -208,7 +270,10 @@ This type of plot, with two continuous axes and data represented by points, is c
 
 Note that the `data` and `mapping` arguments don't have to be named explicitly (with `data =` and `mapping =`) in the `ggplot()` function, since they are obligatory and they are specified in that order.
 
-```{r named-arguments-1, exercise=TRUE, exercise.setup = "tidy-load"}
+```{r}
+#| label: named-arguments
+#| warning: false
+
 ggplot(
   polite,
   aes(x = f0mn, y = H1H2)
@@ -218,7 +283,9 @@ ggplot(
 
 In fact, you can also leave out `x =` and `y =`.
 
-```{r named-arguments-2, exercise=TRUE, exercise.setup = "tidy-load"}
+```{r}
+#| label: named-arguments-2
+
 ggplot(
   polite,
   aes(f0mn, H1H2)
@@ -228,16 +295,15 @@ ggplot(
 
 Try running `?ggplot` in the Console to see the arguments of the function and the order they appear in.
 
-```{r Q-named-arguments, echo=FALSE}
-question(
-  "Which of the following will produce the same plot as the one above?",
-  answer('`ggplot(polite, aes(H1H2, f0mn)) + geom_point()`'),
-  answer('`ggplot(polite, aes(y = H1H2, x = f0mn)) + geom_point()`', correct = TRUE),
-  answer('`ggplot(polite, aes(y = f0mn, x = H1H2)) + geom_point()`'),
-  correct = "Correct! Since the aesthetics are named, it does not matter that *y* comes before *x*.",
-  incorrect = "Nope! The mapping of variable to aesthetics *x* and *y* is different from the plot above."
-)
-```
+::: callout-important
+#### Question
+
+**Which of the following will produce the same plot as the one above?**
+
+1.  `ggplot(polite, aes(H1H2, f0mn)) + geom_point()`
+2.  `ggplot(polite, aes(y = H1H2, x = f0mn)) + geom_point()`
+3.  `ggplot(polite, aes(y = f0mn, x = H1H2)) + geom_point()`
+:::
 
 ## Bar charts
 
@@ -249,11 +315,34 @@ Another common type of plot is the **bar chart**.
 
 There are thousands of languages in the world, but most of them are loosing speakers, and some are already no longer spoken. The endangerment status of a language in the data is on a scale from `not endangered` (languages with large populations of speakers) through `threatened`, `shifting` and `nearly extinct`, to `extinct` (languages that have no living speakers left).
 
-The `glot_aes` data frame contains the endangerment status for 7,845 languages from [Glottolog](https://glottolog.org). Here's what it looks like.
+The `glot_status` data frame contains the endangerment status for 7,845 languages from [Glottolog](https://glottolog.org). To download the file with the data right-click on the following link and download the file: [glot_status.rds](../data/glot_status.rds). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
 
-```{r aes}
-glot_aes
+This time the file is not a `.csv` file but an `.rds` file. `.rds` files are files that can save any R object. They are commonly used to save data frames, like in this case.
+
+To read an `.rds` file you need the `readRDS()` function.
+
+```{r}
+#| label: glot-status
+
+glot_status <- readRDS("data/glot_status.rds")
+
 ```
+
+Here's what the data frame looks like.
+
+```{r}
+#| label: glot-status-view
+
+glot_status
+```
+
+The most important columns are:
+
+-   `Name`: the language name.
+
+-   `status`: the endangerment status of the language.
+
+-   `Macroarea`: the geographic macro-area the language is spoken in.
 
 ### Create a bar chart
 
@@ -261,40 +350,16 @@ To create a bar chart, add `geom_bar()` to the plot.
 
 You only need one axis, the *x* axis to be precise, because the *y*-axis will have the counts.
 
-```{r aes-bars, exercise=TRUE}
-glot_aes %>%
-  ggplot(aes(x = AES)) +
+```{r}
+#| label: status-bar
+#| eval: false
+
+glot_status %>%
+  ggplot(aes(x = status)) +
   ...
 ```
 
 Note how the counting is done automatically. R looks in the `AES` column and counts how many times each value in the column occurs in the data frame.
-
-If you are baffled by that `%>%`, keep on reading.
-
-### What the pipe?!
-
-Wait, what is that thing, `%>%`?
-
-It's called a **pipe**. Think of a pipe as a teleporter.
-
-In the previous code chunk, instead of specifying the data frame *inside* `ggplot()`, we teleport it into `ggplot()` by using the pipe.
-
-So the following lines of code are equivalent.
-
-```{r aes-pipe, eval=FALSE}
-# Using the pipe
-glot_aes %>%
-  ggplot(aes(AES)) +
-  geom_bar()
-
-# Without the pipe
-glot_aes(
-  glot_aes, aes(AES)
-) +
-  geom_bar()
-```
-
-Don't worry too much if the concept is not clear yet. It should become clearer in later tutorials.
 
 ### Stacked bar charts
 
@@ -304,209 +369,32 @@ To create a stacked bar chart, you just need to add a new aesthetic mapping: `fi
 
 Let's make a plot on language endangerment by macro-area.
 
-Complete the following code by specifying that `fill` should be based on `AES`.
+Complete the following code by specifying that `fill` should be based on `status`.
 
-```{r aes-stacked, exercise=TRUE, exercise.setup = "tidy-load"}
+```{r}
+#| label: status-stacked
+#| eval: false
+
 ggplot(
-  data = glot_aes,
+  data = glot_status,
   mapping = aes(x = Macroarea, ...)
 ) +
   geom_bar()
-```
-
-```{r aes-stacked-hint}
-aes(x = Macroarea, fill = ...)
 ```
 
 What if we want to move the colour legend to the bottom of the plot?
 
 Check out the documentation of `theme` by typing `?theme` in the RStudio Console and press ENTER. Search for the word `position`.
 
-```{r Q-legend-pos, echo=FALSE}
-question(
-  "Which of the following moves the legend to the bottom of the plot?",
-  answer('`legend("bottom")`'),
-  answer('`theme(legend.position = "bottom")`', correct = TRUE),
-  answer('`theme(legend.bottom)`')
-)
-```
+::: callout-important
+#### Question
 
-## Legends and labels
+**Which of the following moves the legend to the bottom of the plot?**
 
-### Positioning the legend
-
-The position of the legend can be set with the `legend.position` argument in `theme()`.
-
-Move the legend to the `"bottom"`.
-
-```{r aes-legend, exercise=TRUE, exercise.setup = "tidy-load"}
-ggplot(
-  data = glot_aes,
-  mapping = aes(x = Macroarea, fill = AES)
-) +
-  geom_bar() +
-  ...
-```
-
-```{r aes-legend-hint}
-theme(legend.position = ...)
-```
-
-### Plot titles and labels
-
-The `labs()` function allows you to set the plot title, subtitle, axis labels and more.
-
-Since these are strings (i.e. text), they must be quoted with `"`.
-
-```{r aes-title, exercise=TRUE, exercise.setup = "tidy-load"}
-ggplot(
-  data = glot_aes,
-  mapping = aes(x = Macroarea, fill = AES)
-) +
-  geom_bar() +
-  labs(
-    title = "Number of languages by macro-area and\nAggregated Endangerement Status"
-  )
-```
-
-NOTE: We use `\n` to split the title into two lines, so that it fits the plot. `\n` simply means "**n**ew line".
-
-### Axis labels
-
-To change the axis labels, you specify a string for `x` and `y`.
-
-I have changed the `x` label here below. Go ahead and change `y` to `"Number of languages"`.
-
-```{r aes-labs, exercise=TRUE, exercise.setup = "tidy-load"}
-ggplot(
-  data = glot_aes,
-  mapping = aes(x = Macroarea, fill = AES)
-) +
-  geom_bar() +
-  labs(
-    # We use \n to split the title into two lines. \n means "new line"
-    title = "Number of languages by macro-area and\nAggregated Endangerement Status",
-    x = "Language macro-area",
-    ...
-  )
-```
-
-## Density and violin plots
-
-**Density plots show the distribution of the values of a continuous variable.**
-
-Take for example the Reaction Times (`RT`) values in the *MAssive Lexical Decision* data set (`mald_1_1`).
-
-```{r mald}
-mald_1_1
-```
-
-### Reaction times
-
-To plot the density of a continuous variable, you can use the `density` geometry.
-
-Fill in the following code to create a density plot.
-
-```{r mald-dens, exercise=TRUE, exercise.setup = "tidy-load"}
-mald_1_1 %>%
-  ggplot(aes(RT)) +
-  ...
-```
-
-::: {#mald-dens-hint}
-Remember that all geometries start with `geom_`?
+1.  `legend("bottom")`
+2.  `theme(legend.position = "bottom")`
+3.  `theme(legend.bottom)`
 :::
-
-### Make things cozy with a rug
-
-The density line shows you a smoothed representation of the data distribution, but you might also want to see the raw data.
-
-You can do so by adding the `rug` geometry.
-
-```{r mald-dens-rug, exercise=TRUE, exercise.setup = "tidy-load"}
-mald_1_1 %>%
-  ggplot(aes(RT)) +
-  geom_density() +
-  ...
-```
-
-### Violin plots
-
-An efficient way of showing the distribution of continuous variables depending on discrete groups (like `attitude`) are the so-called **violin plots**.
-
-Go ahead and run the following code.
-
-```{r pol-viol, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
-  geom_violin()
-```
-
-They are called violin plots because they look like violins!
-
-### Lay over the raw data
-
-You can lay over raw data on top of the violins.
-
-To do so, you can use the `jitter` geometry. Fill the following code chunk and run it.
-
-```{r pol-viol-jit, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
-  geom_violin() +
-  ...
-```
-
-That doesn't look great right? The points are spread too widely.
-
-We can fix that by specifying the argument `width` in the jitter geometry something smaller than `0.5`. Try a few values until you think it looks better.
-
-```{r pol-viol-jit-2, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
-  geom_violin() +
-  ...
-```
-
-```{r pol-viol-jit-2-hint}
-geom_jitter(width = ...)
-```
-
-Note that the order between the violin and jitter geoms is important. If you add the jitter geometry before the violin geometry, the violins will just cover up the jittered points (see why it is called "layered" grammar of graphics?).
-
-### Let's add some colour
-
-Let's **fill** the violins with colour. For now, just colour the violins depending on `attitude`
-
-```{r pol-colour, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn, ...)) +
-  geom_violin()
-```
-
-```{r pol-colour-hint}
-fill = ...
-```
-
-Not bad! But maybe we can improve by making the fill a bit transparent?
-
-You can achieve that with the `alpha` argument in `geom_violin()`, which takes a number between 0 (completely transparent) and 1 (completely opaque).
-
-Add it to the code above to make the fill transparent. Try different values until you are satisfied with the output.
-
-### Separate the data by gender
-
-In the previous section we have filled the violins with colours depending on `attitude`. This helps making the plot somewhat more appealing, but colour there doesn't add information to the plot: attitude is already marked by the *x*-axis, so filling by attitude is a bit redundant.
-
-Instead, we can use the fill argument to separate the data into further groups based on other variables in the data.
-
-Go ahead and separate the data by `gender` using the `fill` argument.
-
-```{r pol-colour-gen, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn, ...)) +
-  geom_violin()
-```
 
 ## Faceting and panels
 
@@ -514,39 +402,45 @@ Sometimes we might want to separate the data into separate panels.
 
 We can achieve that easily using **faceting**.
 
-### Attitudes again
+### Polite again
 
-Let's recreate the attitude plot from the previous section.
+Let's reproduce one of the plots from above, but this time let's use the `colour` aesthetic to colour the points by `gender`.
 
-```{r pol-viol-2, exercise=TRUE}
+```{r}
+#| label: polite-gender
+#| warning: false
+
 polite %>%
-  ggplot(aes(attitude, f0mn, fill = gender)) +
-  geom_violin()
+  ggplot(aes(f0mn, H1H2, colour = gender)) +
+  geom_point()
 ```
 
 ### Does being a music student matter?
 
-That looks great, but we want to know if being a music student has an effect on how attitude affects mean f0.
+That looks great, but we want to know if being a music student has an effect on the relationship of `f0mn` and `H1H2`.
 
 In the plot above, the aesthetics mappings are the following:
 
--   `attitude` on the *x*-axis.
--   `f0mn` on the *y*-axis.
--   `gender` as fill in the violin geometry.
+-   `f0mn` on the *x*-axis.
+-   `H1H2` on the *y*-axis.
+-   `gender` as colour.
 
 How can we separate data further depending on whether the participant is a music student or not?
 
 We can create panels using `facet_grid()`. This function takes lists of variables to specify panels in rows and/or columns.
 
-The syntax is a bit strange. Check the documentation with `?facet_grid()` to see how it works and then complete the code below and run it to produce a plot with two column panels.
+The syntax is a bit strange. Check the documentation with `?facet_grid()` (especially the examples) to see how it works and then complete the code below and run it to produce a plot with two column panels for `musicstudent`.
 
-```{r pol-facet, exercise=TRUE}
+```{r}
+#| label: polite-facet
+#| eval: false
+
 polite %>%
-  ggplot(aes(attitude, f0mn, fill = gender)) +
-  geom_violin() +
+  ggplot(aes(f0mn, H1H2, colour = gender)) +
+  geom_point() +
   facet_grid(...)
 ```
 
-```{r pol-facet-hint}
-facet_grid(cols = ...)
-```
+That's all for this week!
+
+Next week, you will learn how to create density and violin plots and how to customise legends, titles and labels!

@@ -91,7 +91,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 2: Data wrangling
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -109,7 +109,7 @@ Examples from different branches of linguistics will be used to provide you with
 -   Use R scripts to save and reuse code.
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 - [Lecture slides](slides/w02/).
@@ -118,7 +118,7 @@ Examples from different branches of linguistics will be used to provide you with
   - [shallow.csv](data/shallow.csv)
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Suggested readings
 
 **Main textbooks**
@@ -129,7 +129,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 3: Data visualisation
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -148,13 +148,29 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 - [Lecture slides](slides/w03/).
-<!-- - [Workshop tutorial](tutorials/tutorial-w02.qmd). -->
+- [Workshop tutorial](tutorials/tutorial-w03.qmd).
 - Workshop files (right-click and download):
   - [polite.csv](data/polite.csv)
+  - [glot_status.rds](data/glot_status.rds)
+:::
+
+::: {.callout-tip collapse="false"}
+#### Suggested readings
+
+**Main textbooks**
+
+- **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). [online book]
+- [ggplot2](https://ggplot2.tidyverse.org) documentation.
+
+**From the lecture**
+
+- [Spiegelhalter 2020](https://www.penguin.co.uk/books/294857/the-art-of-statistics-by-spiegelhalter-david/9780241258767). *The Art of Statistics:
+Learning from Data.*
+
 :::
 
 ### Week 4: Linear models, Basics I

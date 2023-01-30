@@ -117,9 +117,42 @@ Instead, we can use the fill argument to separate the data into further groups b
 Go ahead and separate the data by `gender` using the `fill` argument.
 
 ```{r pol-colour-gen, exercise=TRUE}
+
 polite %>%
   ggplot(aes(attitude, f0mn, ...)) +
   geom_violin()
+```
+
+What if we want to move the colour legend to the bottom of the plot?
+
+<!--# Need to double check this and make it match the previous exercise. -->
+
+In `ggplot2`, we control the position of the legend by modifying an elements of the `theme` option. (If this seems arbitrary, you're not wrong. Eventually you'll memorise quirky `ggplot2` features like this, and until then, you can figure it out by searching "How do I change legend position in ggplot" and some kind soul on the internet will tell you.)
+
+Check out the documentation of `theme` by typing `?theme` in the RStudio Console and press ENTER. Search for the word `position`.
+
+::: callout-important
+#### Question
+
+**Which of the following moves the legend to the bottom of the plot?**
+
+1.  `legend("bottom")`
+2.  `theme(legend.position = "bottom")`
+3.  `theme(legend.bottom)`
+:::
+
+To check, try replacing the first `...` in the code below with the `y =` specification you used above, and the second `...` with the correct way of moving the legend to the bottom of the plot. Run the code to see if you're right!
+
+```{r}
+#| label: status-stacked-legend-bottom
+#| eval: false
+
+ggplot(
+  data = glot_status,
+  mapping = aes(x = Macroarea, ...)
+) +
+  geom_bar() +
+  ...
 ```
 
 ## Legends and labels
@@ -185,4 +218,3 @@ ggplot(
     ...
   )
 ```
-

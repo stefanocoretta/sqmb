@@ -291,7 +291,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="how-to-run-code" class="level3">
 <h3 class="anchored" data-anchor-id="how-to-run-code">How to run code</h3>
-<p>The first code chunk in an Rmd file is a special one: it’s called <code>setup</code> and it’s where you attach all the packages needed for running the code in the file. (You can find the name of a code chunk—or define one yourself!—in the first line of a code block: <code>```{r codechunknamehere</code>. The first code chunk of an Rmd file should always be named <code>setup</code>.</p>
+<p>The first code chunk in an Rmd file is a special one: it’s called <code>setup</code> and it’s where you attach all the packages needed for running the code in the file. (You can find the name of a code chunk—or define one yourself!—in the first line of a code block: <code>```{r chunk-name}</code>). The first code chunk of an Rmd file should always be named <code>setup</code>.</p>
 <p>The <code>setup</code> code chunk also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.</p>
 <p>The line <code>knitr::opts_chunk$set(echo = TRUE)</code> sets the option <code>echo</code> to <code>TRUE</code>. The <code>echo</code> option let’s you decide whether you want the R code printed (echoed) in the rendered Rmd file. When <code>echo = TRUE</code> the code is printed, when <code>echo = FALSE</code> the code is not printed.</p>
 <p>Now go ahead and add <code>library(tidyverse)</code> in the line next to the <code>knitr::opts_chunk</code> line.</p>
@@ -492,7 +492,7 @@ Question
 <h3 class="anchored" data-anchor-id="create-a-bar-chart">Create a bar chart</h3>
 <p>To create a bar chart, add <code>geom_bar()</code> to the plot.</p>
 <p>You only need one axis, the <em>x</em> axis to be precise, because the <em>y</em>-axis will have the counts.</p>
-<p>Also, note how we’re using <code>%&gt;%</code> to pipe the lot_status<code>into the</code>ggplot()<code>function. This works because</code>ggplot()`’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
+<p>Also, note how we’re using <code>%&gt;%</code> to pipe the lot_status into the <code>ggplot()</code> function. This works because <code>ggplot()</code>’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-bar_6912932ab36a5a890c170653cf33998a">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status)) <span class="sc">+</span></span>
@@ -513,36 +513,6 @@ Question
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>What if we want to move the colour legend to the bottom of the plot?</p>
-<p>In <code>ggplot2</code>, we control the position of the legend by modifying an elements of the <code>theme</code> option. (If this seems arbitrary, you’re not wrong. Eventually you’ll memorise quirky <code>ggplot2</code> features like this, and until then, you can figure it out by searching “How do I change legend position in ggplot” and some kind soul on the internet will tell you.)</p>
-<p>Check out the documentation of <code>theme</code> by typing <code>?theme</code> in the RStudio Console and press ENTER. Search for the word <code>position</code>.</p>
-<div class="callout-important callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Question
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Which of the following moves the legend to the bottom of the plot?</strong></p>
-<ol type="1">
-<li><code>legend("bottom")</code></li>
-<li><code>theme(legend.position = "bottom")</code></li>
-<li><code>theme(legend.bottom)</code></li>
-</ol>
-</div>
-</div>
-<p>To check, try replacing the first <code>...</code> in the code below with the <code>y=</code> specification you used above, and the second …` with the correct way of moving the legend to the bottom of the plot. Run the code to see if you’re right!</p>
-<div class="cell" data-hash="tutorial-w03_cache/html/status-stacked-legend-bottom_e68ed1b4000784fcfb20643b632c5368">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 </section>
 <section id="faceting-and-panels" class="level2">
@@ -553,9 +523,9 @@ Question
 <h3 class="anchored" data-anchor-id="polite-again">Polite again</h3>
 <p>Let’s reproduce one of the plots from above, but this time let’s use the <code>colour</code> aesthetic to colour the points by <code>gender</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-gender_e8d867314189861cc45846f8513cb66d">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tutorial-w03_files/figure-html/polite-gender-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -574,10 +544,10 @@ Question
 <p>We can create panels using <code>facet_grid()</code>. This function takes lists of variables to specify panels in rows and/or columns.</p>
 <p>The syntax is a bit strange. Check the documentation with <code>?facet_grid()</code> (especially the examples) to see how it works and then complete the code below and run it to produce a plot with two column panels for <code>musicstudent</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-facet_3f650075940ba355f27321cb706f9098">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That’s all for this week!</p>
 <p>Next week, you will learn how to create density and violin plots and how to customise legends, titles and labels!</p>

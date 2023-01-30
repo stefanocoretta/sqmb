@@ -104,9 +104,7 @@ This is very handy when you are writing an analysis report you need to share wit
 
 ### How to run code
 
-The first code chunk in an Rmd file is a special one: it's called `setup` and it's where you attach all the packages needed for running the code in the file.
-(You can find the name of a code chunk—or define one yourself!—in the first line of a code block: ` ```{r codechunknamehere `.
-The first code chunk of an Rmd file should always be named `setup`.
+The first code chunk in an Rmd file is a special one: it's called `setup` and it's where you attach all the packages needed for running the code in the file. (You can find the name of a code chunk---or define one yourself!---in the first line of a code block: ```` ```{r chunk-name} ````). The first code chunk of an Rmd file should always be named `setup`.
 
 The `setup` code chunk also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.
 
@@ -300,7 +298,7 @@ Try running `?ggplot` in the Console to see the arguments of the function and th
 ::: callout-important
 #### Question
 
-**Which of the following will produce the same plot as the one above?** Reason through it first without running the code, then run all of these to check whether they look the way you expected. 
+**Which of the following will produce the same plot as the one above?** Reason through it first without running the code, then run all of these to check whether they look the way you expected.
 
 1.  `ggplot(polite, aes(H1H2, f0mn)) + geom_point()`
 2.  `ggplot(polite, aes(y = H1H2, x = f0mn)) + geom_point()`
@@ -352,8 +350,7 @@ To create a bar chart, add `geom_bar()` to the plot.
 
 You only need one axis, the *x* axis to be precise, because the *y*-axis will have the counts.
 
-Also, note how we're using `%>%` to pipe the lot_status` into the `ggplot()` function.
-This works because `ggplot()`'s first argument is the data, and piping is a different way of providing the first argument to a function.
+Also, note how we're using `%>%` to pipe the lot_status into the `ggplot()` function. This works because `ggplot()`'s first argument is the data, and piping is a different way of providing the first argument to a function.
 
 ```{r}
 #| label: status-bar
@@ -385,39 +382,6 @@ ggplot(
   mapping = aes(x = Macroarea, ...)
 ) +
   geom_bar()
-```
-
-What if we want to move the colour legend to the bottom of the plot?
-
-In `ggplot2`, we control the position of the legend by modifying an elements of the `theme` option.
-(If this seems arbitrary, you're not wrong.
-Eventually you'll memorise quirky `ggplot2` features like this, and until then, you can figure it out by searching "How do I change legend position in ggplot" and some kind soul on the internet will tell you.)
-
-Check out the documentation of `theme` by typing `?theme` in the RStudio Console and press ENTER. Search for the word `position`.
-
-::: callout-important
-#### Question
-
-**Which of the following moves the legend to the bottom of the plot?**
-
-1.  `legend("bottom")`
-2.  `theme(legend.position = "bottom")`
-3.  `theme(legend.bottom)`
-:::
-
-To check, try replacing the first `...` in the code below with the `y=` specification you used above, and the second ...` with the correct way of moving the legend to the bottom of the plot.
-Run the code to see if you're right!
-
-```{r}
-#| label: status-stacked-legend-bottom
-#| eval: false
-
-ggplot(
-  data = glot_status,
-  mapping = aes(x = Macroarea, ...)
-) +
-  geom_bar() +
-  ...
 ```
 
 ## Faceting and panels

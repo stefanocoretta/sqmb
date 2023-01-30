@@ -50,7 +50,7 @@ A few quick pointers (you can test them in the [Markdown Live Preview](https://m
 
 -   You can make text bold with two stars: `**this text is bold!**`.
 
--   Heading are created with `#`: `# This is a level-1 heading`.
+-   Heading are created with `#`: `# This is a level-1 heading`. `## This is a level-2 heading`.
 
 ### Create an Rmd file
 
@@ -105,8 +105,10 @@ This is very handy when you are writing an analysis report you need to share wit
 ### How to run code
 
 The first code chunk in an Rmd file is a special one: it's called `setup` and it's where you attach all the packages needed for running the code in the file.
+(You can find the name of a code chunk—or define one yourself!—in the first line of a code block: ` ```{r codechunknamehere `.
+The first code chunk of an Rmd file should always be named `setup`.
 
-It also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.
+The `setup` code chunk also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.
 
 The line `knitr::opts_chunk$set(echo = TRUE)` sets the option `echo` to `TRUE`. The `echo` option let's you decide whether you want the R code printed (echoed) in the rendered Rmd file. When `echo = TRUE` the code is printed, when `echo = FALSE` the code is not printed.
 
@@ -120,11 +122,11 @@ To run the code of a code chunk you can use different approaches:
 
 -   You can also run line by line as you do in an R script by placing the text cursor on the line you want to run and press `CMD/CTRL + ENTER`.
 
-Now delete everything after the `setup` code chunk and write a new level-2 heading after the chunk. (Remember to leave an empty line between the chunk and the heading.)
+Now delete everything after the `setup` code chunk and write a new level-2 heading after the chunk with the name "Plotting basics". (Remember to leave an empty line between the chunk and the heading.)
 
 ![](/img/rmd-setup.png)
 
-You will use this Rmd file to write text and code for this tutorial. To insert a new code chunk, you can click on the `Insert a new code chunk` button and then select `R`, or you can press `ALT + CMD/CTRL + I`.
+You will use this Rmd file to write text and code for this tutorial. To insert a new code chunk, you can click on the `Insert a new code chunk` button and then select `R`, or you can press `OPT/ALT + CMD/CTRL + I`.
 
 ![](/img/rmd-new-chunk.png)
 
@@ -147,7 +149,7 @@ In this course you will learn how to use the ggplot2 system, but before we dive 
 
 ### Base R plotting function
 
-Let's create two vectors, `x` and `y` and plot them. For now, run these in the Console.
+Let's create two vectors, `x` and `y` and plot them. For now, run these in the Console (not in the code chunk we just created).
 
 ```{r}
 #| label: scatter
@@ -182,11 +184,11 @@ Remember: To be able to use the functions in a package, you first need to **atta
 
 We will use the `polite` data to learn the basics of plotting using ggplot.
 
-The data comes from the paper by Winter and Grawunder. 2020. *The phonetic profile of Korean formal and informal speech registers*. DOI: [10.1016/j.wocn.2012.08.006](https://doi.org/10.1016/j.wocn.2012.08.006)
+The data comes from the paper by Winter and Grawunder, 2020. *The phonetic profile of Korean formal and informal speech registers*. DOI: [10.1016/j.wocn.2012.08.006](https://doi.org/10.1016/j.wocn.2012.08.006)
 
 To download the file with the data right-click on the following link and download the file: [polite.csv](../data/polite.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
 
-With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the \[here\](https://here.r-lib.org) package (remember how to install packages?) and **add the following line in the setup chunk**, just after the first line of code.
+With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the [here](https://here.r-lib.org) package (remember how to install packages?) and **add the following line in the setup chunk**, just after the first line of code.
 
 ``` r
 knitr::opts_knit$set(root.dir = here::here())
@@ -264,7 +266,7 @@ ggplot(
   ...
 ```
 
-This type of plot, with two continuous axes and data represented by points, is called a **scatter plot**
+This type of plot, with two continuous axes and data represented by points, is called a **scatter plot**.
 
 ### Function arguments
 
@@ -298,7 +300,7 @@ Try running `?ggplot` in the Console to see the arguments of the function and th
 ::: callout-important
 #### Question
 
-**Which of the following will produce the same plot as the one above?**
+**Which of the following will produce the same plot as the one above?** Reason through it first without running the code, then run all of these to check whether they look the way you expected. 
 
 1.  `ggplot(polite, aes(H1H2, f0mn)) + geom_point()`
 2.  `ggplot(polite, aes(y = H1H2, x = f0mn)) + geom_point()`
@@ -313,7 +315,7 @@ Another common type of plot is the **bar chart**.
 
 ### Do you understand me?
 
-There are thousands of languages in the world, but most of them are loosing speakers, and some are already no longer spoken. The endangerment status of a language in the data is on a scale from `not endangered` (languages with large populations of speakers) through `threatened`, `shifting` and `nearly extinct`, to `extinct` (languages that have no living speakers left).
+There are thousands of languages in the world, but most of them are losing speakers, and some are already no longer spoken. The endangerment status of a language in the data is on a scale from `not endangered` (languages with large populations of speakers) through `threatened`, `shifting` and `nearly extinct`, to `extinct` (languages that have no living speakers left).
 
 The `glot_status` data frame contains the endangerment status for 7,845 languages from [Glottolog](https://glottolog.org). To download the file with the data right-click on the following link and download the file: [glot_status.rds](../data/glot_status.rds). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
 
@@ -336,7 +338,7 @@ Here's what the data frame looks like.
 glot_status
 ```
 
-The most important columns are:
+For us today, the most important columns are:
 
 -   `Name`: the language name.
 
@@ -350,6 +352,9 @@ To create a bar chart, add `geom_bar()` to the plot.
 
 You only need one axis, the *x* axis to be precise, because the *y*-axis will have the counts.
 
+Also, note how we're using `%>%` to pipe the lot_status` into the `ggplot()` function.
+This works because `ggplot()`'s first argument is the data, and piping is a different way of providing the first argument to a function.
+
 ```{r}
 #| label: status-bar
 #| eval: false
@@ -359,13 +364,13 @@ glot_status %>%
   ...
 ```
 
-Note how the counting is done automatically. R looks in the `AES` column and counts how many times each value in the column occurs in the data frame.
+Note how the counting is done automatically. R looks in the `status` column and counts how many times each value in the column occurs in the data frame.
 
 ### Stacked bar charts
 
 A special type of bar charts are the so-called **stacked bar charts**. These are bar charts where each bar contains a "stack" of shorter bars, each indicating the counts of some sub-groups.
 
-To create a stacked bar chart, you just need to add a new aesthetic mapping: `fill`. The `fill` aesthetic let's you fill bars or areas with different colours depending on the values of a specified column.
+To create a stacked bar chart, you just need to add a new aesthetic mapping: `fill`. The `fill` aesthetic lets you fill bars or areas with different colours depending on the values of a specified column.
 
 Let's make a plot on language endangerment by macro-area.
 
@@ -384,6 +389,10 @@ ggplot(
 
 What if we want to move the colour legend to the bottom of the plot?
 
+In `ggplot2`, we control the position of the legend by modifying an elements of the `theme` option.
+(If this seems arbitrary, you're not wrong.
+Eventually you'll memorise quirky `ggplot2` features like this, and until then, you can figure it out by searching "How do I change legend position in ggplot" and some kind soul on the internet will tell you.)
+
 Check out the documentation of `theme` by typing `?theme` in the RStudio Console and press ENTER. Search for the word `position`.
 
 ::: callout-important
@@ -395,6 +404,21 @@ Check out the documentation of `theme` by typing `?theme` in the RStudio Console
 2.  `theme(legend.position = "bottom")`
 3.  `theme(legend.bottom)`
 :::
+
+To check, try replacing the first `...` in the code below with the `y=` specification you used above, and the second ...` with the correct way of moving the legend to the bottom of the plot.
+Run the code to see if you're right!
+
+```{r}
+#| label: status-stacked-legend-bottom
+#| eval: false
+
+ggplot(
+  data = glot_status,
+  mapping = aes(x = Macroarea, ...)
+) +
+  geom_bar() +
+  ...
+```
 
 ## Faceting and panels
 

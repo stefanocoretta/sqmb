@@ -192,7 +192,9 @@ With Rmd files, we can use relative paths to read data. For relative paths to wo
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
-Now rerun the setup code chunk to set the new option.
+(Note that it's `knitr::opts_knit` rather than `knitr::opts_chunk`).
+
+Now rerun the `setup` code chunk to set the new option.
 
 This will set the working directory for the Rmd file to the project working directory.
 
@@ -251,20 +253,21 @@ Data is represented with **geometries**, or `geom`s for short. `geom`s are added
 
 For this plot, you want to use `geom_point()`. This geom simply adds point to the plot based on the data in the `polite` data frame.
 
-Replace `...` with the geom in the following code and run it.
+To add `geom`s to a plot, you write a `+` at the end of the `ggplot()` command and include the geom on the next line. For example:
 
 ```{r}
 #| label: first-plot
-#| eval: false
 
 ggplot(
   data = polite,
   mapping = aes(x = f0mn, y = H1H2)
 ) +
-  ...
+  geom_point()
 ```
 
 This type of plot, with two continuous axes and data represented by points, is called a **scatter plot**.
+
+Note that using the `+` is a quirk of `ggplot()`. The idea behind it is that you start from a bare plot and you **add** (`+`) layers of data on top of it. This is because of the philosophy behind the package, called the [Layered Grammar of Graphics](http://vita.had.co.nz/papers/layered-grammar.html).
 
 ### Function arguments
 
@@ -428,6 +431,16 @@ polite %>%
   geom_point() +
   facet_grid(...)
 ```
+
+## Render your Rmd file!
+
+Now that you have done all of this hard work, why don't you try and render the Rmd file you've been working on to an HTML file?
+
+Go ahead, click on the "Knitr" button and if everything works fine you should see a rendered HTML file in a second!
+
+Note that you will be asked to render your Rmd files for the assessments, so I recommend you try this out now.
+
+## The end
 
 That's all for this week!
 

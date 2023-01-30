@@ -204,6 +204,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#polite-again" id="toc-polite-again" class="nav-link" data-scroll-target="#polite-again">Polite again</a></li>
   <li><a href="#does-being-a-music-student-matter" id="toc-does-being-a-music-student-matter" class="nav-link" data-scroll-target="#does-being-a-music-student-matter">Does being a music student matter?</a></li>
   </ul></li>
+  <li><a href="#render-your-rmd-file" id="toc-render-your-rmd-file" class="nav-link" data-scroll-target="#render-your-rmd-file">Render your Rmd file!</a></li>
+  <li><a href="#the-end" id="toc-the-end" class="nav-link" data-scroll-target="#the-end">The end</a></li>
   </ul>
 </nav>
     </div>
@@ -357,7 +359,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>To download the file with the data right-click on the following link and download the file: <a href="../data/polite.csv">polite.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>). Remember to save the file in <code>data/</code> in the course project folder.</p>
 <p>With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the <a href="https://here.r-lib.org">here</a> package (remember how to install packages?) and <strong>add the following line in the setup chunk</strong>, just after the first line of code.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> here<span class="sc">::</span><span class="fu">here</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Now rerun the setup code chunk to set the new option.</p>
+<p>(Note that it’s <code>knitr::opts_knit</code> rather than <code>knitr::opts_chunk</code>).</p>
+<p>Now rerun the <code>setup</code> code chunk to set the new option.</p>
 <p>This will set the working directory for the Rmd file to the project working directory.</p>
 <p>Finally, <strong>create a new code chunk, add the following line of code and then run the code chunk to read the data</strong>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite_d30e440b9f0478c0523ed6089fb1af60">
@@ -398,36 +401,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Nice, but we are missing the most important part: showing the data!</p>
 <p>Data is represented with <strong>geometries</strong>, or <code>geom</code>s for short. <code>geom</code>s are added to the base ggplot with functions whose names all start with <code>geom_</code>.</p>
 <p>For this plot, you want to use <code>geom_point()</code>. This geom simply adds point to the plot based on the data in the <code>polite</code> data frame.</p>
-<p>Replace <code>...</code> with the geom in the following code and run it.</p>
-<div class="cell" data-hash="tutorial-w03_cache/html/first-plot_9401d1a7bc51839a3cceab52d66e5832">
+<p>To add <code>geom</code>s to a plot, you write a <code>+</code> at the end of the <code>ggplot()</code> command and include the geom on the next line. For example:</p>
+<div class="cell" data-hash="tutorial-w03_cache/html/first-plot_b1ee3199d755c2cc30fbbc00b0356c4d">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> polite,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> f0mn, <span class="at">y =</span> H1H2)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 12 rows containing missing values (`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="tutorial-w03_files/figure-html/first-plot-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 <p>This type of plot, with two continuous axes and data represented by points, is called a <strong>scatter plot</strong>.</p>
+<p>Note that using the <code>+</code> is a quirk of <code>ggplot()</code>. The idea behind it is that you start from a bare plot and you <strong>add</strong> (<code>+</code>) layers of data on top of it. This is because of the philosophy behind the package, called the <a href="http://vita.had.co.nz/papers/layered-grammar.html">Layered Grammar of Graphics</a>.</p>
 </section>
 <section id="function-arguments" class="level3">
 <h3 class="anchored" data-anchor-id="function-arguments">Function arguments</h3>
 <p>Note that the <code>data</code> and <code>mapping</code> arguments don’t have to be named explicitly (with <code>data =</code> and <code>mapping =</code>) in the <code>ggplot()</code> function, since they are obligatory and they are specified in that order.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/named-arguments_5dee62a067434f67917996c7666b9b6a">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  polite,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> f0mn, <span class="at">y =</span> H1H2)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  polite,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> f0mn, <span class="at">y =</span> H1H2)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tutorial-w03_files/figure-html/named-arguments-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>In fact, you can also leave out <code>x =</code> and <code>y =</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/named-arguments-2_50a2cfde8143d90b267bcd56427170a0">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  polite,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(f0mn, H1H2)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  polite,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(f0mn, H1H2)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 12 rows containing missing values (`geom_point()`).</code></pre>
 </div>
@@ -467,11 +477,11 @@ Question
 <p>This time the file is not a <code>.csv</code> file but an <code>.rds</code> file. <code>.rds</code> files are files that can save any R object. They are commonly used to save data frames, like in this case.</p>
 <p>To read an <code>.rds</code> file you need the <code>readRDS()</code> function.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/glot-status_b9a7c710cc144f0beb80a401a09f706e">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/glot_status.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/glot_status.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here’s what the data frame looks like.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/glot-status-view_c5384a0e4ba43c436a48d9d890d93f71">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>glot_status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>glot_status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -494,9 +504,9 @@ Question
 <p>You only need one axis, the <em>x</em> axis to be precise, because the <em>y</em>-axis will have the counts.</p>
 <p>Also, note how we’re using <code>%&gt;%</code> to pipe the lot_status into the <code>ggplot()</code> function. This works because <code>ggplot()</code>’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-bar_6912932ab36a5a890c170653cf33998a">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status)) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note how the counting is done automatically. R looks in the <code>status</code> column and counts how many times each value in the column occurs in the data frame.</p>
 </section>
@@ -507,11 +517,11 @@ Question
 <p>Let’s make a plot on language endangerment by macro-area.</p>
 <p>Complete the following code by specifying that <code>fill</code> should be based on <code>status</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-stacked_bdde3e877bcb73867cf3374436efbe79">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -523,9 +533,9 @@ Question
 <h3 class="anchored" data-anchor-id="polite-again">Polite again</h3>
 <p>Let’s reproduce one of the plots from above, but this time let’s use the <code>colour</code> aesthetic to colour the points by <code>gender</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-gender_e8d867314189861cc45846f8513cb66d">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tutorial-w03_files/figure-html/polite-gender-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -544,16 +554,25 @@ Question
 <p>We can create panels using <code>facet_grid()</code>. This function takes lists of variables to specify panels in rows and/or columns.</p>
 <p>The syntax is a bit strange. Check the documentation with <code>?facet_grid()</code> (especially the examples) to see how it works and then complete the code below and run it to produce a plot with two column panels for <code>musicstudent</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-facet_3f650075940ba355f27321cb706f9098">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="render-your-rmd-file" class="level2">
+<h2 class="anchored" data-anchor-id="render-your-rmd-file">Render your Rmd file!</h2>
+<p>Now that you have done all of this hard work, why don’t you try and render the Rmd file you’ve been working on to an HTML file?</p>
+<p>Go ahead, click on the “Knitr” button and if everything works fine you should see a rendered HTML file in a second!</p>
+<p>Note that you will be asked to render your Rmd files for the assessments, so I recommend you try this out now.</p>
+</section>
+<section id="the-end" class="level2">
+<h2 class="anchored" data-anchor-id="the-end">The end</h2>
 <p>That’s all for this week!</p>
 <p>Next week, you will learn how to create density and violin plots and how to customise legends, titles and labels!</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

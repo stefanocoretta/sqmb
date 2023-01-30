@@ -253,7 +253,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>Text can be made italics by enclosing it between single stars: <code>*this text is in italics*</code>.</p></li>
 <li><p>You can make text bold with two stars: <code>**this text is bold!**</code>.</p></li>
-<li><p>Heading are created with <code>#</code>: <code># This is a level-1 heading</code>.</p></li>
+<li><p>Heading are created with <code>#</code>: <code># This is a level-1 heading</code>. <code>## This is a level-2 heading</code>.</p></li>
 </ul>
 </section>
 <section id="create-an-rmd-file" class="level3">
@@ -291,8 +291,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="how-to-run-code" class="level3">
 <h3 class="anchored" data-anchor-id="how-to-run-code">How to run code</h3>
-<p>The first code chunk in an Rmd file is a special one: it’s called <code>setup</code> and it’s where you attach all the packages needed for running the code in the file.</p>
-<p>It also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.</p>
+<p>The first code chunk in an Rmd file is a special one: it’s called <code>setup</code> and it’s where you attach all the packages needed for running the code in the file. (You can find the name of a code chunk—or define one yourself!—in the first line of a code block: <code>```{r codechunknamehere</code>. The first code chunk of an Rmd file should always be named <code>setup</code>.</p>
+<p>The <code>setup</code> code chunk also has special code from the knitr package. The knitr package is what allows you to run R code from Rmd files.</p>
 <p>The line <code>knitr::opts_chunk$set(echo = TRUE)</code> sets the option <code>echo</code> to <code>TRUE</code>. The <code>echo</code> option let’s you decide whether you want the R code printed (echoed) in the rendered Rmd file. When <code>echo = TRUE</code> the code is printed, when <code>echo = FALSE</code> the code is not printed.</p>
 <p>Now go ahead and add <code>library(tidyverse)</code> in the line next to the <code>knitr::opts_chunk</code> line.</p>
 <p>To run the code of a code chunk you can use different approaches:</p>
@@ -301,9 +301,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Alternatively, place the text cursor inside the code chunk and press <code>CMD/CTRL + SHIFT + ENTER</code>.</p></li>
 <li><p>You can also run line by line as you do in an R script by placing the text cursor on the line you want to run and press <code>CMD/CTRL + ENTER</code>.</p></li>
 </ul>
-<p>Now delete everything after the <code>setup</code> code chunk and write a new level-2 heading after the chunk. (Remember to leave an empty line between the chunk and the heading.)</p>
+<p>Now delete everything after the <code>setup</code> code chunk and write a new level-2 heading after the chunk with the name “Plotting basics”. (Remember to leave an empty line between the chunk and the heading.)</p>
 <p><img src="../img/rmd-setup.png" class="img-fluid"></p>
-<p>You will use this Rmd file to write text and code for this tutorial. To insert a new code chunk, you can click on the <code>Insert a new code chunk</code> button and then select <code>R</code>, or you can press <code>ALT + CMD/CTRL + I</code>.</p>
+<p>You will use this Rmd file to write text and code for this tutorial. To insert a new code chunk, you can click on the <code>Insert a new code chunk</code> button and then select <code>R</code>, or you can press <code>OPT/ALT + CMD/CTRL + I</code>.</p>
 <p><img src="../img/rmd-new-chunk.png" class="img-fluid"></p>
 <p>A new R code chunk will be inserted at the text cursor position.</p>
 </section>
@@ -324,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="base-r-plotting-function" class="level3">
 <h3 class="anchored" data-anchor-id="base-r-plotting-function">Base R plotting function</h3>
-<p>Let’s create two vectors, <code>x</code> and <code>y</code> and plot them. For now, run these in the Console.</p>
+<p>Let’s create two vectors, <code>x</code> and <code>y</code> and plot them. For now, run these in the Console (not in the code chunk we just created).</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/scatter_3683926b50d07426d8eb05b2c7a48663">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x<span class="sc">^</span><span class="dv">3</span></span>
@@ -353,9 +353,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="the-polite-data" class="level3">
 <h3 class="anchored" data-anchor-id="the-polite-data">The <code>polite</code> data</h3>
 <p>We will use the <code>polite</code> data to learn the basics of plotting using ggplot.</p>
-<p>The data comes from the paper by Winter and Grawunder. 2020. <em>The phonetic profile of Korean formal and informal speech registers</em>. DOI: <a href="https://doi.org/10.1016/j.wocn.2012.08.006">10.1016/j.wocn.2012.08.006</a></p>
+<p>The data comes from the paper by Winter and Grawunder, 2020. <em>The phonetic profile of Korean formal and informal speech registers</em>. DOI: <a href="https://doi.org/10.1016/j.wocn.2012.08.006">10.1016/j.wocn.2012.08.006</a></p>
 <p>To download the file with the data right-click on the following link and download the file: <a href="../data/polite.csv">polite.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>). Remember to save the file in <code>data/</code> in the course project folder.</p>
-<p>With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the [here](https://here.r-lib.org) package (remember how to install packages?) and <strong>add the following line in the setup chunk</strong>, just after the first line of code.</p>
+<p>With Rmd files, we can use relative paths to read data. For relative paths to work relative to the project working directory, you need to install the <a href="https://here.r-lib.org">here</a> package (remember how to install packages?) and <strong>add the following line in the setup chunk</strong>, just after the first line of code.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">root.dir =</span> here<span class="sc">::</span><span class="fu">here</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now rerun the setup code chunk to set the new option.</p>
 <p>This will set the working directory for the Rmd file to the project working directory.</p>
@@ -406,7 +406,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This type of plot, with two continuous axes and data represented by points, is called a <strong>scatter plot</strong></p>
+<p>This type of plot, with two continuous axes and data represented by points, is called a <strong>scatter plot</strong>.</p>
 </section>
 <section id="function-arguments" class="level3">
 <h3 class="anchored" data-anchor-id="function-arguments">Function arguments</h3>
@@ -446,7 +446,7 @@ Question
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Which of the following will produce the same plot as the one above?</strong></p>
+<p><strong>Which of the following will produce the same plot as the one above?</strong> Reason through it first without running the code, then run all of these to check whether they look the way you expected.</p>
 <ol type="1">
 <li><code>ggplot(polite, aes(H1H2, f0mn)) + geom_point()</code></li>
 <li><code>ggplot(polite, aes(y = H1H2, x = f0mn)) + geom_point()</code></li>
@@ -462,7 +462,7 @@ Question
 <p><strong>Bar charts are useful when you are counting things.</strong> In the following example, we will be counting the number of languages by their endangerment status.</p>
 <section id="do-you-understand-me" class="level3">
 <h3 class="anchored" data-anchor-id="do-you-understand-me">Do you understand me?</h3>
-<p>There are thousands of languages in the world, but most of them are loosing speakers, and some are already no longer spoken. The endangerment status of a language in the data is on a scale from <code>not endangered</code> (languages with large populations of speakers) through <code>threatened</code>, <code>shifting</code> and <code>nearly extinct</code>, to <code>extinct</code> (languages that have no living speakers left).</p>
+<p>There are thousands of languages in the world, but most of them are losing speakers, and some are already no longer spoken. The endangerment status of a language in the data is on a scale from <code>not endangered</code> (languages with large populations of speakers) through <code>threatened</code>, <code>shifting</code> and <code>nearly extinct</code>, to <code>extinct</code> (languages that have no living speakers left).</p>
 <p>The <code>glot_status</code> data frame contains the endangerment status for 7,845 languages from <a href="https://glottolog.org">Glottolog</a>. To download the file with the data right-click on the following link and download the file: <a href="../data/glot_status.rds">glot_status.rds</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>). Remember to save the file in <code>data/</code> in the course project folder.</p>
 <p>This time the file is not a <code>.csv</code> file but an <code>.rds</code> file. <code>.rds</code> files are files that can save any R object. They are commonly used to save data frames, like in this case.</p>
 <p>To read an <code>.rds</code> file you need the <code>readRDS()</code> function.</p>
@@ -481,7 +481,7 @@ Question
 </div>
 </div>
 </div>
-<p>The most important columns are:</p>
+<p>For us today, the most important columns are:</p>
 <ul>
 <li><p><code>Name</code>: the language name.</p></li>
 <li><p><code>status</code>: the endangerment status of the language.</p></li>
@@ -492,17 +492,18 @@ Question
 <h3 class="anchored" data-anchor-id="create-a-bar-chart">Create a bar chart</h3>
 <p>To create a bar chart, add <code>geom_bar()</code> to the plot.</p>
 <p>You only need one axis, the <em>x</em> axis to be precise, because the <em>y</em>-axis will have the counts.</p>
+<p>Also, note how we’re using <code>%&gt;%</code> to pipe the lot_status<code>into the</code>ggplot()<code>function. This works because</code>ggplot()`’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-bar_6912932ab36a5a890c170653cf33998a">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status)) <span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Note how the counting is done automatically. R looks in the <code>AES</code> column and counts how many times each value in the column occurs in the data frame.</p>
+<p>Note how the counting is done automatically. R looks in the <code>status</code> column and counts how many times each value in the column occurs in the data frame.</p>
 </section>
 <section id="stacked-bar-charts" class="level3">
 <h3 class="anchored" data-anchor-id="stacked-bar-charts">Stacked bar charts</h3>
 <p>A special type of bar charts are the so-called <strong>stacked bar charts</strong>. These are bar charts where each bar contains a “stack” of shorter bars, each indicating the counts of some sub-groups.</p>
-<p>To create a stacked bar chart, you just need to add a new aesthetic mapping: <code>fill</code>. The <code>fill</code> aesthetic let’s you fill bars or areas with different colours depending on the values of a specified column.</p>
+<p>To create a stacked bar chart, you just need to add a new aesthetic mapping: <code>fill</code>. The <code>fill</code> aesthetic lets you fill bars or areas with different colours depending on the values of a specified column.</p>
 <p>Let’s make a plot on language endangerment by macro-area.</p>
 <p>Complete the following code by specifying that <code>fill</code> should be based on <code>status</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-stacked_bdde3e877bcb73867cf3374436efbe79">
@@ -513,6 +514,7 @@ Question
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What if we want to move the colour legend to the bottom of the plot?</p>
+<p>In <code>ggplot2</code>, we control the position of the legend by modifying an elements of the <code>theme</code> option. (If this seems arbitrary, you’re not wrong. Eventually you’ll memorise quirky <code>ggplot2</code> features like this, and until then, you can figure it out by searching “How do I change legend position in ggplot” and some kind soul on the internet will tell you.)</p>
 <p>Check out the documentation of <code>theme</code> by typing <code>?theme</code> in the RStudio Console and press ENTER. Search for the word <code>position</code>.</p>
 <div class="callout-important callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center">
@@ -532,6 +534,15 @@ Question
 </ol>
 </div>
 </div>
+<p>To check, try replacing the first <code>...</code> in the code below with the <code>y=</code> specification you used above, and the second …` with the correct way of moving the legend to the bottom of the plot. Run the code to see if you’re right!</p>
+<div class="cell" data-hash="tutorial-w03_cache/html/status-stacked-legend-bottom_e68ed1b4000784fcfb20643b632c5368">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="faceting-and-panels" class="level2">
@@ -542,9 +553,9 @@ Question
 <h3 class="anchored" data-anchor-id="polite-again">Polite again</h3>
 <p>Let’s reproduce one of the plots from above, but this time let’s use the <code>colour</code> aesthetic to colour the points by <code>gender</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-gender_e8d867314189861cc45846f8513cb66d">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tutorial-w03_files/figure-html/polite-gender-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -563,10 +574,10 @@ Question
 <p>We can create panels using <code>facet_grid()</code>. This function takes lists of variables to specify panels in rows and/or columns.</p>
 <p>The syntax is a bit strange. Check the documentation with <code>?facet_grid()</code> (especially the examples) to see how it works and then complete the code below and run it to produce a plot with two column panels for <code>musicstudent</code>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite-facet_3f650075940ba355f27321cb706f9098">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(f0mn, H1H2, <span class="at">colour =</span> gender)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That’s all for this week!</p>
 <p>Next week, you will learn how to create density and violin plots and how to customise legends, titles and labels!</p>

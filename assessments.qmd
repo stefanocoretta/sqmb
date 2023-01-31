@@ -1,4 +1,4 @@
-## Overview
+## Assessment overview
 
 This course will be assessed on the basis of a **3 formative assessments** and **2 summative assessments**.
 
@@ -10,16 +10,16 @@ See below for details.
 
 ## Formative assessments
 
-::: {.callout-warning collapse="true" icon="false"}
-## Formative 1: Week 4
+::: {.callout-warning collapse="false" icon="false"}
+## Formative 1: Week 4 (**Thursday 9 February at NOON)**
 
 **Data summary and visualisation**
 
--   Given a data table, submit a short and concise report with summary measurements and plots illustrating patterns in the data.
+- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
 
--   Criticise a given plot and provide an appropriate plot for the given data.
+- We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
 
--   Answer a set of multiple-choice and true/false questions.
+- The GitHub Classroom invitation link can be found on Learn.
 :::
 
 ::: {.callout-warning collapse="true" icon="false"}

@@ -1,4 +1,4 @@
-## Overview
+## Syllabus overview
 
 This course is an introduction to **quantitative data analysis**, as commonly employed in linguistics, using the R software.
 
@@ -214,11 +214,13 @@ Learning from Data.*
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 1
 
+- **DUE on Thursday 9 February at NOON**.
+
 - Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
 
 - We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
 
-- GitHub Classroom invitation links will be circulated via Learn.
+- The GitHub Classroom invitation link can be found on Learn.
 
 :::
 

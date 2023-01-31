@@ -148,6 +148,19 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
+::: {.callout-note collapse="false"}
+#### Homework
+
+**Set-up your laptop**
+
+From Week 4 on, we will need to use software that unfortunately is not currently working on the Lab PCs. This means you will need to bring your own laptop to the workshop. Moreover, **you will have to install software prior to the workshop**.
+
+**Note that it will take up to an hour to install everything and you might encounter errors, so please do this asap. DO NOT WAIT NEXT WEEK.**
+
+You can find the full instructions here: [set-up instructions](setup.qmd).
+
+:::
+
 ::: {.callout-tip collapse="false"}
 #### Materials
 
@@ -205,6 +218,18 @@ Learning from Data.*
 - Describe the model specification and results in writing.
 :::
 
+::: {.callout-note collapse="true"}
+#### Homework
+
+**Set-up your laptop**
+
+From Week 4 on, we will need to use software that unfortunately is not currently working on the Lab PCs. This means you will need to bring your own laptop to the workshop. Moreover, **you were asked to install software prior to the workshop**.
+
+**In the tragic event you did not go through the installation instructions last week, DO IT NOW AT YOUR OWN PERIL.** I won't be able to help you with the installation during the workshop.
+
+You can find the full instructions here: [set-up instructions](setup.qmd).
+
+:::
 
 ### Week 5: Linear models, Basics II
 

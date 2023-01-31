@@ -184,6 +184,29 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 - [Spiegelhalter 2020](https://www.penguin.co.uk/books/294857/the-art-of-statistics-by-spiegelhalter-david/9780241258767). *The Art of Statistics:
 Learning from Data.*
 
+**Extra**
+
+- [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/).
+- **Data viz catalogues**
+  - [Directory of visualisations](https://clauswilke.com/dataviz/directory-of-visualizations.html)
+  - [Data viz catalogue](https://datavizcatalogue.com/index.html)
+  - [Data Viz project](https://datavizproject.com)
+  - [Top 50](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+  - [Data Viz](https://datavizm20.classes.andrewheiss.com/)
+- **Tutorials**
+  - [Raincloud plots](https://wellcomeopenresearch.org/articles/4-63)
+  - [Labels](https://www.cararthompson.com/talks/user2022/)
+  - [Graphic design](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/)
+- **Colour**
+  - [ColorBrewer2](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3).
+  - [MetBrewer](https://github.com/BlakeRMills/MetBrewer)
+  - [Use colour wisely](https://albert-rapp.de/post/2022-02-19-ggplot2-color-tips-from-datawrapper/).
+- **Caveats**
+  - [Same stats different data](https://www.autodesk.com/research/publications/same-stats-different-graphs).
+  - [Behind bars](https://stats.stackexchange.com/questions/349422/does-it-make-sense-to-add-error-bars-in-a-bar-chart-of-frequencies/367889#367889).
+  - [Issues with error bars](https://www.data-to-viz.com/caveat/error_bar.html).
+  - [I've stopped using boxplots](https://nightingaledvs.com/ive-stopped-using-box-plots-should-you/).
+
 :::
 
 ### Week 4: Linear models, Basics I

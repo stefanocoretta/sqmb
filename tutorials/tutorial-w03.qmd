@@ -198,6 +198,8 @@ Now rerun the `setup` code chunk to set the new option.
 
 This will set the working directory for the Rmd file to the project working directory.
 
+**Make sure that this line is always in the `setup` block**, or R might get confused about where the working directory is and not be able to find the data.
+
 Finally, **create a new code chunk, add the following line of code and then run the code chunk to read the data**.
 
 ```{r}

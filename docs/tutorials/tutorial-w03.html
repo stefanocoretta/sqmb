@@ -251,7 +251,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>R comments in R scripts cannot be formatted (for example, you can’t make bold or italic texts).</p>
 <p>Text in Rmd files can be fully formatted using a simple but powerful <strong>mark-up language</strong> called <a href="https://www.markdownguide.org">markdown</a>.</p>
 <p>You don’t have to learn markdown all in one go, so I encourage you to just learn it bit by bit, in your time. You can look at the the <a href="">Markdown Guide</a> for an in-depth intro and/or dive in the <a href="https://www.markdowntutorial.com">Markdown Tutorial</a> for a hands-on approach.</p>
-<p>A few quick pointers (you can test them in the <a href="https://markdownlivepreview.com">Markdown Live Preview</a>:</p>
+<p>A few quick pointers (you can test them in the <a href="https://markdownlivepreview.com">Markdown Live Preview</a>):</p>
 <ul>
 <li><p>Text can be made italics by enclosing it between single stars: <code>*this text is in italics*</code>.</p></li>
 <li><p>You can make text bold with two stars: <code>**this text is bold!**</code>.</p></li>
@@ -260,7 +260,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="create-an-rmd-file" class="level3">
 <h3 class="anchored" data-anchor-id="create-an-rmd-file">Create an Rmd file</h3>
-<p>To create a new Rmd file, just click on the click on the <code>New file</code> button, then <code>R Markdown...</code>. (If you are asked to install/update packages, do so.</p>
+<p>To create a new Rmd file, just click on the click on the <code>New file</code> button, then <code>R Markdown...</code>. (If you are asked to install/update packages, do so.)</p>
 <p><img src="../img/new-rmd.png" class="img-fluid"></p>
 <p>A window will open. Add a title of your choice and your name, then click <code>OK</code>.</p>
 <p><img src="../img/new-rmd-window.png" class="img-fluid"></p>
@@ -362,6 +362,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>(Note that it’s <code>knitr::opts_knit</code> rather than <code>knitr::opts_chunk</code>).</p>
 <p>Now rerun the <code>setup</code> code chunk to set the new option.</p>
 <p>This will set the working directory for the Rmd file to the project working directory.</p>
+<p><strong>Make sure that this line is always in the <code>setup</code> block</strong>, or R might get confused about where the working directory is and not be able to find the data.</p>
 <p>Finally, <strong>create a new code chunk, add the following line of code and then run the code chunk to read the data</strong>.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/polite_d30e440b9f0478c0523ed6089fb1af60">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>polite <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/polite.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -502,7 +503,7 @@ Question
 <h3 class="anchored" data-anchor-id="create-a-bar-chart">Create a bar chart</h3>
 <p>To create a bar chart, add <code>geom_bar()</code> to the plot.</p>
 <p>You only need one axis, the <em>x</em> axis to be precise, because the <em>y</em>-axis will have the counts.</p>
-<p>Also, note how we’re using <code>%&gt;%</code> to pipe the lot_status into the <code>ggplot()</code> function. This works because <code>ggplot()</code>’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
+<p>Also, note how we’re using <code>%&gt;%</code> to pipe the <code>glot_status</code> data frame into the <code>ggplot()</code> function. This works because <code>ggplot()</code>’s first argument is the data, and piping is a different way of providing the first argument to a function.</p>
 <div class="cell" data-hash="tutorial-w03_cache/html/status-bar_6912932ab36a5a890c170653cf33998a">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>glot_status <span class="sc">%&gt;%</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> status)) <span class="sc">+</span></span>

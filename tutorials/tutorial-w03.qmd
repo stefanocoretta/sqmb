@@ -44,7 +44,7 @@ Text in Rmd files can be fully formatted using a simple but powerful **mark-up l
 
 You don't have to learn markdown all in one go, so I encourage you to just learn it bit by bit, in your time. You can look at the the [Markdown Guide]() for an in-depth intro and/or dive in the [Markdown Tutorial](https://www.markdowntutorial.com) for a hands-on approach.
 
-A few quick pointers (you can test them in the [Markdown Live Preview](https://markdownlivepreview.com):
+A few quick pointers (you can test them in the [Markdown Live Preview](https://markdownlivepreview.com)):
 
 -   Text can be made italics by enclosing it between single stars: `*this text is in italics*`.
 
@@ -54,7 +54,7 @@ A few quick pointers (you can test them in the [Markdown Live Preview](https://m
 
 ### Create an Rmd file
 
-To create a new Rmd file, just click on the click on the `New file` button, then `R Markdown...`. (If you are asked to install/update packages, do so.
+To create a new Rmd file, just click on the click on the `New file` button, then `R Markdown...`. (If you are asked to install/update packages, do so.)
 
 ![](/img/new-rmd.png)
 
@@ -353,7 +353,7 @@ To create a bar chart, add `geom_bar()` to the plot.
 
 You only need one axis, the *x* axis to be precise, because the *y*-axis will have the counts.
 
-Also, note how we're using `%>%` to pipe the lot_status into the `ggplot()` function. This works because `ggplot()`'s first argument is the data, and piping is a different way of providing the first argument to a function.
+Also, note how we're using `%>%` to pipe the `glot_status` data frame into the `ggplot()` function. This works because `ggplot()`'s first argument is the data, and piping is a different way of providing the first argument to a function.
 
 ```{r}
 #| label: status-bar

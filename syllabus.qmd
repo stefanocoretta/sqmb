@@ -274,3 +274,53 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 - Understand treatment and sum coding.
 - Advanced reporting of model specification and results.
 :::
+
+### Flexible Learning Week
+
+::: {.callout-note collapse="true"}
+#### Homework
+
+There is no homework as such, so take the time to revise the materials and/or catch up with the previous weeks' materials.
+
+There will be no classes.
+:::
+
+### Week 6: Linear models: Binary outcomes
+
+::: {.callout-warning collapse="false"}
+#### Formative assessment 2
+
+Info to follow.
+
+:::
+
+### Week 7: Linear models: Intermediate I
+
+### Week 8: Linear models: Intermediate II
+
+::: {.callout-warning collapse="false"}
+#### Formative assessment 3
+
+Info to follow.
+
+:::
+
+### Week 9: Statistical inference
+
+### Thursday 30 March
+
+::: {.callout-warning collapse="false"}
+#### Summative assessment 1
+
+Info to follow.
+
+:::
+
+### Thursday 27 April
+
+::: {.callout-warning collapse="false"}
+#### Summative assessment 2
+
+Info to follow.
+
+:::

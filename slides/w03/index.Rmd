@@ -35,6 +35,7 @@ library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 
 library(tidyverse)
+theme_set(theme_light())
 library(ggmosaic)
 
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
@@ -48,6 +49,15 @@ formants <- read_csv("data/formants.csv")
 gestures <- read_csv("data/gestures.csv")
 polite <- read_csv("data/polite.csv")
 mald_1_1 <- readRDS("data/mald_1_1.rds")
+
+formants <- formants %>%
+  mutate(
+    time = time / 9
+  ) %>%
+  pivot_longer(f1:f2, names_to = "formant") %>%
+  mutate(
+    id = paste(file, formant, sep = "_")
+  )
 ```
 
 
@@ -191,7 +201,8 @@ layout: false
 glot_status %>%
   ggplot(aes(Macroarea, fill = status)) +
   geom_bar(position = "fill") +
-  scale_fill_brewer(type = "seq", palette = "BuPu")
+  scale_fill_brewer(type = "seq", palette = "BuPu") +
+  labs(y = "proportion")
 ```
 
 ???
@@ -204,11 +215,13 @@ Each bar is stretched so that covers the entire range from 0 to 1.
 
 Note that proportions are between 0 and 1, while percentages are between 0 and 100%.
 
+By default, `geom_bar()` adds a *y* label "counts" so you have to manually change the label to "proportions".
+
 ---
 
 # Dot matrix chart
 
-```{r status-matrix, fig.asp=1}
+```{r status-matrix, fig.asp=1, out.width="45%"}
 n_per_row <- 100
 glot_status %>%
   arrange(status) %>%
@@ -251,10 +264,12 @@ layout: true
 ```{r forms-line}
 formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
-  ggplot(aes(time, group = file)) +
-  geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
-  geom_line(aes(y = f2), alpha = 0.1, colour = "orange") +
-  facet_grid(. ~ c2)
+  ggplot(aes(time, value, group = id, colour = formant)) +
+  geom_line(alpha = 0.5) +
+  facet_grid(. ~ c2) +
+  labs(
+    x = "Relative time", y = "Formant value (Hz)"
+  )
 ```
 
 ---
@@ -262,10 +277,12 @@ formants %>%
 ```{r forms-point}
 formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
-  ggplot(aes(time, group = file)) +
-  geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
-  geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
-  facet_grid(. ~ c2)
+  ggplot(aes(time, value, group = id, colour = formant)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(. ~ c2) +
+  labs(
+    x = "Relative time", y = "Formant value (Hz)"
+  )
 ```
 
 ---
@@ -273,12 +290,13 @@ formants %>%
 ```{r forms-line-point}
 formants %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
-  ggplot(aes(time, group = file)) +
-  geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
-  geom_line(aes(y = f2), alpha = 0.1, colour = "orange") +
-  geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
-  geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
-  facet_grid(. ~ c2)
+  ggplot(aes(time, value, group = id, colour = formant)) +
+  geom_line(alpha = 0.2) +
+  geom_point(alpha = 0.5) +
+  facet_grid(. ~ c2) +
+  labs(
+    x = "Relative time", y = "Formant value (Hz)"
+  )
 ```
 
 ---
@@ -287,7 +305,11 @@ formants %>%
 gestures %>%
   ggplot(aes(as.factor(months), count)) +
   geom_line(aes(group = id), alpha = 0.2) +
-  geom_point()
+  geom_point() +
+  labs(
+    title = "Infant gesture counts at 10, 11 and 12 mo",
+    x = "Months old", y = "Gesture count"
+  )
 ```
 
 
@@ -298,7 +320,11 @@ gestures %>%
   ggplot(aes(as.factor(months), count)) +
   geom_line(aes(group = id), alpha = 0.2) +
   geom_point() +
-  facet_grid(~ gesture)
+  facet_grid(~ gesture) +
+  labs(
+    title = "Infant gesture counts at 10, 11 and 12 mo, by gesture type",
+    x = "Months old", y = "Gesture count"
+  )
 ```
 
 ---
@@ -308,7 +334,11 @@ gestures %>%
   ggplot(aes(as.factor(months), count)) +
   geom_line(aes(group = id), alpha = 0.2) +
   geom_point() +
-  facet_grid(background ~ gesture)
+  facet_grid(background ~ gesture) +
+  labs(
+    title = "Infant gesture counts at 10, 11 and 12 mo",
+    x = "Months old", y = "Gesture count"
+  )
 ```
 
 ---
@@ -330,7 +360,11 @@ gestures %>%
   ggplot(aes(gesture, count_tot)) +
   geom_line(aes(group = dyad), alpha = 0.2) +
   geom_point() +
-  facet_grid(~ months)
+  facet_grid(~ months) +
+  labs(
+    title = "Infant point vs reach counts at 10, 11 and 12 mo",
+    x = "Gesture type", y = "Gesture count"
+  )
 ```
 
 ---
@@ -345,7 +379,11 @@ gestures %>%
   ggplot(aes(gesture, count_tot), alpha = 0.2) +
   geom_line(aes(group = dyad)) +
   geom_point() +
-  facet_grid(background ~ months)
+  facet_grid(background ~ months) +
+  labs(
+    title = "Infant gesture counts at 10, 11 and 12 mo",
+    x = "Gesture type", y = "Gesture count"
+  )
 ```
 
 ---
@@ -558,7 +596,8 @@ Bar charts should be used for discrete numeric variables, not for continuous var
 ```{r mald-bar-2}
 mald_1_1 %>%
   ggplot(aes(IsWord, fill = ACC)) +
-  geom_bar(position = "fill")
+  geom_bar(position = "fill") +
+  labs(y = "proportion")
 ```
 
 ???

@@ -41,7 +41,7 @@ class: center, middle, inverse, title-slide
 
 
 
-# Random variables
+## Random variables
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **We have a question about the world, so we sample from a population.**
@@ -72,7 +72,7 @@ In probability theory, **A random variable `\(Y\)` is a variable whose value is 
 
 layout: true
 
-# Probabilities
+## Probabilities
 
 ---
 
@@ -113,7 +113,7 @@ layout: true
 layout: false
 layout: true
 
-# Probability distributions
+## Probability distributions
 
 ---
 
@@ -252,7 +252,7 @@ background-image: url(https://media.giphy.com/media/443pAv9m6Ti8KiCoAi/giphy.gif
 
 layout: true
 
-# Albanian VOT
+## Albanian VOT
 
 ---
 
@@ -303,8 +303,120 @@ Let's assume VOT values are **distributed according to a Gaussian distribution**
 
 &lt;img src="index_files/figure-html/alb-vot-dist-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
+--
+
+We want to make inferences about the population based on the sample.
+
 ---
 
+.f3[
+`$$vot = Gaussian(\mu, \sigma)$$`
+]
+
+**Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
+
+--
+
+.f3[
+`$$\mu = ...$$`
+`$$\sigma = ...$$`
+]
+
+---
+
+.f3[
+`$$vot = Gaussian(\mu, \sigma)$$`
+]
+
+**Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
+
+
+
+.f3[
+`$$\mu = 12.6$$`
+`$$\sigma = 2.8$$`
+]
+
+--
+
+&lt;br&gt;
+
+**BUT**, this does not keep into consideration the **uncertainty and variability** of the sampling procedure.
+
+---
+
+.f3[
+`$$vot = Gaussian(\mu, \sigma)$$`
+]
+
+**Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
+
+--
+
+.f3[
+`$$\mu = Gussian(\mu_1, \sigma_1)$$`
+]
+
+**Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
+
+.f3[
+`$$\sigma = ...$$`
+]
+
+--
+
+Standard deviations are always positive! So we need a half Gaussian distribution (only the positive half!).
+
+---
+
+.f3[
+`$$vot = Gaussian(\mu, \sigma)$$`
+]
+
+**Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
+
+--
+
+.f3[
+`$$\mu = Gussian(\mu_1, \sigma_1)$$`
+]
+
+**Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
+
+.f3[
+`$$\sigma = HalfGaussian(\mu_2 = 0, \sigma_2)$$`
+]
+
+**Hyperparameters**: mean `\(\mu_2\)` = 0 and SD `\(\sigma_2\)`.
+
+---
+
+layout: false
+layout: true
+
+## Estimating probability distributions
+
+---
+
+.pull-left[
+&lt;img src="index_files/figure-html/norm-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/hnorm-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- `\(Gaussian(\mu, \sigma)\)`
+
+- We need to estimate:
+
+  - `\(\mu_1\)` and `\(\sigma_1\)` from the probability distribution of `\(\mu\)`.
+
+  - `\(\sigma_2\)` from the probability distribution of `\(\sigma\)`.
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -37,6 +37,7 @@ use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 library(tidyverse)
 theme_set(theme_light())
 library(glue)
+library(extraDistr)
 
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
 options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
@@ -55,7 +56,7 @@ alb_vot_vl <- alb_vot %>%
   )
 ```
 
-# Random variables
+## Random variables
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **We have a question about the world, so we sample from a population.**
@@ -86,7 +87,7 @@ In probability theory, **A random variable `\(Y\)` is a variable whose value is 
 
 layout: true
 
-# Probabilities
+## Probabilities
 
 ---
 
@@ -127,7 +128,7 @@ layout: true
 layout: false
 layout: true
 
-# Probability distributions
+## Probability distributions
 
 ---
 
@@ -274,7 +275,7 @@ background-image: url(https://media.giphy.com/media/443pAv9m6Ti8KiCoAi/giphy.gif
 
 layout: true
 
-# Albanian VOT
+## Albanian VOT
 
 ---
 
@@ -375,8 +376,13 @@ alb_dist <- ggplot(data = tibble(x = 0:25), aes(x)) +
     label = vot_sd_text,
     fill = "#8c510a", colour = "white"
   ) +
+  annotate(
+    "label", x = 5, y = 0.1,
+    label = "theoretical sample\ndistribution",
+    fill = "#9970ab", colour = "white"
+  ) +
   labs(
-    title = "Theoretical distribution of Albanian voiceless stops VOT",
+    title = "Theoretical sample distribution of Albanian voiceless stops VOT",
     subtitle = glue("Gaussian distribution: mean = {round(vot_mean, 1)} ms, SD = {round(vot_sd, 1)}"),
     x = "VOT (ms)", y = "Relative probability"
   )
@@ -390,11 +396,136 @@ alb_dist +
   geom_density(data = alb_vot_vl, aes(vot), colour = "grey", fill = "grey", alpha = 0.2) +
   geom_rug(data = alb_vot_vl, aes(vot), alpha = 0.5) +
   annotate(
-    "label", x = 19.25, y = 0.02,
-    label = "sample",
+    "label", x = 20, y = 0.03,
+    label = "empirical sample\ndistribution",
     fill = "grey", colour = "white"
   )
 ```
 
+--
+
+We want to make inferences about the population based on the sample.
+
 ---
 
+.f3[
+$$vot = Gaussian(\mu, \sigma)$$
+]
+
+**Parameters**: mean $\mu$ and SD $\sigma$.
+
+--
+
+.f3[
+$$\mu = ...$$
+$$\sigma = ...$$
+]
+
+---
+
+.f3[
+$$vot = Gaussian(\mu, \sigma)$$
+]
+
+**Parameters**: mean $\mu$ and SD $\sigma$.
+
+
+
+.f3[
+$$\mu = 12.6$$
+$$\sigma = 2.8$$
+]
+
+--
+
+<br>
+
+**BUT**, this does not keep into consideration the **uncertainty and variability** of the sampling procedure.
+
+---
+
+.f3[
+$$vot = Gaussian(\mu, \sigma)$$
+]
+
+**Parameters**: mean $\mu$ and SD $\sigma$.
+
+--
+
+.f3[
+$$\mu = Gussian(\mu_1, \sigma_1)$$
+]
+
+**Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
+
+.f3[
+$$\sigma = ...$$
+]
+
+--
+
+Standard deviations are always positive! So we need a half Gaussian distribution (only the positive half!).
+
+---
+
+.f3[
+$$vot = Gaussian(\mu, \sigma)$$
+]
+
+**Parameters**: mean $\mu$ and SD $\sigma$.
+
+--
+
+.f3[
+$$\mu = Gussian(\mu_1, \sigma_1)$$
+]
+
+**Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
+
+.f3[
+$$\sigma = HalfGaussian(\mu_2 = 0, \sigma_2)$$
+]
+
+**Hyperparameters**: mean $\mu_2$ = 0 and SD $\sigma_2$.
+
+---
+
+layout: false
+layout: true
+
+## Estimating probability distributions
+
+---
+
+.pull-left[
+```{r norm, out.width = "100%"}
+ggplot(data = tibble(x = -5:5), aes(x)) +
+  stat_function(fun = dnorm, n = 101, args = list(0, 1)) +
+  theme(
+    axis.text.x = element_blank()
+  )
+```
+]
+
+.pull-right[
+```{r hnorm, out.width = "100%"}
+ggplot(data = tibble(x = 0:5), aes(x)) +
+  stat_function(fun = dhnorm, n = 101, args = list(1)) +
+  geom_vline(xintercept = 0) +
+  theme(
+    axis.text.x = element_blank()
+  )
+```
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- `\(Gaussian(\mu, \sigma)\)`
+
+- We need to estimate:
+
+  - `\(\mu_1\)` and $\sigma_1$ from the probability distribution of $\mu$.
+
+  - $\sigma_2$ from the probability distribution of $\sigma$.
+]

@@ -36,9 +36,10 @@ use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 
 library(tidyverse)
 theme_set(theme_light())
-library(glue)
-library(extraDistr)
 library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
 
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
 options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
@@ -472,7 +473,7 @@ $$\sigma = ...$$
 
 --
 
-Standard deviations are always positive! So we need a half-Gaussian distribution (only the positive half!).
+Standard deviations are always positive! So we need a truncated Gaussian distribution (only the positive half!).
 
 ---
 
@@ -489,7 +490,7 @@ $$\mu = Gaussian(\mu_1, \sigma_1)$$
 **Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
 
 .f3[
-$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$
+$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
 ]
 
 **Hyperparameters**: mean $\mu_2$ and SD $\sigma_2$.
@@ -527,13 +528,13 @@ ggplot(data = tibble(x = 0:5), aes(x)) +
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- `\(Gaussian(\mu, \sigma), \mu = Gaussian(\mu_1, \sigma_1), \sigma = HalfGaussian(\mu_2, \sigma_2)\)`
+- `\(Gaussian(\mu, \sigma), \mu = Gaussian(\mu_1, \sigma_1), \sigma = TruncGaussian(\mu_2, \sigma_2)\)`
 
 - We need to estimate:
 
   - `\(\mu_1\)` and $\sigma_1$ for the Gaussian probability distribution of $\mu$.
 
-  - $\mu_2$ and $\sigma_2$ for the half-Gaussian probability distribution of $\sigma$.
+  - $\mu_2$ and $\sigma_2$ for the truncated Gaussian probability distribution of $\sigma$.
 ]
 
 --
@@ -624,12 +625,16 @@ vot_bm_summ <- capture.output(summary(vot_bm))
 cat(vot_bm_summ[c(8:10)], sep = "\n")
 ```
 
+--
+
 <br>
 <br>
 
 .pull-left[
 - **Intercept**: the mean $\mu$.
+
 - **Estimate**: $\mu_1 = 11.62$ ms.
+
 - **Est.Error**: $\sigma_1 = 0.59$ ms.
 ]
 
@@ -639,37 +644,66 @@ $$vot \sim Gaussian(\mu, \sigma)$$
 $$\mu = Gaussian(\mu_1, \sigma_1)$$
 ]
 
-$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$
+$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
 ]
 
 ---
 
 ```{r vot-int-p}
-x <- seq(9, 14, by = (14-9)/101)
-y <- dnorm(x, 11.62, 0.59)
+vot_bm_draws <- as_draws_df(vot_bm)
+int_dens_l <- density(vot_bm_draws$b_Intercept, adjust = 1.5)
+int_dens <- tibble(
+  x = int_dens_l$x,
+  y = int_dens_l$y
+)
 
-vot_int_p <- ggplot() +
-  aes(x, y) +
-  geom_line() +
+vot_int_p <- int_dens %>%
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1) +
   scale_x_continuous(n.breaks = 6) +
   labs(
-    title = expression(Probability~distribution~of~mu[1]),
+    title = expression(Probability~distribution~of~mu),
     x = expression(mu[1]), y = "Probability density"
-  )
+  ) +
+  ylim(0, 0.7)
 vot_int_p
 ```
 
 ---
 
 ```{r vot-int-p-2}
+ci_low <- 10.48
+ci_hi <- 12.78
+label_y <- 0.7
+
 vot_int_p +
   geom_ribbon(
-    aes(x = ifelse(x >= 10.48 & x <= 12.78, x, NA), ymin = 0, ymax = y),
+    aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
     fill = "#E84646",
     alpha = 0.4
-  )
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_hi, y = label_y, yend = label_y,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_low, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "segment",
+    x = ci_hi, xend = ci_hi, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate("label", x = ci_low + (ci_hi-ci_low)/2, y = label_y, label = "95% CrI")
 ```
 
+--
+
+There is a 95% probability that mean VOT is between `r ci_low` and `r ci_hi` ms.
 
 ---
 
@@ -677,3 +711,84 @@ vot_int_p +
 vot_bm_summ <- capture.output(summary(vot_bm))
 cat(vot_bm_summ[c(12:14)], sep = "\n")
 ```
+
+--
+
+<br>
+<br>
+
+.pull-left[
+- **sigma**: the SD $\sigma$.
+
+- **Estimate**: $\mu_2 = 2.88$ ms.
+
+- **Est.Error**: $\sigma_2 = 0.44$ ms.
+]
+
+.pull-right[
+$$vot \sim Gaussian(\mu, \sigma)$$
+
+$$\mu = Gaussian(\mu_1, \sigma_1)$$
+
+.purple[
+$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
+]
+]
+
+---
+
+```{r vot-sig-p}
+vot_bm_draws <- as_draws_df(vot_bm)
+sig_dens_l <- density(vot_bm_draws$sigma, adjust = 1.5)
+sig_dens <- tibble(
+  x = sig_dens_l$x,
+  y = sig_dens_l$y
+)
+
+vot_sig_p <- sig_dens %>%
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1) +
+  scale_x_continuous(n.breaks = 6) +
+  labs(
+    title = expression(Probability~distribution~of~mu),
+    x = expression(mu[1]), y = "Probability density"
+  ) +
+  ylim(0, 1)
+vot_sig_p
+```
+
+---
+
+```{r vot-int-p-2}
+ci_low <- 2.18
+ci_hi <- 3.88
+label_y <- 1
+
+vot_sig_p +
+  geom_ribbon(
+    aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_hi, y = label_y, yend = label_y,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_low, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "segment",
+    x = ci_hi, xend = ci_hi, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate("label", x = ci_low + (ci_hi-ci_low)/2, y = label_y, label = "95% CrI")
+```
+
+--
+
+There is a 95% probability that mean VOT is between `r ci_low` and `r ci_hi` ms.

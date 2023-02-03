@@ -38,10 +38,12 @@ library(tidyverse)
 theme_set(theme_light())
 library(glue)
 library(extraDistr)
+library(brms)
 
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
 options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
 options(show.signif.stars = FALSE)
+my_seed <- 8878
 ```
 
 ```{r read-data}
@@ -409,7 +411,15 @@ We want to make inferences about the population based on the sample.
 ---
 
 .f3[
-$$vot = Gaussian(\mu, \sigma)$$
+$$vot \sim Gaussian(\mu, \sigma)$$
+]
+
+**Read as**: VOT values (`\(vot\)`) are distributed according to (`\(\sim\)`) a Gaussian distribution (`\(Gaussian()\)`) with mean $\mu$ and standard deviation $\sigma$.
+
+---
+
+.f3[
+$$vot \sim Gaussian(\mu, \sigma)$$
 ]
 
 **Parameters**: mean $\mu$ and SD $\sigma$.
@@ -424,7 +434,7 @@ $$\sigma = ...$$
 ---
 
 .f3[
-$$vot = Gaussian(\mu, \sigma)$$
+$$vot \sim Gaussian(\mu, \sigma)$$
 ]
 
 **Parameters**: mean $\mu$ and SD $\sigma$.
@@ -445,15 +455,13 @@ $$\sigma = 2.8$$
 ---
 
 .f3[
-$$vot = Gaussian(\mu, \sigma)$$
+$$vot \sim Gaussian(\mu, \sigma)$$
 ]
 
 **Parameters**: mean $\mu$ and SD $\sigma$.
 
---
-
 .f3[
-$$\mu = Gussian(\mu_1, \sigma_1)$$
+$$\mu = Gaussian(\mu_1, \sigma_1)$$
 ]
 
 **Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
@@ -464,29 +472,27 @@ $$\sigma = ...$$
 
 --
 
-Standard deviations are always positive! So we need a half Gaussian distribution (only the positive half!).
+Standard deviations are always positive! So we need a half-Gaussian distribution (only the positive half!).
 
 ---
 
 .f3[
-$$vot = Gaussian(\mu, \sigma)$$
+$$vot \sim Gaussian(\mu, \sigma)$$
 ]
 
 **Parameters**: mean $\mu$ and SD $\sigma$.
 
---
-
 .f3[
-$$\mu = Gussian(\mu_1, \sigma_1)$$
+$$\mu = Gaussian(\mu_1, \sigma_1)$$
 ]
 
 **Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
 
 .f3[
-$$\sigma = HalfGaussian(\mu_2 = 0, \sigma_2)$$
+$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$
 ]
 
-**Hyperparameters**: mean $\mu_2$ = 0 and SD $\sigma_2$.
+**Hyperparameters**: mean $\mu_2$ and SD $\sigma_2$.
 
 ---
 
@@ -521,11 +527,153 @@ ggplot(data = tibble(x = 0:5), aes(x)) +
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- `\(Gaussian(\mu, \sigma)\)`
+- `\(Gaussian(\mu, \sigma), \mu = Gaussian(\mu_1, \sigma_1), \sigma = HalfGaussian(\mu_2, \sigma_2)\)`
 
 - We need to estimate:
 
-  - `\(\mu_1\)` and $\sigma_1$ from the probability distribution of $\mu$.
+  - `\(\mu_1\)` and $\sigma_1$ for the Gaussian probability distribution of $\mu$.
 
-  - $\sigma_2$ from the probability distribution of $\sigma$.
+  - $\mu_2$ and $\sigma_2$ for the half-Gaussian probability distribution of $\sigma$.
 ]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+With our sample of N = 24 we want to make inferences about the population of VOT values of Albanian voiceless stops, by estimating the four parameters $\mu_1$, $\sigma_1$, $\mu_2$ and $\sigma_2$.
+]
+
+---
+
+```{r vot-bm, echo=FALSE}
+vot_bm <- brm(
+  vot ~ 1,
+  data = alb_vot_vl,
+  backend = "cmdstanr",
+  cores = 4,
+  file = "./data/cache/vot_bm",
+  seed = my_seed
+)
+```
+
+```{r vot-bm-code, eval=FALSE, echo=TRUE}
+# Attach the brms package
+library(brms)
+
+# Run a Bayesian model
+vot_bm <- brm(
+  # This is the formula of the model.
+  vot ~ 1,
+  # This is the probability distribution family.
+  family = gaussian(),
+  # And the data.
+  data = alb_vot_vl
+)
+```
+
+---
+
+.f2.center[
+`vot ~ 1`
+]
+
+**Read as**: Model VOT values (`vot`) as a function of (`~`) the mean (`1`).
+
+.f7[We will see later that `1` is also called the *Intercept*.]
+
+--
+
+.f2.center[
+`family = gaussian()`
+]
+
+**Read as**: using a Gaussian probability distribution.
+
+- The Gaussian distribution also has another parameter, the SD.
+
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Altogether**: Model VOT values as a function of the mean and standard deviation of a Gaussian probability distribution.
+]
+
+---
+
+```{r vot-bm-summ}
+summary(vot_bm)
+```
+
+---
+
+```{r vot-bm-summ-2}
+vot_bm_summ <- capture.output(summary(vot_bm))
+cat(vot_bm_summ[c(1, 3, 4, 7:14)], sep = "\n")
+```
+
+---
+
+```{r vot-bm-summ-3}
+vot_bm_summ <- capture.output(summary(vot_bm))
+cat(vot_bm_summ[c(1, 3, 4)], sep = "\n")
+```
+
+---
+
+```{r vot-bm-summ-4}
+vot_bm_summ <- capture.output(summary(vot_bm))
+cat(vot_bm_summ[c(8:10)], sep = "\n")
+```
+
+<br>
+<br>
+
+.pull-left[
+- **Intercept**: the mean $\mu$.
+- **Estimate**: $\mu_1 = 11.62$ ms.
+- **Est.Error**: $\sigma_1 = 0.59$ ms.
+]
+
+.pull-right[
+$$vot \sim Gaussian(\mu, \sigma)$$
+.purple[
+$$\mu = Gaussian(\mu_1, \sigma_1)$$
+]
+
+$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$
+]
+
+---
+
+```{r vot-int-p}
+x <- seq(9, 14, by = (14-9)/101)
+y <- dnorm(x, 11.62, 0.59)
+
+vot_int_p <- ggplot() +
+  aes(x, y) +
+  geom_line() +
+  scale_x_continuous(n.breaks = 6) +
+  labs(
+    title = expression(Probability~distribution~of~mu[1]),
+    x = expression(mu[1]), y = "Probability density"
+  )
+vot_int_p
+```
+
+---
+
+```{r vot-int-p-2}
+vot_int_p +
+  geom_ribbon(
+    aes(x = ifelse(x >= 10.48 & x <= 12.78, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  )
+```
+
+
+---
+
+```{r vot-bm-summ-5}
+vot_bm_summ <- capture.output(summary(vot_bm))
+cat(vot_bm_summ[c(12:14)], sep = "\n")
+```

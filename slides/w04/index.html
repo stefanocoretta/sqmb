@@ -310,7 +310,15 @@ We want to make inferences about the population based on the sample.
 ---
 
 .f3[
-`$$vot = Gaussian(\mu, \sigma)$$`
+`$$vot \sim Gaussian(\mu, \sigma)$$`
+]
+
+**Read as**: VOT values (`\(vot\)`) are distributed according to (`\(\sim\)`) a Gaussian distribution (`\(Gaussian()\)`) with mean `\(\mu\)` and standard deviation `\(\sigma\)`.
+
+---
+
+.f3[
+`$$vot \sim Gaussian(\mu, \sigma)$$`
 ]
 
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
@@ -325,7 +333,7 @@ We want to make inferences about the population based on the sample.
 ---
 
 .f3[
-`$$vot = Gaussian(\mu, \sigma)$$`
+`$$vot \sim Gaussian(\mu, \sigma)$$`
 ]
 
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
@@ -346,15 +354,13 @@ We want to make inferences about the population based on the sample.
 ---
 
 .f3[
-`$$vot = Gaussian(\mu, \sigma)$$`
+`$$vot \sim Gaussian(\mu, \sigma)$$`
 ]
 
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
 
---
-
 .f3[
-`$$\mu = Gussian(\mu_1, \sigma_1)$$`
+`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
 ]
 
 **Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
@@ -365,29 +371,27 @@ We want to make inferences about the population based on the sample.
 
 --
 
-Standard deviations are always positive! So we need a half Gaussian distribution (only the positive half!).
+Standard deviations are always positive! So we need a half-Gaussian distribution (only the positive half!).
 
 ---
 
 .f3[
-`$$vot = Gaussian(\mu, \sigma)$$`
+`$$vot \sim Gaussian(\mu, \sigma)$$`
 ]
 
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
 
---
-
 .f3[
-`$$\mu = Gussian(\mu_1, \sigma_1)$$`
+`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
 ]
 
 **Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
 
 .f3[
-`$$\sigma = HalfGaussian(\mu_2 = 0, \sigma_2)$$`
+`$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$`
 ]
 
-**Hyperparameters**: mean `\(\mu_2\)` = 0 and SD `\(\sigma_2\)`.
+**Hyperparameters**: mean `\(\mu_2\)` and SD `\(\sigma_2\)`.
 
 ---
 
@@ -409,14 +413,162 @@ layout: true
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- `\(Gaussian(\mu, \sigma)\)`
+- `\(Gaussian(\mu, \sigma), \mu = Gaussian(\mu_1, \sigma_1), \sigma = HalfGaussian(\mu_2, \sigma_2)\)`
 
 - We need to estimate:
 
-  - `\(\mu_1\)` and `\(\sigma_1\)` from the probability distribution of `\(\mu\)`.
+  - `\(\mu_1\)` and `\(\sigma_1\)` for the Gaussian probability distribution of `\(\mu\)`.
 
-  - `\(\sigma_2\)` from the probability distribution of `\(\sigma\)`.
+  - `\(\mu_2\)` and `\(\sigma_2\)` for the half-Gaussian probability distribution of `\(\sigma\)`.
 ]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+With our sample of N = 24 we want to make inferences about the population of VOT values of Albanian voiceless stops, by estimating the four parameters `\(\mu_1\)`, `\(\sigma_1\)`, `\(\mu_2\)` and `\(\sigma_2\)`.
+]
+
+---
+
+
+
+
+```r
+# Attach the brms package
+library(brms)
+
+# Run a Bayesian model
+vot_bm &lt;- brm(
+  # This is the formula of the model.
+  vot ~ 1,
+  # This is the probability distribution family.
+  family = gaussian(),
+  # And the data.
+  data = alb_vot_vl
+)
+```
+
+---
+
+.f2.center[
+`vot ~ 1`
+]
+
+**Read as**: Model VOT values (`vot`) as a function of (`~`) the mean (`1`).
+
+.f7[We will see later that `1` is also called the *Intercept*.]
+
+--
+
+.f2.center[
+`family = gaussian()`
+]
+
+**Read as**: using a Gaussian probability distribution.
+
+- The Gaussian distribution also has another parameter, the SD.
+
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Altogether**: Model VOT values as a function of the mean and standard deviation of a Gaussian probability distribution.
+]
+
+---
+
+
+```
+##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: vot ~ 1 
+##    Data: alb_vot_vl (Number of observations: 24) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    11.62      0.59    10.48    12.78 1.00     2559     2158
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     2.88      0.44     2.18     3.88 1.00     2327     2013
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+
+
+```
+##  Family: gaussian 
+## Formula: vot ~ 1 
+##    Data: alb_vot_vl (Number of observations: 24) 
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    11.62      0.59    10.48    12.78 1.00     2559     2158
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     2.88      0.44     2.18     3.88 1.00     2327     2013
+```
+
+---
+
+
+```
+##  Family: gaussian 
+## Formula: vot ~ 1 
+##    Data: alb_vot_vl (Number of observations: 24)
+```
+
+---
+
+
+```
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    11.62      0.59    10.48    12.78 1.00     2559     2158
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **Intercept**: the mean `\(\mu\)`.
+- **Estimate**: `\(\mu_1 = 11.62\)` ms.
+- **Est.Error**: `\(\sigma_1 = 0.59\)` ms.
+]
+
+.pull-right[
+`$$vot \sim Gaussian(\mu, \sigma)$$`
+.purple[
+`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
+]
+
+`$$\sigma = HalfGaussian(\mu_2, \sigma_2)$$`
+]
+
+---
+
+&lt;img src="index_files/figure-html/vot-int-p-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/vot-int-p-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+```
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     2.88      0.44     2.18     3.88 1.00     2327     2013
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

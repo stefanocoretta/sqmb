@@ -679,7 +679,7 @@ label_y <- 0.7
 vot_int_p +
   geom_ribbon(
     aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
-    fill = "#E84646",
+    fill = "#9970ab",
     alpha = 0.4
   ) +
   annotate(
@@ -767,7 +767,7 @@ label_y <- 1
 vot_sig_p +
   geom_ribbon(
     aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
-    fill = "#E84646",
+    fill = "#9970ab",
     alpha = 0.4
   ) +
   annotate(

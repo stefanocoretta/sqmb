@@ -129,7 +129,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 3: Data visualisation
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -148,7 +148,7 @@ Examples from different branches of linguistics will be used to provide you with
 - Filter and mutate data.
 :::
 
-::: {.callout-note collapse="false"}
+::: {.callout-note collapse="true"}
 #### Homework
 
 **Set-up your laptop**
@@ -161,7 +161,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 - [Lecture slides](slides/w03/).
@@ -171,7 +171,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
   - [glot_status.rds](data/glot_status.rds)
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Suggested readings
 
 **Main textbooks**
@@ -209,7 +209,7 @@ Learning from Data.*
 
 :::
 
-### Week 4: Linear models, Basics I
+### Week 4: Statistical models, Basics I
 
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 1
@@ -224,26 +224,27 @@ Learning from Data.*
 
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
 
-- What are statistical models useful for?
-- What are statistical populations, samples and distributions?
-- What are statistical variables and which type of relationships exist between variables?
-- What is a linear model and which are its components?
+- How can we talk about uncertainty?
+- What are probability distributions?
+- How can we describe probability distributions with statistical parameters?
+- What are the frequentist and Bayesian view of statistical parameters?
+- How can we estimate parameters using statistical models?
 
 
 **Skills**
 
-- Fit a linear model with one continuous outcome variable and one continuous predictor with `brm()`.
-- Interpret the summary of the model and understand the meaning of the reported coefficients.
-- Plot and diagnose linear models.
+- Fit a statistical model to estimate the mean and standard deviation of a Gaussian variable with `brm()`.
+- Interpret the summary of the model and understand the meaning of the reported estimates.
+- Plot the probability distribution of the estimated parameters.
 - Describe the model specification and results in writing.
 :::
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="false"}
 #### Homework
 
 **Set-up your laptop**
@@ -254,6 +255,16 @@ From Week 4 on, we will need to use software that unfortunately is not currently
 
 You can find the full instructions here: [set-up instructions](setup.qmd).
 
+:::
+
+::: {.callout-tip collapse="false"}
+#### Materials
+
+- [Lecture slides](slides/w04/).
+<!-- - [Workshop tutorial](tutorials/tutorial-w03.qmd). -->
+<!-- - Workshop files (right-click and download): -->
+  <!-- - [polite.csv](data/polite.csv) -->
+  <!-- - [glot_status.rds](data/glot_status.rds) -->
 :::
 
 ### Week 5: Linear models, Basics II

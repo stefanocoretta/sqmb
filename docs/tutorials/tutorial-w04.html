@@ -172,21 +172,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#density-and-violin-plots" id="toc-density-and-violin-plots" class="nav-link active" data-scroll-target="#density-and-violin-plots">Density and violin plots</a>
+  <li><a href="#mutating-data" id="toc-mutating-data" class="nav-link active" data-scroll-target="#mutating-data">Mutating data</a>
   <ul class="collapse">
-  <li><a href="#reaction-times" id="toc-reaction-times" class="nav-link" data-scroll-target="#reaction-times">Reaction times</a></li>
+  <li><a href="#the-alb_vot-data" id="toc-the-alb_vot-data" class="nav-link" data-scroll-target="#the-alb_vot-data">The <code>alb_vot</code> data</a></li>
+  <li><a href="#create-a-new-column" id="toc-create-a-new-column" class="nav-link" data-scroll-target="#create-a-new-column">Create a new column</a></li>
+  </ul></li>
+  <li><a href="#plotting-continuous-variables" id="toc-plotting-continuous-variables" class="nav-link" data-scroll-target="#plotting-continuous-variables">Plotting continuous variables</a>
+  <ul class="collapse">
+  <li><a href="#density-plots" id="toc-density-plots" class="nav-link" data-scroll-target="#density-plots">Density plots</a></li>
   <li><a href="#make-things-cozy-with-a-rug" id="toc-make-things-cozy-with-a-rug" class="nav-link" data-scroll-target="#make-things-cozy-with-a-rug">Make things cozy with a rug</a></li>
+  <li><a href="#if-else" id="toc-if-else" class="nav-link" data-scroll-target="#if-else">If-else</a></li>
+  <li><a href="#logical-operators" id="toc-logical-operators" class="nav-link" data-scroll-target="#logical-operators">Logical operators</a></li>
   <li><a href="#violin-plots" id="toc-violin-plots" class="nav-link" data-scroll-target="#violin-plots">Violin plots</a></li>
   <li><a href="#lay-over-the-raw-data" id="toc-lay-over-the-raw-data" class="nav-link" data-scroll-target="#lay-over-the-raw-data">Lay over the raw data</a></li>
   <li><a href="#lets-add-some-colour" id="toc-lets-add-some-colour" class="nav-link" data-scroll-target="#lets-add-some-colour">Let’s add some colour</a></li>
   <li><a href="#separate-the-data-by-gender" id="toc-separate-the-data-by-gender" class="nav-link" data-scroll-target="#separate-the-data-by-gender">Separate the data by gender</a></li>
   </ul></li>
-  <li><a href="#legends-and-labels" id="toc-legends-and-labels" class="nav-link" data-scroll-target="#legends-and-labels">Legends and labels</a>
+  <li><a href="#filtering-data" id="toc-filtering-data" class="nav-link" data-scroll-target="#filtering-data">Filtering data</a></li>
+  <li><a href="#modelling-with-brm" id="toc-modelling-with-brm" class="nav-link" data-scroll-target="#modelling-with-brm">Modelling with <code>brm()</code></a></li>
+  <li><a href="#plotting-extra-legends-and-labels" id="toc-plotting-extra-legends-and-labels" class="nav-link" data-scroll-target="#plotting-extra-legends-and-labels">Plotting extra: Legends and labels</a>
   <ul class="collapse">
   <li><a href="#positioning-the-legend" id="toc-positioning-the-legend" class="nav-link" data-scroll-target="#positioning-the-legend">Positioning the legend</a></li>
   <li><a href="#plot-titles-and-labels" id="toc-plot-titles-and-labels" class="nav-link" data-scroll-target="#plot-titles-and-labels">Plot titles and labels</a></li>
   <li><a href="#axis-labels" id="toc-axis-labels" class="nav-link" data-scroll-target="#axis-labels">Axis labels</a></li>
   </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -210,45 +220,114 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="density-and-violin-plots" class="level2">
-<h2 class="anchored" data-anchor-id="density-and-violin-plots">Density and violin plots</h2>
-<p><strong>Density plots show the distribution of the values of a continuous variable.</strong></p>
-<p>Take for example the Reaction Times (<code>RT</code>) values in the <em>MAssive Lexical Decision</em> data set (<code>mald_1_1</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mald_1_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="reaction-times" class="level3">
-<h3 class="anchored" data-anchor-id="reaction-times">Reaction times</h3>
-<p>To plot the density of a continuous variable, you can use the <code>density</code> geometry.</p>
-<p>Fill in the following code to create a density plot.</p>
-<div class="cell" data-exercise="true" data-exercise.setup="tidy-load">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mald_1_1 <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(RT)) <span class="sc">+</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s pick up from where we left off last week.</p>
+<p>In week 3, you learnt how to use ggplot2 to create bar charts and how to create different panels. Bar charts are great for categorical data.</p>
+<p>This week you will learn how to make density and violin plots, which work very well with numeric data in combination of categorical data (for example, when you want to show values of a numeric variable across different groups).</p>
+<p>Then, you will use the <code>brm()</code> function from the <a href="https://paul-buerkner.github.io/brms/">brms</a> package to model continuous variables.</p>
+<p>But first, let’s read some data and transform it so that we can use it in the tutorial.</p>
+<section id="mutating-data" class="level2">
+<h2 class="anchored" data-anchor-id="mutating-data">Mutating data</h2>
+<section id="the-alb_vot-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-alb_vot-data">The <code>alb_vot</code> data</h3>
+<p>Let’s play around with the Albanian VOT data we used in class.</p>
+<p>The data comes from the paper by Coretta and colleagues, 2022. <em>Northern Tosk Albanian</em>. DOI: <a href="https://doi.org/10.1017/S0025100322000044">10.1017/S0025100322000044</a>. This is an IPA Illustration of Northern Tosk Albanian. It contains data from voiceless and voiced consonants of Nothern Tosk Albanian, as uttered in a set of words by 5 speakers.</p>
+<p>To download the file with the data right-click on the following link and download the file: <a href="../data/alb_vot.csv">alb_vot.csv</a>. (Note that tutorial files are also linked in the <a href="../syllabus.html">Syllabus</a>). Remember to save the file in <code>data/</code> in the course project folder.</p>
+<p>Create a new <code>.Rmd</code> file first, save it in <code>code/</code> and name it <code>tutorial-w04</code> (the extension <code>.Rmd</code> is added automatically!).</p>
+<p>I leave to you creating title headings in your file as you please. Remember to to add <code>knitr::opts_knit$set(root.dir = here::here())</code> in the <code>setup</code> chunk and to attach the tidyverse.</p>
+<p>Now you can create a new code chunk and read the <code>alb_vot.csv</code> file in R. Remember how to do this?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="mald-dens-hint">
-<p>Remember that all geometries start with <code>geom_</code>?</p>
+<p>Great!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>alb_vot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The data frame has the following columns:</p>
+<ul>
+<li><code>speaker</code>: the speaker ID.</li>
+<li><code>file</code>: the file the measurements are take from.</li>
+<li><code>label</code>: the label in the interval.</li>
+<li><code>release</code>: the time of the consonant’s closure release in seconds.</li>
+<li><code>voi_onset</code>: the onset of voicing of the vowel following the target consonant in seconds.</li>
+<li><code>consonant</code>: the IPA transcription of the target consonant.</li>
+</ul>
+<p>Now we need to create a new column with the Voice Onset Time (<code>vot</code>) values. Note that VOT is simply the difference between the onset of voicing (<code>voi_onset</code>) and the time of release (<code>release</code>).</p>
+</section>
+<section id="create-a-new-column" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-new-column">Create a new column</h3>
+<p>To change or create columns, we can use the <code>mutate()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> package. This is another tidyverse package, and it’s attached when you attach the tidyverse. The <code>summarise()</code> and <code>count()</code> functions you used in Week 2 are from this same package.</p>
+<p>Let’s calculate VOT now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">vot =</span> voi_onset <span class="sc">-</span> release</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Since we are mutating <code>alb_vot</code>, we need to assign (<code>&lt;-</code>) the output of <code>mutate()</code> back into <code>alb_vot</code>. Check the <code>alb_vot</code> data frame now to view the newly created column <code>vot</code> (to view the data frame, click on <code>alb_vot</code> in the Environment tab, in the top-right panel of Rstudio).</p>
+<p>Well done!</p>
+<p>Normally, VOT is measured in milliseconds (ms), but the <code>vot</code> column is now in seconds (because <code>release</code> and <code>voi_onset</code> are in seconds).</p>
+<p>Let’s change this. We can overwrite the <code>vot</code> column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Multiply by 1000 to get ms from s</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">vot =</span> (voi_onset <span class="sc">-</span> release) <span class="sc">*</span> <span class="dv">1000</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check <code>alb_vot</code> now to see that it worked.</p>
+</section>
+</section>
+<section id="plotting-continuous-variables" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-continuous-variables">Plotting continuous variables</h2>
+<section id="density-plots" class="level3">
+<h3 class="anchored" data-anchor-id="density-plots">Density plots</h3>
+<p><strong>Density plots show the distribution (i.e.&nbsp;the probability density) of the values of a continuous variable.</strong></p>
+<p>VOT is a numeric continuous variable so density plots are appropriate.</p>
+<p>To plot the probability density of a continuous variable, you can use the <code>density</code> geometry. Remember, all geometry functions start with <code>geom_</code>.</p>
+<p>Fill in the … in the following code to create a density plot of VOT values in <code>alb_vot</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> vot)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that to create a density plot, you only need to specify the <code>x</code>-axis. The <code>y</code>-axis is the probability density, which is automatically calculated.</p>
+<p>What can you notice about the distribution of VOT values?</p>
 </section>
 <section id="make-things-cozy-with-a-rug" class="level3">
 <h3 class="anchored" data-anchor-id="make-things-cozy-with-a-rug">Make things cozy with a rug</h3>
-<p>The density line shows you a smoothed representation of the data distribution, but you might also want to see the raw data.</p>
+<p>The density line shows you a smoothed representation of the data distribution over the VOT values, but you might also want to see the raw data.</p>
 <p>You can do so by adding the <code>rug</code> geometry.</p>
-<div class="cell" data-exercise="true" data-exercise.setup="tidy-load">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mald_1_1 <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(RT)) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(vot)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Nice huh?</p>
+</section>
+<section id="if-else" class="level3">
+<h3 class="anchored" data-anchor-id="if-else">If-else</h3>
+<p>What if we want to plot the density of voiceless and voiced consonants separately?</p>
+<p>We could use faceting, as you learnt in Week 3, or we can use the aesthetics <code>fill</code> and/or <code>colour</code>.</p>
+<p>However, first we need to create a new column that indicated if a consonant is voiceless or voiced!</p>
+<p>We will use the <code>mutate()</code> function again to create a new <code>voicing</code> column. But how do we get the values for this new column (without having to manually code each consonant as voiceless or voiced)?</p>
+<p>We can use the <code>ifelse()</code> function!</p>
+<p>The <code>ifelse()</code> function works a bit like the English sentence “If X is true, do Y, otherwise do Z”. The “X” has to be a “logical statement”, i.e.&nbsp;an expression using <strong>logical operators</strong>.</p>
+</section>
+<section id="logical-operators" class="level3">
+<h3 class="anchored" data-anchor-id="logical-operators">Logical operators</h3>
 </section>
 <section id="violin-plots" class="level3">
 <h3 class="anchored" data-anchor-id="violin-plots">Violin plots</h3>
 <p>An efficient way of showing the distribution of continuous variables depending on discrete groups (like <code>attitude</code>) are the so-called <strong>violin plots</strong>.</p>
 <p>Go ahead and run the following code.</p>
 <div class="cell" data-exercise="true">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>They are called violin plots because they look like violins!</p>
 </section>
@@ -257,21 +336,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>You can lay over raw data on top of the violins.</p>
 <p>To do so, you can use the <code>jitter</code> geometry. Fill the following code chunk and run it.</p>
 <div class="cell" data-exercise="true">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That doesn’t look great right? The points are spread too widely.</p>
 <p>We can fix that by specifying the argument <code>width</code> in the jitter geometry something smaller than <code>0.5</code>. Try a few values until you think it looks better.</p>
 <div class="cell" data-exercise="true">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_jitter</span>(<span class="at">width =</span> ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_jitter</span>(<span class="at">width =</span> ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that the order between the violin and jitter geoms is important. If you add the jitter geometry before the violin geometry, the violins will just cover up the jittered points (see why it is called “layered” grammar of graphics?).</p>
 </section>
@@ -279,12 +358,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="lets-add-some-colour">Let’s add some colour</h3>
 <p>Let’s <strong>fill</strong> the violins with colour. For now, just colour the violins depending on <code>attitude</code></p>
 <div class="cell" data-exercise="true">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn, ...)) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn, ...)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fill <span class="ot">=</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fill <span class="ot">=</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Not bad! But maybe we can improve by making the fill a bit transparent?</p>
 <p>You can achieve that with the <code>alpha</code> argument in <code>geom_violin()</code>, which takes a number between 0 (completely transparent) and 1 (completely opaque).</p>
@@ -296,9 +375,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Instead, we can use the fill argument to separate the data into further groups based on other variables in the data.</p>
 <p>Go ahead and separate the data by <code>gender</code> using the <code>fill</code> argument.</p>
 <div class="cell" data-exercise="true">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn, ...)) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>polite <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(attitude, f0mn, ...)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What if we want to move the colour legend to the bottom of the plot?</p>
 <!--# Need to double check this and make it match the previous exercise. -->
@@ -324,28 +403,34 @@ Question
 </div>
 <p>To check, try replacing the first <code>...</code> in the code below with the <code>y =</code> specification you used above, and the second <code>...</code> with the correct way of moving the legend to the bottom of the plot. Run the code to see if you’re right!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, ...)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="legends-and-labels" class="level2">
-<h2 class="anchored" data-anchor-id="legends-and-labels">Legends and labels</h2>
+<section id="filtering-data" class="level2">
+<h2 class="anchored" data-anchor-id="filtering-data">Filtering data</h2>
+</section>
+<section id="modelling-with-brm" class="level2">
+<h2 class="anchored" data-anchor-id="modelling-with-brm">Modelling with <code>brm()</code></h2>
+</section>
+<section id="plotting-extra-legends-and-labels" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-extra-legends-and-labels">Plotting extra: Legends and labels</h2>
 <section id="positioning-the-legend" class="level3">
 <h3 class="anchored" data-anchor-id="positioning-the-legend">Positioning the legend</h3>
 <p>The position of the legend can be set with the <code>legend.position</code> argument in <code>theme()</code>.</p>
 <p>Move the legend to the <code>"bottom"</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-titles-and-labels" class="level3">
@@ -353,14 +438,14 @@ Question
 <p>The <code>labs()</code> function allows you to set the plot title, subtitle, axis labels and more.</p>
 <p>Since these are strings (i.e.&nbsp;text), they must be quoted with <code>"</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of languages by macro-area and</span><span class="sc">\n</span><span class="st">Aggregated Endangerement Status"</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of languages by macro-area and</span><span class="sc">\n</span><span class="st">Aggregated Endangerement Status"</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>NOTE: We use <code>\n</code> to split the title into two lines, so that it fits the plot. <code>\n</code> simply means “<strong>n</strong>ew line”.</p>
 </section>
@@ -369,21 +454,24 @@ Question
 <p>To change the axis labels, you specify a string for <code>x</code> and <code>y</code>.</p>
 <p>I have changed the <code>x</code> label here below. Go ahead and change <code>y</code> to <code>"Number of languages"</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We use \n to split the title into two lines. \n means "new line"</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of languages by macro-area and</span><span class="sc">\n</span><span class="st">Aggregated Endangerement Status"</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Language macro-area"</span>,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We use \n to split the title into two lines. \n means "new line"</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of languages by macro-area and</span><span class="sc">\n</span><span class="st">Aggregated Endangerement Status"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Language macro-area"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-
 </section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+
+
 </section>
 
 </main> <!-- /main -->

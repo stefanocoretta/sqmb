@@ -1,0 +1,89 @@
+---
+title: "Class difficulty ratings"
+editor: visual
+execute: 
+  freeze: true
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+theme_set(theme_light())
+library(googlesheets4)
+gs4_deauth()
+
+class_rate <- read_sheet("https://docs.google.com/spreadsheets/d/1STMXP32cz06pceqA77Zuy2w-OSiQnL0eZtJhsCCK4Nk/edit?usp=sharing")
+
+colnames(class_rate) <- c("timestamp", "week", "rel_rating", "first_rating")
+
+class_rate <- class_rate %>%
+  mutate(
+    timestamp = as.character(timestamp),
+    rating = ifelse(
+      is.na(rel_rating),
+      case_when(
+        first_rating == "Very difficult" ~ -2,
+        first_rating == "Difficult" ~ -1,
+        first_rating == "Neither easy nor difficult" ~ 0,
+        first_rating == "Easy" ~ 1,
+        first_rating == "Very easy" ~ 2,
+      ),
+      case_when(
+        rel_rating == "Much more difficult" ~ -2,
+        rel_rating == "More difficult" ~ -1,
+        rel_rating == "Same as last week" ~ 0,
+        rel_rating == "Easier" ~ 1,
+        rel_rating == "Much easier" ~ 2,
+      )
+    ),
+    rating_2 = case_when(
+      week == 1 ~ rating,
+      week == 2 ~ rating + median(rating[week == 1]),
+      week == 3 ~ rating + median(rating[week == 1]) + median(rating[week == 2]),
+      week == 4 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]),
+      week == 5 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]),
+      week == 7 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]),
+      week == 8 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]) + median(rating[week == 7]),
+      week == 9 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]) + median(rating[week == 7]) + median(rating[week == 8])
+    )
+  )
+
+class_counts <- class_rate %>%
+  count(week, rating) %>%
+  group_by(week) %>%
+  mutate(prop = n / sum(n) * 100)
+
+class_counts_2 <- class_rate %>%
+  count(week, rating_2) %>%
+  group_by(week) %>%
+  mutate(prop = n / sum(n) * 100)
+```
+
+```{r}
+#| label: plot
+#| warning: false
+
+class_counts_2 %>%
+  ggplot(aes(as.character(week), -rating_2)) +
+  geom_vline(xintercept = c("1", "2", "3"), linewidth = 1.5, colour = "gray") +
+  geom_point(aes(size = prop, fill = prop), shape = 21, colour = "black") +
+  scale_size_continuous(range = c(0, 15), guide = "none") +
+  scale_fill_distiller(palette = "Purples", direction = 1) +
+  annotate(
+    "line",
+    x = seq(1, 3, by = 0.5),
+    y = c(-2, -2, -1, -1, 0),
+    linewidth = 2, colour = "#31a354"
+  ) +
+  annotate("text", x = 0.6, y = -2, label = "very\neasy", fontface = "italic") +
+  annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
+  annotate("text", x = 0.6, y = 0, label = "neither", fontface = "italic") +
+  annotate("text", x = 0.6, y = 1, label = "difficult", fontface = "italic") +
+  labs(y = "Difficulty", x = "Week", fill = "Percentage") +
+  ylim(-2.5, 1) +
+  theme(axis.text.y = element_blank())
+
+ggsave("img/difficulty-ratings.png", width = 7, height = 4)
+```
+

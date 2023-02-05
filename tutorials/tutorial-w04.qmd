@@ -5,6 +5,14 @@ execute:
   eval: false
 ---
 
+```{r}
+#| label: pkgs
+#| message: false
+
+library(tidyverse)
+```
+
+
 Let's pick up from where we left off last week.
 
 In week 3, you learnt how to use ggplot2 to create bar charts and how to create different panels. Bar charts are great for categorical data.
@@ -15,13 +23,13 @@ Then, you will use the `brm()` function from the [brms](https://paul-buerkner.gi
 
 But first, let's read some data and transform it so that we can use it in the tutorial.
 
-## Filtering and mutating data
+## Mutating data
 
 ### The `alb_vot` data
 
 Let's play around with the Albanian VOT data we used in class.
 
-The data comes from the paper by Coretta and colleagues, 2022. *Northern Tosk Albanian*. DOI: [10.1017/S0025100322000044](https://doi.org/10.1017/S0025100322000044). This is an IPA Illustration of Northern Tosk Albanian.
+The data comes from the paper by Coretta and colleagues, 2022. *Northern Tosk Albanian*. DOI: [10.1017/S0025100322000044](https://doi.org/10.1017/S0025100322000044). This is an IPA Illustration of Northern Tosk Albanian. It contains data from voiceless and voiced consonants of Nothern Tosk Albanian, as uttered in a set of words by 5 speakers.
 
 To download the file with the data right-click on the following link and download the file: [alb_vot.csv](../data/alb_vot.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
 
@@ -37,11 +45,60 @@ Now you can create a new code chunk and read the `alb_vot.csv` file in R. Rememb
 alb_vot <- ...
 ```
 
-### Mutating data
 
-### Filtering data
+Great!
 
+```{r}
+#| label: alb-vot-view
 
+alb_vot
+```
+
+The data frame has the following columns:
+
+- `speaker`: the speaker ID.
+- `file`: the file the measurements are take from.
+- `label`: the label in the interval.
+- `release`: the time of the consonant's closure release in seconds.
+- `voi_onset`: the onset of voicing of the vowel following the target consonant in seconds.
+- `consonant`: the IPA transcription of the target consonant.
+
+Now we need to create a new column with the Voice Onset Time (`vot`) values. Note that VOT is simply the difference between the onset of voicing (`voi_onset`) and the time of release (`release`).
+
+### Create a new column
+
+To change or create columns, we can use the `mutate()` function from the [dplyr](https://dplyr.tidyverse.org) package. This is another tidyverse package, and it's attached when you attach the tidyverse. The `summarise()` and `count()` functions you used in Week 2 are from this same package.
+
+Let's calculate VOT now.
+
+```{r}
+#| label: vot
+
+alb_vot <- alb_vot %>%
+  mutate(
+    vot = voi_onset - release
+  )
+```
+
+Since we are mutating `alb_vot`, we need to assign (`<-`) the output of `mutate()` back into `alb_vot`. Check the `alb_vot` data frame now to view the newly created column `vot` (to view the data frame, click on `alb_vot` in the Environment tab, in the top-right panel of Rstudio).
+
+Well done!
+
+Normally, VOT is measured in milliseconds (ms), but the `vot` column is now in seconds (because `release` and `voi_onset` are in seconds).
+
+Let's change this. We can overwrite the `vot` column:
+
+```{r}
+#| label: vot-2
+
+alb_vot <- alb_vot %>%
+  mutate(
+    # Multiply by 1000 to get ms from s
+    vot = (voi_onset - release) * 1000
+  )
+```
+
+Check `alb_vot` now to see that it worked.
 
 
 ## Plotting continuous variables
@@ -50,38 +107,58 @@ alb_vot <- ...
 
 **Density plots show the distribution (i.e. the probability density) of the values of a continuous variable.**
 
-Take for example the Reaction Times (`RT`) values in the *MAssive Lexical Decision* data set (`mald_1_1`).
+VOT is a numeric continuous variable so density plots are appropriate.
 
-```{r mald}
-mald_1_1
-```
+To plot the probability density of a continuous variable, you can use the `density` geometry. Remember, all geometry functions start with `geom_`.
 
-To plot the density of a continuous variable, you can use the `density` geometry.
+Fill in the ... in the following code to create a density plot of VOT values in `alb_vot`.
 
-Fill in the following code to create a density plot.
+```{r}
+#| label: vot-dens
 
-```{r mald-dens, exercise=TRUE, exercise.setup = "tidy-load"}
-mald_1_1 %>%
-  ggplot(aes(RT)) +
+alb_vot %>%
+  ggplot(aes(x = vot)) +
   ...
 ```
 
-::: {#mald-dens-hint}
-Remember that all geometries start with `geom_`?
-:::
+Note that to create a density plot, you only need to specify the `x`-axis. The `y`-axis is the probability density, which is automatically calculated. 
+
+What can you notice about the distribution of VOT values?
 
 ### Make things cozy with a rug
 
-The density line shows you a smoothed representation of the data distribution, but you might also want to see the raw data.
+The density line shows you a smoothed representation of the data distribution over the VOT values, but you might also want to see the raw data.
 
 You can do so by adding the `rug` geometry.
 
-```{r mald-dens-rug, exercise=TRUE, exercise.setup = "tidy-load"}
-mald_1_1 %>%
-  ggplot(aes(RT)) +
+```{r}
+#| label: vot-dens-rug
+
+alb_vot %>%
+  ggplot(aes(vot)) +
   geom_density() +
   ...
 ```
+
+Nice huh?
+
+### If-else
+
+What if we want to plot the density of voiceless and voiced consonants separately?
+
+We could use faceting, as you learnt in Week 3, or we can use the aesthetics `fill` and/or `colour`.
+
+However, first we need to create a new column that indicated if a consonant is voiceless or voiced!
+
+We will use the `mutate()` function again to create a new `voicing` column. But how do we get the values for this new column (without having to manually code each consonant as voiceless or voiced)?
+
+We can use the `ifelse()` function!
+
+The `ifelse()` function works a bit like the English sentence "If X is true, do Y, otherwise do Z". The "X" has to be a "logical statement", i.e. an expression using **logical operators**.
+
+### Logical operators
+
+
 
 ### Violin plots
 
@@ -194,7 +271,17 @@ ggplot(
   ...
 ```
 
-## Legends and labels
+## Filtering data
+
+
+
+
+
+## Modelling with `brm()`
+
+
+
+## Plotting extra: Legends and labels
 
 ### Positioning the legend
 
@@ -257,3 +344,6 @@ ggplot(
     ...
   )
 ```
+
+## Summary
+

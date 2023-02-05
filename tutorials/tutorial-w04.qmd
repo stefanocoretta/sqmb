@@ -5,17 +5,56 @@ execute:
   eval: false
 ---
 
-## Density and violin plots
+Let's pick up from where we left off last week.
 
-**Density plots show the distribution of the values of a continuous variable.**
+In week 3, you learnt how to use ggplot2 to create bar charts and how to create different panels. Bar charts are great for categorical data.
+
+This week you will learn how to make density and violin plots, which work very well with numeric data in combination of categorical data (for example, when you want to show values of a numeric variable across different groups).
+
+Then, you will use the `brm()` function from the [brms](https://paul-buerkner.github.io/brms/) package to model continuous variables.
+
+But first, let's read some data and transform it so that we can use it in the tutorial.
+
+## Filtering and mutating data
+
+### The `alb_vot` data
+
+Let's play around with the Albanian VOT data we used in class.
+
+The data comes from the paper by Coretta and colleagues, 2022. *Northern Tosk Albanian*. DOI: [10.1017/S0025100322000044](https://doi.org/10.1017/S0025100322000044). This is an IPA Illustration of Northern Tosk Albanian.
+
+To download the file with the data right-click on the following link and download the file: [alb_vot.csv](../data/alb_vot.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
+
+Create a new `.Rmd` file first, save it in `code/` and name it `tutorial-w04` (the extension `.Rmd` is added automatically!).
+
+I leave to you creating title headings in your file as you please. Remember to to add `knitr::opts_knit$set(root.dir = here::here())` in the `setup` chunk and to attach the tidyverse.
+
+Now you can create a new code chunk and read the `alb_vot.csv` file in R. Remember how to do this?
+
+```{r}
+#| label: alb-vot
+
+alb_vot <- ...
+```
+
+### Mutating data
+
+### Filtering data
+
+
+
+
+## Plotting continuous variables
+
+### Density plots
+
+**Density plots show the distribution (i.e. the probability density) of the values of a continuous variable.**
 
 Take for example the Reaction Times (`RT`) values in the *MAssive Lexical Decision* data set (`mald_1_1`).
 
 ```{r mald}
 mald_1_1
 ```
-
-### Reaction times
 
 To plot the density of a continuous variable, you can use the `density` geometry.
 

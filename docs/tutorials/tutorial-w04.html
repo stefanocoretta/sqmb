@@ -203,11 +203,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#markov-chain-monte-carlo-mcmc" id="toc-markov-chain-monte-carlo-mcmc" class="nav-link" data-scroll-target="#markov-chain-monte-carlo-mcmc">Markov-Chain Monte Carlo (MCMC)</a></li>
   <li><a href="#model-summary" id="toc-model-summary" class="nav-link" data-scroll-target="#model-summary">Model summary</a></li>
   </ul></li>
-  <li><a href="#plotting-extra-legends-and-labels" id="toc-plotting-extra-legends-and-labels" class="nav-link" data-scroll-target="#plotting-extra-legends-and-labels">Plotting extra: Legends and labels</a>
+  <li><a href="#legends-and-labels-in-plots" id="toc-legends-and-labels-in-plots" class="nav-link" data-scroll-target="#legends-and-labels-in-plots">Legends and labels in plots</a>
   <ul class="collapse">
-  <li><a href="#positioning-the-legend" id="toc-positioning-the-legend" class="nav-link" data-scroll-target="#positioning-the-legend">Positioning the legend</a></li>
   <li><a href="#plot-titles-and-labels" id="toc-plot-titles-and-labels" class="nav-link" data-scroll-target="#plot-titles-and-labels">Plot titles and labels</a></li>
   <li><a href="#axis-labels" id="toc-axis-labels" class="nav-link" data-scroll-target="#axis-labels">Axis labels</a></li>
+  <li><a href="#positioning-the-legend" id="toc-positioning-the-legend" class="nav-link" data-scroll-target="#positioning-the-legend">Positioning the legend</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
@@ -233,7 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/pkgs_e30a8418cbf1d1de84f0e06d1b3592ed">
 
 </div>
 <p>Let’s pick up from where we left off last week.</p>
@@ -251,14 +251,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Create a new <code>.Rmd</code> file first, save it in <code>code/</code> and name it <code>tutorial-w04</code> (the extension <code>.Rmd</code> is added automatically!).</p>
 <p>I leave to you creating title headings in your file as you please. Remember to to add <code>knitr::opts_knit$set(root.dir = here::here())</code> in the <code>setup</code> chunk and to attach the tidyverse.</p>
 <p>Now you can create a new code chunk and read the <code>alb_vot.csv</code> file in R. Remember how to do this?</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/alb-vot-ex_b1323a114b3ec154e18ce26a1041be20">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/alb-vot_92f85dca23e7cb6fd6513392de33d64f">
 
 </div>
 <p>Great!</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/alb-vot-view_c79c96a60e3555b2093670a4b1116e0c">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alb_vot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -284,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="create-a-new-column">Create a new column</h3>
 <p>To change or create columns, we can use the <code>mutate()</code> function from the <a href="https://dplyr.tidyverse.org">dplyr</a> package. This is another tidyverse package, and it’s attached when you attach the tidyverse. The <code>summarise()</code> and <code>count()</code> functions you used in Week 2 are from this same package.</p>
 <p>Let’s calculate VOT now.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot_50c304086655f717c47a6c9a98cff16c">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">vot =</span> voi_onset <span class="sc">-</span> release</span>
@@ -294,7 +294,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Well done!</p>
 <p>Normally, VOT is measured in milliseconds (ms), but the <code>vot</code> column is now in seconds (because <code>release</code> and <code>voi_onset</code> are in seconds).</p>
 <p>Let’s change this. We can overwrite the <code>vot</code> column:</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-2_fa6c98112fd2d4a8127256cf0038f8d1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Multiply by 1000 to get ms from s</span></span>
@@ -310,7 +310,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>VOT is a numeric continuous variable so density plots are appropriate.</p>
 <p>To plot the probability density of a continuous variable, you can use the <code>density</code> geometry. Remember, all geometry functions start with <code>geom_</code>.</p>
 <p>Fill in the … in the following code to create a density plot of VOT values in <code>alb_vot</code>.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-dens-ex_27ad507b092a5313deb435b0064c2097">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> vot)) <span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -321,7 +321,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="make-things-cozy-with-a-rug">Make things cozy with a rug</h3>
 <p>The density line shows you a smoothed representation of the data distribution over the VOT values, but you might also want to see the raw data.</p>
 <p>You can do so by adding the <code>rug</code> geometry.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-dens-rug-ex_258d188cbe2a5ac99f80ad372b1bc02c">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(vot)) <span class="sc">+</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
@@ -349,7 +349,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>Logical operators return <code>TRUE</code> or <code>FALSE</code> depending on whether the statement they convey is true or false. Remember, <code>TRUE</code> and <code>FALSE</code> are logical values.</p>
 <p>Try these out in the Console:</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/logic_12f110fa1ce37c984a7ec1520e500613">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will return FALSE</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">==</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -381,7 +381,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="finding-unique-values">Finding unique values</h3>
 <p>Let’s create a new column that states whether a consonant is voiced or voiceless.</p>
 <p>So, the data contains the following consonants:</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/cons_31662f193fb51e5de11ea9de4b3e62e6">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cons_ipa <span class="ot">&lt;-</span> alb_vot<span class="sc">$</span>consonant</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(cons_ipa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -393,7 +393,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If you check <code>cons_ipa</code> in the Environment tab, it will say that this is <code>chr</code> vector, i.e.&nbsp;a character vector. This makes sense, because <code>consonant</code> is a character column in <code>alb_vot</code>.</p>
 <p>The <code>unique()</code> function shows the unique values of a vector (it works with any type of vector, numeric, character, logical, …).</p>
 <p>This is great, we now know all the consonants in the <code>consonant</code> column, but maybe it will be easier to type them later if we use the custom transcription in <code>label</code> rather than IPA.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/cons-2_1d4405dbc0ea31e21a3bee3d2562b3b9">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cons_lab <span class="ot">&lt;-</span> alb_vot<span class="sc">$</span>label</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(cons_lab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -410,7 +410,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="the-in-operator" class="level3">
 <h3 class="anchored" data-anchor-id="the-in-operator">The <code>%in%</code> operator</h3>
 <p>Now with this knowledge we can create a new column with <code>voiceless</code> and <code>voiced</code> values for each row in the data frame. Like so:</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/voi_8c1a7fb5ab54f1bda7ff2ef266e1ce4e">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">voicing =</span> <span class="fu">ifelse</span>(</span>
@@ -426,7 +426,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Let’s unpack this. First of all, what is <code>label %in% c("ts", "k", "p", "t", "tS", "c")</code> doing?</p>
 <p>The <code>%in%</code> operator is a special logical operator that returns <code>TRUE</code> if the value to the left is one of the values in the list to its right, and <code>FALSE</code> if not.</p>
 <p>Try these in the Console:</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/in_7331562282b92c551b63e023abd2e011">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -439,7 +439,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>But <code>%in%</code> is even more powerful because the value on the left does not have to be a single value, but it can also be a vector! We say <code>%in%</code> is <em>vectorised</em> because it can work with vectors (most functions and operators in R are vectorised).</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/in-vct_11ae222ef961657f4ebaf99cc37ebd73">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE, TRUE</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -459,7 +459,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="voiceless-or-voiced" class="level3">
 <h3 class="anchored" data-anchor-id="voiceless-or-voiced">Voiceless or voiced?</h3>
 <p>So now run the code to create a new column <code>voicing</code>.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/voi-2_2b5749748504a4fbb960edca3dc5f1c9">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">voicing =</span> <span class="fu">ifelse</span>(</span>
@@ -486,7 +486,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="violin-plots">Violin plots</h2>
 <p>An efficient way of showing the distribution of continuous variables depending on discrete groups (like <code>attitude</code>) are the so-called <strong>violin plots</strong>.</p>
 <p>Go ahead and run the following code.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-vio_fc35d47bb7d31ce8f6ef6be4b1871979">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot)) <span class="sc">+</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -504,7 +504,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="lay-over-the-raw-data">Lay over the raw data</h3>
 <p>You can lay over raw data on top of the violins. To do so, you can use the <code>jitter</code> geometry.</p>
 <p><code>geom_jitter()</code> creates so-called strip charts. Let’s first see how these look like without violins.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-jitter_daba7c2b5f9f06103dc0169b1c8a5b19">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot)) <span class="sc">+</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -514,13 +514,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>That doesn’t look great right? The points are spread too widely.</p>
 <p>We can fix that by specifying the argument <code>width</code> in the jitter geometry to be something smaller than <code>0.5</code>. Try a few values until you think it looks better.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-jitter-1-ex_c650187cb03c5e05a7c6ac3ad35690b5">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot)) <span class="sc">+</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When you are satisfied, create a violin plot with overlaid strip charts.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-vio-jit-ex_eac7858ed084de472ad13c82524af11c">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot)) <span class="sc">+</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
@@ -531,7 +531,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="lets-add-some-colour" class="level3">
 <h3 class="anchored" data-anchor-id="lets-add-some-colour">Let’s add some colour</h3>
 <p>Let’s <strong>fill</strong> the violins with colour. For now, just colour the violins depending on <code>voicing</code></p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-vio-jit-2_57d20354b9769547088a816e0261a33f">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
@@ -543,7 +543,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Not bad! But maybe we can improve by making the fill a bit transparent?</p>
 <p>You can achieve that with the <code>alpha</code> argument in <code>geom_violin()</code>, which takes a number between 0 (completely transparent) and 1 (completely opaque).</p>
 <p>Add it to the code above to make the fill transparent. Try different values until you are satisfied with the output. You could also add <code>alpha</code> to <code>geom_jitter()</code> to make the points a bit transparent.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-vio-jit-3-ex_e335aaa14169d58c6cc0c422482d6ce5">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(...) <span class="sc">+</span></span>
@@ -562,7 +562,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="the-filter-function">The <code>filter()</code> function</h3>
 <p>Filtering in R with the tidyverse is straightforward. You can use the <code>filter()</code> function.</p>
 <p>In the code below, we are filtering the <code>alb_vot</code> data so that we only include the voiceless stops <code>c("p", "t", "k")</code>. Moreover, we want only rows for with the VOT is less than 20 ms.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-filt_4c6f9be373a77bcda1d598fce4c0c190">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>alb_vot_vl <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    label <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"p"</span>, <span class="st">"t"</span>, <span class="st">"k"</span>),</span>
@@ -579,7 +579,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution.</p>
 <p><span class="math display">\[vot \sim Gaussian(\mu, \sigma)\]</span></p>
 <p>We can calculate the sample mean and standard deviation easily, using the <code>summarise()</code> function, as you learnt in Week 2.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-msd_98fe57906c48733b935c57db8a006fac">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>alb_vot_vl <span class="sc">%&gt;%</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">vot_mean =</span> <span class="fu">mean</span>(vot),</span>
@@ -600,7 +600,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In other words, we are trying to estimate the following parameters: <span class="math inline">\(\mu_1\)</span>, <span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\mu_2\)</span>, <span class="math inline">\(\sigma_2\)</span>.</p>
 <p>We can achieve this by modelling the data using the <code>brm()</code> function from the brms package (BRM stands for Bayesian Regression Model. We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).</p>
 <p>Add <code>library(brm)</code> in the <code>setup</code> chunk and run that chunk. Then, run the following code.</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-bm_a6d4fa1bcf59c669fbebde317e6013f5">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>alb_vot_bm <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  vot <span class="sc">~</span> <span class="dv">1</span>,</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
@@ -608,7 +608,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"cmdstanr"</span></span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-bm-2_8e8d801937c568fbc71c9542b36d68cb">
 
 </div>
 <p>You will see the message <code>Compiling Stan program...</code> followed by <code>Start sampling</code> and <code>Running MCMC with 4 sequential chains...</code>. Something like in the figure below.</p>
@@ -619,14 +619,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>These are about the MCMC stuff mentioned in one of the messages above: MCMC stands for Markov-Chain Monte Carlo. Keep reading for a quick intro.</p>
 <section id="markov-chain-monte-carlo-mcmc" class="level3">
 <h3 class="anchored" data-anchor-id="markov-chain-monte-carlo-mcmc">Markov-Chain Monte Carlo (MCMC)</h3>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+MCMC
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Markov-Chain Monte Carlo refers to a set of algorithms used to estimate parameters of unknown distributions, based on repeated draws from parameter values and observed data.</p>
+</div>
+</div>
 <p>You don’t need to understand the details of this. For now, just remember that several draws are made (i.e.&nbsp;the algorithm is run for several <strong>iterations</strong>), and that the model runs 4 <strong>chains</strong> of these iterations.</p>
 <p>We will learn more about chains and iterations in the coming weeks and you will know how to use information about these to diagnose the robustness of the estimated parameters.</p>
 </section>
 <section id="model-summary" class="level3">
 <h3 class="anchored" data-anchor-id="model-summary">Model summary</h3>
 <p>Now we can inspect the model output using the <code>summary()</code> function (don’t confuse this with the <code>summarise()</code> function, used to get statistical summaries of data).</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-bm-summ_c929307a220bf7e45c2a570c1d98002f">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_vot_bm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: gaussian 
@@ -651,7 +663,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 <p>We have seen the summary of this model during the lecture. Do you remember how to interpret it?</p>
 <p>You can use the <code>tidy()</code> function from the <a href="https://github.com/bbolker/broom.mixed">broom.mixed</a> package to extract the information on the estimated parameters as a table (remember to attach the package in the <code>setup</code> chunk; you might also need to install the package).</p>
-<div class="cell">
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-bm-tidy_ca18bd58a68c84a4af890b7bdf95f1bc">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(alb_vot_bm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -681,60 +693,118 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </ul>
 <p>In other words:</p>
 <p><span class="math display">\[vot \sim Gaussian(\mu, \sigma)\]</span> <span class="math display">\[\mu = Gaussian(11.62, 0.57)\]</span> <span class="math display">\[\sigma = TruncGaussian(2.86, 0.44)\]</span></p>
-</section>
-</section>
-<section id="plotting-extra-legends-and-labels" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-extra-legends-and-labels">Plotting extra: Legends and labels</h2>
-<section id="positioning-the-legend" class="level3">
-<h3 class="anchored" data-anchor-id="positioning-the-legend">Positioning the legend</h3>
-<p>The position of the legend can be set with the <code>legend.position</code> argument in <code>theme()</code>.</p>
-<p>Move the legend to the <code>"bottom"</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Based on the model summary and on the tidy summary, we also know the <strong>95% Credible Intervals</strong> (CIs or CrIs) of the probability distributions of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(sigma\)</span>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
+<div class="callout-caption-container flex-fill">
+Credible Interval
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A 95% (Bayesian) Credible Interval indicates the range of values we can be 95% confident contains the true parameter value.</p>
+</div>
+</div>
+<ul>
+<li><p>At 95% confidence, the mean (<span class="math inline">\(\mu\)</span>) VOT value for Albanian voiceless stops is between 10.5 and 12.8 ms.</p></li>
+<li><p>As for the standard deviation (<span class="math inline">\(\sigma\)</span>), we can be 95% confident that it is between 2.18 and 3.88 ms.</p></li>
+</ul>
+<p>One way to describe probability distributions is to state the values of their parameters and their 95% CrIs, as we just did.</p>
+<p>Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week.</p>
+<p>In the meantime, read on to find out how to add titles and change axis labels to plots and how to position the legend!</p>
 </section>
+</section>
+<section id="legends-and-labels-in-plots" class="level2">
+<h2 class="anchored" data-anchor-id="legends-and-labels-in-plots">Legends and labels in plots</h2>
 <section id="plot-titles-and-labels" class="level3">
 <h3 class="anchored" data-anchor-id="plot-titles-and-labels">Plot titles and labels</h3>
 <p>The <code>labs()</code> function allows you to set the plot title, subtitle, axis labels and more.</p>
-<p>Since these are strings (i.e.&nbsp;text), they must be quoted with <code>"</code>. Replace the <code>...</code> with <code>"Number of languages by macro-area and\nAggregated Endangerement Status"</code> below.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> ...</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Since these are strings (i.e.&nbsp;text), they must be quoted with <code>""</code>. Replace the <code>...</code> below with an appropriate title, like <code>"VOT of Albanian stops"</code>.</p>
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-title_dacf9ee0409e987aed1e731ae3e03217">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> ...</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>NOTE: We use <code>\n</code> to split the title into two lines, so that it fits the plot. <code>\n</code> simply means “<strong>n</strong>ew line”.</p>
 </section>
 <section id="axis-labels" class="level3">
 <h3 class="anchored" data-anchor-id="axis-labels">Axis labels</h3>
-<p>To change the axis labels, you specify a string for <code>x</code> and <code>y</code>.</p>
-<p>I have changed the <code>x</code> label here below. Go ahead and change <code>y</code> to <code>"Number of languages"</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> glot_status,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Macroarea, <span class="at">fill =</span> status)</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We use \n to split the title into two lines. \n means "new line"</span></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of languages by macro-area and</span><span class="sc">\n</span><span class="st">Aggregated Endangerement Status"</span>,</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Language macro-area"</span>,</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To change the the axis labels, you can specify a string for <code>x</code> and <code>y</code> in the <code>labs()</code> function.</p>
+<p>I have changed the <code>x</code> label here below. Go ahead and change <code>y</code> to <code>"VOT (ms)"</code>. (Remember to also add the title).</p>
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-labs_8cee63f001b57f674663dae3dd7d2f8a">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> ...,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Consonant voicing"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="positioning-the-legend" class="level3">
+<h3 class="anchored" data-anchor-id="positioning-the-legend">Positioning the legend</h3>
+<p>The position of the legend can be set with the <code>legend.position</code> argument in the <code>theme()</code> function.</p>
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-legend_9c511c32b9fa1eba0e06838161a823da">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tutorial-w04_files/figure-html/vot-legend-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Sometimes you don’t want the legend at all. You can achieve that with <code>"none"</code> as the value to the <code>legend.position</code> argument.</p>
+<div class="cell" data-hash="tutorial-w04_cache/html/vot-legend-none_d2618f4580840fc1500d1a706302ba22">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Transforming data</strong></p>
+<ul>
+<li><p><code>mutate()</code> creates new columns or mutates existing ones.</p></li>
+<li><p><code>filter()</code> can filter data based on given values.</p></li>
+<li><p>With <code>ifelse(), you can output values depending on a logical statement.</code></p></li>
+<li><p>Use logical operators to create logical statements: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>.</p></li>
+<li><p><code>unique()</code> returns the unique values of a vector.</p></li>
+<li><p>The <code>%in%</code> operator returns <code>TRUE</code> if the value to the left is one of the values in the list to its right, and <code>FALSE</code> if not.</p></li>
+</ul>
+<p><strong>Plotting</strong></p>
+<ul>
+<li><p>Use <code>geom_density()</code> to create density plots.</p></li>
+<li><p>Use <code>geom_violin()</code> to create violin plots.</p></li>
+<li><p>Use <code>geom_jitter()</code> to create strip charts.</p></li>
+<li><p><code>labs()</code> allows you to specify title and axis labels.</p></li>
+<li><p><code>theme(legend.position = …)</code> lets you specify the position of the legend.</p></li>
+</ul>
+<p><strong>Modelling</strong></p>
+<ul>
+<li><p>Use <code>brm()</code> with <code>family = gaussian()</code> to model the mean and standard deviation of Gaussian data.</p></li>
+<li><p><code>summary()</code> returns the summary of a <code>brm</code> model.</p></li>
+<li><p>With <code>tidy()</code> from broom.mixed you can obtain a tidy table with the model summary.</p></li>
+</ul>
+</div>
+</div>
+</div>
 
 
 </section>

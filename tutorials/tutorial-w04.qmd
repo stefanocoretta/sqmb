@@ -1,6 +1,8 @@
 ---
 title: "SQM tutorial - Week 4"
 editor: visual
+execute: 
+  cache: true
 ---
 
 ```{r}
@@ -518,7 +520,11 @@ These are about the MCMC stuff mentioned in one of the messages above: MCMC stan
 
 ### Markov-Chain Monte Carlo (MCMC)
 
+::: {.callout-tip icon="false"}
+#### MCMC
+
 Markov-Chain Monte Carlo refers to a set of algorithms used to estimate parameters of unknown distributions, based on repeated draws from parameter values and observed data.
+:::
 
 You don't need to understand the details of this. For now, just remember that several draws are made (i.e. the algorithm is run for several **iterations**), and that the model runs 4 **chains** of these iterations.
 
@@ -569,73 +575,130 @@ For `sd__Observation` ($\sigma$):
 
 In other words:
 
-$$vot \sim Gaussian(\mu, \sigma)$$
-$$\mu = Gaussian(11.62, 0.57)$$
-$$\sigma = TruncGaussian(2.86, 0.44)$$
+$$vot \sim Gaussian(\mu, \sigma)$$ $$\mu = Gaussian(11.62, 0.57)$$ $$\sigma = TruncGaussian(2.86, 0.44)$$
 
-## Plotting extra: Legends and labels
+Based on the model summary and on the tidy summary, we also know the **95% Credible Intervals** (CIs or CrIs) of the probability distributions of $\mu$ and $sigma$.
 
-### Positioning the legend
+::: {.callout-tip icon="false"}
+#### Credible Interval
 
-The position of the legend can be set with the `legend.position` argument in `theme()`.
+A 95% (Bayesian) Credible Interval indicates the range of values we can be 95% confident contains the true parameter value.
+:::
 
-Move the legend to the `"bottom"`.
+-   At 95% confidence, the mean ($\mu$) VOT value for Albanian voiceless stops is between 10.5 and 12.8 ms.
 
-```{r}
-#| label: status-legend
-#| eval: false
+-   As for the standard deviation ($\sigma$), we can be 95% confident that it is between 2.18 and 3.88 ms.
 
-ggplot(
-  data = glot_status,
-  mapping = aes(x = Macroarea, fill = status)
-) +
-  geom_bar() +
-  ...
-```
+One way to describe probability distributions is to state the values of their parameters and their 95% CrIs, as we just did.
+
+Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week.
+
+In the meantime, read on to find out how to add titles and change axis labels to plots and how to position the legend!
+
+## Legends and labels in plots
 
 ### Plot titles and labels
 
 The `labs()` function allows you to set the plot title, subtitle, axis labels and more.
 
-Since these are strings (i.e. text), they must be quoted with `"`. Replace the `...` with `"Number of languages by macro-area and\nAggregated Endangerement Status"` below.
+Since these are strings (i.e. text), they must be quoted with `""`. Replace the `...` below with an appropriate title, like `"VOT of Albanian stops"`.
 
 ```{r}
-#| label: status-title
+#| label: vot-title
 #| eval: false
 
-ggplot(
-  data = glot_status,
-  mapping = aes(x = Macroarea, fill = status)
-) +
-  geom_bar() +
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin() +
+  geom_jitter(width = 0.05, alpha = 0.2) +
   labs(
     title = ...
   )
 ```
 
-NOTE: We use `\n` to split the title into two lines, so that it fits the plot. `\n` simply means "**n**ew line".
-
 ### Axis labels
 
-To change the axis labels, you specify a string for `x` and `y`.
+To change the the axis labels, you can specify a string for `x` and `y` in the `labs()` function.
 
-I have changed the `x` label here below. Go ahead and change `y` to `"Number of languages"`.
+I have changed the `x` label here below. Go ahead and change `y` to `"VOT (ms)"`. (Remember to also add the title).
 
 ```{r}
-#| label: status-labs
+#| label: vot-labs
 #| eval: false
 
-ggplot(
-  data = glot_status,
-  mapping = aes(x = Macroarea, fill = status)
-) +
-  geom_bar() +
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin() +
+  geom_jitter(width = 0.05, alpha = 0.2) +
   labs(
-    # We use \n to split the title into two lines. \n means "new line"
-    title = "Number of languages by macro-area and\nAggregated Endangerement Status",
-    x = "Language macro-area",
+    title = ...,
+    x = "Consonant voicing",
     ...
   )
 ```
 
+### Positioning the legend
+
+The position of the legend can be set with the `legend.position` argument in the `theme()` function.
+
+```{r}
+#| label: vot-legend
+
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin() +
+  geom_jitter(width = 0.05, alpha = 0.2) +
+  theme(legend.position = "bottom")
+```
+
+Sometimes you don't want the legend at all. You can achieve that with `"none"` as the value to the `legend.position` argument.
+
+```{r}
+#| label: vot-legend-none
+#| eval: false
+
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin() +
+  geom_jitter(width = 0.05, alpha = 0.2) +
+  theme(legend.position = ...)
+
+```
+
 ## Summary
+
+::: {.callout-note appearance="minimal"}
+**Transforming data**
+
+-   `mutate()` creates new columns or mutates existing ones.
+
+-   `filter()` can filter data based on given values.
+
+-   With `ifelse(), you can output values depending on a logical statement.`
+
+-   Use logical operators to create logical statements: `==`, `!=`, `>`, `<`.
+
+-   `unique()` returns the unique values of a vector.
+
+-   The `%in%` operator returns `TRUE` if the value to the left is one of the values in the list to its right, and `FALSE` if not.
+
+**Plotting**
+
+-   Use `geom_density()` to create density plots.
+
+-   Use `geom_violin()` to create violin plots.
+
+-   Use `geom_jitter()` to create strip charts.
+
+-   `labs()` allows you to specify title and axis labels.
+
+-   `theme(legend.position = …)` lets you specify the position of the legend.
+
+**Modelling**
+
+-   Use `brm()` with `family = gaussian()` to model the mean and standard deviation of Gaussian data.
+
+-   `summary()` returns the summary of a `brm` model.
+
+-   With `tidy()` from broom.mixed you can obtain a tidy table with the model summary.
+:::

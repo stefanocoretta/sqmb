@@ -266,6 +266,18 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
   - [alb_vot.csv](data/alb_vot.csv)
 :::
 
+::: {.callout-tip collapse="false"}
+#### Suggested readings
+
+**Main textbooks**
+
+- **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). [online book]
+- [ggplot2](https://ggplot2.tidyverse.org) documentation.
+- **S4LR** Ch 3 [via library].
+- **SReT** Ch 2, sparingly (we have not covered everything in the chapter yet) [via library].
+
+:::
+
 ### Week 5: Linear models, Basics II
 
 ::: {.callout-important collapse="true"}

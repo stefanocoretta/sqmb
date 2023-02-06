@@ -238,10 +238,10 @@ Learning from Data.*
 
 **Skills**
 
+- Transform data by creating new columns and filtering based on specific values.
+- Use logical operators to transform data.
 - Fit a statistical model to estimate the mean and standard deviation of a Gaussian variable with `brm()`.
 - Interpret the summary of the model and understand the meaning of the reported estimates.
-- Plot the probability distribution of the estimated parameters.
-- Describe the model specification and results in writing.
 :::
 
 ::: {.callout-note collapse="false"}
@@ -261,10 +261,9 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 #### Materials
 
 - [Lecture slides](slides/w04/).
-<!-- - [Workshop tutorial](tutorials/tutorial-w03.qmd). -->
-<!-- - Workshop files (right-click and download): -->
-  <!-- - [polite.csv](data/polite.csv) -->
-  <!-- - [glot_status.rds](data/glot_status.rds) -->
+- [Workshop tutorial](tutorials/tutorial-w04.qmd).
+- Workshop files (right-click and download):
+  - [alb_vot.csv](data/alb_vot.csv)
 :::
 
 ### Week 5: Linear models, Basics II

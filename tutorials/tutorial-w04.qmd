@@ -1,14 +1,18 @@
 ---
-title: "Tutorial 4"
+title: "SQM tutorial - Week 4"
 editor: visual
 ---
 
 ```{r}
 #| label: pkgs
 #| message: false
+#| echo: false
 
 library(tidyverse)
 theme_set(theme_light())
+
+library(brms)
+library(broom.mixed)
 ```
 
 Let's pick up from where we left off last week.
@@ -446,11 +450,128 @@ You might have noticed that we need to assign the output of `filter()`, which is
 
 ## Modelling with `brm()`
 
+In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution.
 
+$$vot \sim Gaussian(\mu, \sigma)$$
 
+We can calculate the sample mean and standard deviation easily, using the `summarise()` function, as you learnt in Week 2.
 
+```{r}
+#| label: vot-msd
 
+alb_vot_vl %>%
+  summarise(
+    vot_mean = mean(vot),
+    vot_sd = sd(vot)
+  )
+```
 
+But now we want to make inference from our sample (N = 24) to the entire population of VOT values of the Albanian voiceless plosives /p/, /t/, /k/.
+
+We want to estimate the following probability distributions:
+
+$$\mu = Gaussian(\mu_1, \sigma_1)$$ $$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
+
+In other words, we are trying to estimate the following parameters: $\mu_1$, $\sigma_1$, $\mu_2$, $\sigma_2$.
+
+We can achieve this by modelling the data using the `brm()` function from the brms package (BRM stands for Bayesian Regression Model. We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).
+
+Add `library(brm)` in the `setup` chunk and run that chunk. Then, run the following code.
+
+```{r}
+#| label: vot-bm
+#| eval: false
+
+alb_vot_bm <- brm(
+  vot ~ 1,
+  family = gaussian(),
+  data = alb_vot_vl,
+  backend = "cmdstanr"
+)
+```
+
+```{r}
+#| label: vot-bm-2
+#| echo: false
+#| message: false
+
+alb_vot_bm <- brm(
+  vot ~ 1,
+  family = gaussian(),
+  data = alb_vot_vl,
+  backend = "cmdstanr",
+  file = "data/cache/vot_bm.rds"
+)
+```
+
+You will see the message `Compiling Stan program...` followed by `Start sampling` and `Running MCMC with 4 sequential chains...`. Something like in the figure below.
+
+![](/img/mcmc-messages.png)
+
+We will get back to what all this means in the coming weeks. For now know that [Stan](https://mc-stan.org) is a programming language that can run Bayesian models. `brms()` is an R interface to Stan, so that you can use R and R syntax to run Bayesian models without having to learn Stan! (If you feel adventurous, nobody stops you from learning Stan too, although it is not required for this course).
+
+After those initial messages, you will see a list of messages about **chains** and **interactions**, as in the figure below.
+
+![](/img/mcmc-chains-info.png)
+
+These are about the MCMC stuff mentioned in one of the messages above: MCMC stands for Markov-Chain Monte Carlo. Keep reading for a quick intro.
+
+### Markov-Chain Monte Carlo (MCMC)
+
+Markov-Chain Monte Carlo refers to a set of algorithms used to estimate parameters of unknown distributions, based on repeated draws from parameter values and observed data.
+
+You don't need to understand the details of this. For now, just remember that several draws are made (i.e. the algorithm is run for several **iterations**), and that the model runs 4 **chains** of these iterations.
+
+We will learn more about chains and iterations in the coming weeks and you will know how to use information about these to diagnose the robustness of the estimated parameters.
+
+### Model summary
+
+Now we can inspect the model output using the `summary()` function (don't confuse this with the `summarise()` function, used to get statistical summaries of data).
+
+```{r}
+#| label: vot-bm-summ
+
+summary(alb_vot_bm)
+
+```
+
+We have seen the summary of this model during the lecture. Do you remember how to interpret it?
+
+You can use the `tidy()` function from the [broom.mixed](https://github.com/bbolker/broom.mixed) package to extract the information on the estimated parameters as a table (remember to attach the package in the `setup` chunk; you might also need to install the package).
+
+```{r}
+#| label: vot-bm-tidy
+
+tidy(alb_vot_bm)
+```
+
+The `term` column gives us the two parameters we wanted to estimate:
+
+-   `(Intercept)` is actually $\mu$.
+
+-   `sd__Observation` is $\sigma$.
+
+Note that `sd__Observation` in the tidy table corresponds to `sigma` in the model summary above.
+
+Now, for each of the two parameters, you get `estimate` and `std.error`. There are the hyper-parameters of the probability distributions for $\mu$ and $\sigma$.
+
+For `(Intercept)` ($\mu$):
+
+-   `estimate` is $\mu_1$: 11.62 ms.
+
+-   `std.error` is $\sigma_1$: 0.57 ms.
+
+For `sd__Observation` ($\sigma$):
+
+-   `estimate` is $\mu_2$: 2.86 ms.
+
+-   `std.error` is $\sigma_2$: 0.44 ms.
+
+In other words:
+
+$$vot \sim Gaussian(\mu, \sigma)$$
+$$\mu = Gaussian(11.62, 0.57)$$
+$$\sigma = TruncGaussian(2.86, 0.44)$$
 
 ## Plotting extra: Legends and labels
 

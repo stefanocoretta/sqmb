@@ -1,8 +1,6 @@
 ---
 title: "Tutorial 4"
 editor: visual
-execute: 
-  eval: false
 ---
 
 ```{r}
@@ -10,8 +8,8 @@ execute:
 #| message: false
 
 library(tidyverse)
+theme_set(theme_light())
 ```
-
 
 Let's pick up from where we left off last week.
 
@@ -40,11 +38,19 @@ I leave to you creating title headings in your file as you please. Remember to t
 Now you can create a new code chunk and read the `alb_vot.csv` file in R. Remember how to do this?
 
 ```{r}
-#| label: alb-vot
+#| label: alb-vot-ex
+#| eval: false
 
 alb_vot <- ...
 ```
 
+```{r}
+#| label: alb-vot
+#| echo: false
+#| message: false
+
+alb_vot <- read_csv("data/alb_vot.csv")
+```
 
 Great!
 
@@ -56,12 +62,12 @@ alb_vot
 
 The data frame has the following columns:
 
-- `speaker`: the speaker ID.
-- `file`: the file the measurements are take from.
-- `label`: the label in the interval.
-- `release`: the time of the consonant's closure release in seconds.
-- `voi_onset`: the onset of voicing of the vowel following the target consonant in seconds.
-- `consonant`: the IPA transcription of the target consonant.
+-   `speaker`: the speaker ID.
+-   `file`: the file the measurements are take from.
+-   `label`: the label in the interval.
+-   `release`: the time of the consonant's closure release in seconds.
+-   `voi_onset`: the onset of voicing of the vowel following the target consonant in seconds.
+-   `consonant`: the IPA transcription of the target consonant.
 
 Now we need to create a new column with the Voice Onset Time (`vot`) values. Note that VOT is simply the difference between the onset of voicing (`voi_onset`) and the time of release (`release`).
 
@@ -100,10 +106,7 @@ alb_vot <- alb_vot %>%
 
 Check `alb_vot` now to see that it worked.
 
-
-## Plotting continuous variables
-
-### Density plots
+## Density plots
 
 **Density plots show the distribution (i.e. the probability density) of the values of a continuous variable.**
 
@@ -114,14 +117,15 @@ To plot the probability density of a continuous variable, you can use the `densi
 Fill in the ... in the following code to create a density plot of VOT values in `alb_vot`.
 
 ```{r}
-#| label: vot-dens
+#| label: vot-dens-ex
+#| eval: false
 
 alb_vot %>%
   ggplot(aes(x = vot)) +
   ...
 ```
 
-Note that to create a density plot, you only need to specify the `x`-axis. The `y`-axis is the probability density, which is automatically calculated. 
+Note that to create a density plot, you only need to specify the `x`-axis. The `y`-axis is the probability density, which is automatically calculated.
 
 What can you notice about the distribution of VOT values?
 
@@ -132,7 +136,8 @@ The density line shows you a smoothed representation of the data distribution ov
 You can do so by adding the `rug` geometry.
 
 ```{r}
-#| label: vot-dens-rug
+#| label: vot-dens-rug-ex
+#| eval: false
 
 alb_vot %>%
   ggplot(aes(vot)) +
@@ -142,7 +147,7 @@ alb_vot %>%
 
 Nice huh?
 
-### If-else
+## If-else
 
 What if we want to plot the density of voiceless and voiced consonants separately?
 
@@ -154,130 +159,296 @@ We will use the `mutate()` function again to create a new `voicing` column. But 
 
 We can use the `ifelse()` function!
 
-The `ifelse()` function works a bit like the English sentence "If X is true, do Y, otherwise do Z". The "X" has to be a "logical statement", i.e. an expression using **logical operators**.
+The `ifelse()` function works a bit like the English sentence "If X is true, do Y, otherwise do Z". The "X" has to be a "logical statement", i.e. an expression using **logical operators**. So let's talk about logical operators (we will get back to them below, when we will filter the VOT data).
 
 ### Logical operators
 
+There are four main logical operators:
 
+-   `x == y`: `x` equals `y`.
 
-### Violin plots
+-   `x != y`: `x` is not equal to `y`.
+
+-   `x > y`: `x` is greater than `y`.
+
+-   `x < y`: `x` is smaller than `y`.
+
+Logical operators return `TRUE` or `FALSE` depending on whether the statement they convey is true or false. Remember, `TRUE` and `FALSE` are logical values.
+
+Try these out in the Console:
+
+```{r}
+#| label: logic
+
+# This will return FALSE
+1 == 2
+
+# FALSE
+"apples" == "oranges"
+
+# TRUE
+10 > 5
+
+# FALSE
+10 > 15
+
+# TRUE
+3 < 4
+
+```
+
+### Finding unique values
+
+Let's create a new column that states whether a consonant is voiced or voiceless.
+
+So, the data contains the following consonants:
+
+```{r}
+#| label: cons
+cons_ipa <- alb_vot$consonant
+
+unique(cons_ipa)
+```
+
+Wait, what's that `$` in `alb_vot$consonant` there? That is a base R way of extracting a single column (in this case `consonant`) from a data frame (`alb_vot`).
+
+If you check `cons_ipa` in the Environment tab, it will say that this is `chr` vector, i.e. a character vector. This makes sense, because `consonant` is a character column in `alb_vot`.
+
+The `unique()` function shows the unique values of a vector (it works with any type of vector, numeric, character, logical, ...).
+
+This is great, we now know all the consonants in the `consonant` column, but maybe it will be easier to type them later if we use the custom transcription in `label` rather than IPA.
+
+```{r}
+#| label: cons-2
+cons_lab <- alb_vot$label
+
+unique(cons_lab)
+```
+
+Great! Now, to make things easier, let me tell you which consonants are voiceless and which are voiced:
+
+-   voiceless: `c("ts", "k", "p", "t", "tS", "c")`.
+
+-   voiced: `c("b", "g", "d", "dz", "J", "dZ")`.
+
+### The `%in%` operator
+
+Now with this knowledge we can create a new column with `voiceless` and `voiced` values for each row in the data frame. Like so:
+
+```{r}
+#| label: voi
+#| eval: false
+
+alb_vot <- alb_vot %>%
+  mutate(
+    voicing = ifelse(
+      # IF this is TRUE
+      label %in% c("ts", "k", "p", "t", "tS", "c"),
+      # Write
+      "voiceless",
+      # OR ELSE write
+      "voiced"
+    )
+  )
+
+```
+
+Let's unpack this. First of all, what is `label %in% c("ts", "k", "p", "t", "tS", "c")` doing?
+
+The `%in%` operator is a special logical operator that returns `TRUE` if the value to the left is one of the values in the list to its right, and `FALSE` if not.
+
+Try these in the Console:
+
+```{r}
+#| label: in
+
+# TRUE
+5 %in% c(1, 2, 5, 7)
+
+# FALSE
+"apples" %in% c("oranges", "banana")
+```
+
+But `%in%` is even more powerful because the value on the left does not have to be a single value, but it can also be a vector! We say `%in%` is *vectorised* because it can work with vectors (most functions and operators in R are vectorised).
+
+```{r}
+#| label: in-vct
+
+# TRUE, TRUE
+c(1, 5) %in% c(4, 1, 7, 5, 8)
+
+stocked <- c("durian", "bananas", "grapes")
+needed <- c("durian", "apples")
+
+# TRUE, FALSE
+needed %in% stocked
+
+```
+
+Try to understand what is going on in the code above before moving on.
+
+### Voiceless or voiced?
+
+So now run the code to create a new column `voicing`.
+
+```{r}
+#| label: voi-2
+
+alb_vot <- alb_vot %>%
+  mutate(
+    voicing = ifelse(
+      # IF this is TRUE
+      label %in% c("ts", "k", "p", "t", "tS", "c"),
+      # Write
+      "voiceless",
+      # OR ELSE write
+      "voiced"
+    )
+  )
+```
+
+The `ifelse` function is doing the following:
+
+-   If the value in the column `label` is among (`%in%`) the values in the vector `c("ts", "k", "p", "t", "tS", "c")`.
+
+-   Write `voiceless` in the `voicing` column.
+
+-   Otherwise write `voiced`.
+
+Check out the `voicing` column in `alb_vot`.
+
+Now that we have the info we need to plot voiceless and voiced consonants separately, let's do that! But to spice things up a bit, let's do it with violin plots.
+
+## Violin plots
 
 An efficient way of showing the distribution of continuous variables depending on discrete groups (like `attitude`) are the so-called **violin plots**.
 
 Go ahead and run the following code.
 
-```{r pol-viol, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
+```{r}
+#| label: vot-vio
+
+alb_vot %>%
+  ggplot(aes(voicing, vot)) +
   geom_violin()
 ```
 
-They are called violin plots because they look like violins!
+They are called violin plots because they look like violins! The geometry for violin plots is... `geom_violin()`.
+
+Usually, you need the following `aes`thetics:
+
+-   `x`-axis: a categorical variable, like `voicing`.
+
+-   `y`-axis: a continuous numeric variable, like `vot`.
 
 ### Lay over the raw data
 
-You can lay over raw data on top of the violins.
+You can lay over raw data on top of the violins. To do so, you can use the `jitter` geometry.
 
-To do so, you can use the `jitter` geometry. Fill the following code chunk and run it.
+`geom_jitter()` creates so-called strip charts. Let's first see how these look like without violins.
 
-```{r pol-viol-jit, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
-  geom_violin() +
-  ...
+```{r}
+#| label: vot-jitter
+alb_vot %>%
+  ggplot(aes(voicing, vot)) +
+  geom_jitter()
 ```
 
 That doesn't look great right? The points are spread too widely.
 
-We can fix that by specifying the argument `width` in the jitter geometry something smaller than `0.5`. Try a few values until you think it looks better.
+We can fix that by specifying the argument `width` in the jitter geometry to be something smaller than `0.5`. Try a few values until you think it looks better.
 
-```{r pol-viol-jit-2, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn)) +
+```{r}
+#| label: vot-jitter-1-ex
+#| eval: false
+
+alb_vot %>%
+  ggplot(aes(voicing, vot)) +
+  geom_jitter(width = ...)
+```
+
+When you are satisfied, create a violin plot with overlaid strip charts.
+
+```{r}
+#| label: vot-vio-jit-ex
+#| eval: false
+
+alb_vot %>%
+  ggplot(aes(voicing, vot)) +
   geom_violin() +
-  ...
+  geom_jitter(width = ...)
 ```
 
-```{r pol-viol-jit-2-hint}
-geom_jitter(width = ...)
-```
-
-Note that the order between the violin and jitter geoms is important. If you add the jitter geometry before the violin geometry, the violins will just cover up the jittered points (see why it is called "layered" grammar of graphics?).
+Note that the order between the violin and jitter geoms is important. If you add the jitter geometry before the violin geometry, the violins will just cover the jittered points (see why it is called "layered" grammar of graphics?).
 
 ### Let's add some colour
 
-Let's **fill** the violins with colour. For now, just colour the violins depending on `attitude`
+Let's **fill** the violins with colour. For now, just colour the violins depending on `voicing`
 
-```{r pol-colour, exercise=TRUE}
-polite %>%
-  ggplot(aes(attitude, f0mn, ...)) +
-  geom_violin()
-```
+```{r}
+#| label: vot-vio-jit-2
 
-```{r pol-colour-hint}
-fill = ...
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin() +
+  geom_jitter(width = 0.05)
 ```
 
 Not bad! But maybe we can improve by making the fill a bit transparent?
 
 You can achieve that with the `alpha` argument in `geom_violin()`, which takes a number between 0 (completely transparent) and 1 (completely opaque).
 
-Add it to the code above to make the fill transparent. Try different values until you are satisfied with the output.
-
-### Separate the data by gender
-
-In the previous section we have filled the violins with colours depending on `attitude`. This helps making the plot somewhat more appealing, but colour there doesn't add information to the plot: attitude is already marked by the *x*-axis, so filling by attitude is a bit redundant.
-
-Instead, we can use the fill argument to separate the data into further groups based on other variables in the data.
-
-Go ahead and separate the data by `gender` using the `fill` argument.
-
-```{r pol-colour-gen, exercise=TRUE}
-
-polite %>%
-  ggplot(aes(attitude, f0mn, ...)) +
-  geom_violin()
-```
-
-What if we want to move the colour legend to the bottom of the plot?
-
-<!--# Need to double check this and make it match the previous exercise. -->
-
-In `ggplot2`, we control the position of the legend by modifying an elements of the `theme` option. (If this seems arbitrary, you're not wrong. Eventually you'll memorise quirky `ggplot2` features like this, and until then, you can figure it out by searching "How do I change legend position in ggplot" and some kind soul on the internet will tell you.)
-
-Check out the documentation of `theme` by typing `?theme` in the RStudio Console and press ENTER. Search for the word `position`.
-
-::: callout-important
-#### Question
-
-**Which of the following moves the legend to the bottom of the plot?**
-
-1.  `legend("bottom")`
-2.  `theme(legend.position = "bottom")`
-3.  `theme(legend.bottom)`
-:::
-
-To check, try replacing the first `...` in the code below with the `y =` specification you used above, and the second `...` with the correct way of moving the legend to the bottom of the plot. Run the code to see if you're right!
+Add it to the code above to make the fill transparent. Try different values until you are satisfied with the output. You could also add `alpha` to `geom_jitter()` to make the points a bit transparent.
 
 ```{r}
-#| label: status-stacked-legend-bottom
+#| label: vot-vio-jit-3-ex
 #| eval: false
 
-ggplot(
-  data = glot_status,
-  mapping = aes(x = Macroarea, ...)
-) +
-  geom_bar() +
-  ...
+alb_vot %>%
+  ggplot(aes(voicing, vot, fill = voicing)) +
+  geom_violin(...) +
+  geom_jitter(width = 0.05)
 ```
+
+Wonderful! Now, what can you tell about VOT in voiceless and voiced consonants in Albanian based on this plot?
 
 ## Filtering data
 
+We are getting closer and closer to start modelling our VOT data to learn more about them.
 
+Normally, you would approach data modelling by using the entire data set and including as many variables as it makes sense.
 
+Since you are just starting to learn how to model data with [brms](https://paul-buerkner.github.io/brms/), we will first take a pedagogical approach and start small.
 
+To do, we will filter the data so that we include only voiceless plosives that don't have a VOT longer than 20 ms. (Again, we are doing this now for pedagogical reasons, not because this is what you would do with this data in real-life research).
+
+### The `filter()` function
+
+Filtering in R with the tidyverse is straightforward. You can use the `filter()` function.
+
+In the code below, we are filtering the `alb_vot` data so that we only include the voiceless stops `c("p", "t", "k")`. Moreover, we want only rows for with the VOT is less than 20 ms.
+
+```{r}
+#| label: vot-filt
+
+alb_vot_vl <- alb_vot %>%
+  filter(
+    label %in% c("p", "t", "k"),
+    vot < 20
+  )
+```
+
+This should not look to alien! The first statement, `label %in% c("p", "t", "k")` works like the `%in%` statement we used above with `mutate()`.
+
+In `filter()`, you can add multiple statements to filter the data with, separated by commas. Here we have a second statement, `vot < 20`, i.e. "give me VOT values that are less than 20 ms.
+
+You might have noticed that we need to assign the output of `filter()`, which is a data frame, to a new variable `alb_vot_vl`. This will be the data frame you will use in the next section.
 
 ## Modelling with `brm()`
+
+
+
+
 
 
 
@@ -305,10 +476,11 @@ ggplot(
 
 The `labs()` function allows you to set the plot title, subtitle, axis labels and more.
 
-Since these are strings (i.e. text), they must be quoted with `"`.
+Since these are strings (i.e. text), they must be quoted with `"`. Replace the `...` with `"Number of languages by macro-area and\nAggregated Endangerement Status"` below.
 
 ```{r}
 #| label: status-title
+#| eval: false
 
 ggplot(
   data = glot_status,
@@ -316,7 +488,7 @@ ggplot(
 ) +
   geom_bar() +
   labs(
-    title = "Number of languages by macro-area and\nAggregated Endangerement Status"
+    title = ...
   )
 ```
 
@@ -346,4 +518,3 @@ ggplot(
 ```
 
 ## Summary
-

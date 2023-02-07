@@ -205,7 +205,7 @@ Try these out in the Console:
 
 ### Finding unique values
 
-Let's create a new column that states whether a consonant is voiced or voiceless.
+Let's create a new column that states whether a consonant is voiced or voiceless. Because we're modifying the data frame, let's move back into the editor so that all of our manipulations are recorded.
 
 So, the data contains the following consonants:
 
@@ -236,6 +236,8 @@ Great! Now, to make things easier, let me tell you which consonants are voiceles
 -   voiceless: `c("ts", "k", "p", "t", "tS", "c")`.
 
 -   voiced: `c("b", "g", "d", "dz", "J", "dZ")`.
+
+Don't worry about assigning these vectors to variables right now.
 
 ### The `%in%` operator
 
@@ -272,7 +274,7 @@ Try these in the Console:
 5 %in% c(1, 2, 5, 7)
 
 # FALSE
-"apples" %in% c("oranges", "banana")
+"apples" %in% c("oranges", "bananas")
 ```
 
 But `%in%` is even more powerful because the value on the left does not have to be a single value, but it can also be a vector! We say `%in%` is *vectorised* because it can work with vectors (most functions and operators in R are vectorised).
@@ -295,7 +297,7 @@ Try to understand what is going on in the code above before moving on.
 
 ### Voiceless or voiced?
 
-So now run the code to create a new column `voicing`.
+So now run the code to create a new column `voicing` (this is the same code as above).
 
 ```{r}
 #| label: voi-2
@@ -313,7 +315,7 @@ alb_vot <- alb_vot %>%
   )
 ```
 
-The `ifelse` function is doing the following:
+The `ifelse()` function is doing the following:
 
 -   If the value in the column `label` is among (`%in%`) the values in the vector `c("ts", "k", "p", "t", "tS", "c")`.
 
@@ -327,7 +329,7 @@ Now that we have the info we need to plot voiceless and voiced consonants separa
 
 ## Violin plots
 
-An efficient way of showing the distribution of continuous variables depending on discrete groups (like `attitude`) are the so-called **violin plots**.
+An efficient way of showing the distribution of continuous variables depending on discrete groups (like `voicing`) are the so-called **violin plots**.
 
 Go ahead and run the following code.
 
@@ -389,7 +391,7 @@ Note that the order between the violin and jitter geoms is important. If you add
 
 ### Let's add some colour
 
-Let's **fill** the violins with colour. For now, just colour the violins depending on `voicing`
+Let's **fill** the violins with colour. For now, just colour the violins depending on `voicing`.
 
 ```{r}
 #| label: vot-vio-jit-2
@@ -444,15 +446,15 @@ alb_vot_vl <- alb_vot %>%
   )
 ```
 
-This should not look to alien! The first statement, `label %in% c("p", "t", "k")` works like the `%in%` statement we used above with `mutate()`.
+This should not look too alien! The first statement, `label %in% c("p", "t", "k")` works like the `%in%` statement we used above with `mutate()`.
 
-In `filter()`, you can add multiple statements to filter the data with, separated by commas. Here we have a second statement, `vot < 20`, i.e. "give me VOT values that are less than 20 ms.
+In `filter()`, you can add multiple statements to filter the data with, separated by commas. Here we have a second statement, `vot < 20`, i.e. "give me VOT values that are less than 20 ms". Combining statements like this will give you only those rows where both conditions apply.
 
-You might have noticed that we need to assign the output of `filter()`, which is a data frame, to a new variable `alb_vot_vl`. This will be the data frame you will use in the next section.
+You might have noticed that we need to assign the output of `filter()`, which is a data frame, to a new variable `alb_vot_vl` ("vl" for "voiceless"). This will be the data frame you will use in the next section.
 
 ## Modelling with `brm()`
 
-In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution.
+In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution (you may also have encountered Gaussian distributions under the name "normal distribution").
 
 $$vot \sim Gaussian(\mu, \sigma)$$
 
@@ -474,11 +476,11 @@ We want to estimate the following probability distributions:
 
 $$\mu = Gaussian(\mu_1, \sigma_1)$$ $$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
 
-In other words, we are trying to estimate the following parameters: $\mu_1$, $\sigma_1$, $\mu_2$, $\sigma_2$.
+In other words, we are trying to estimate the following parameters (called "hyperparameters"): $\mu_1$, $\sigma_1$, $\mu_2$, $\sigma_2$.
 
-We can achieve this by modelling the data using the `brm()` function from the brms package (BRM stands for Bayesian Regression Model. We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).
+We can achieve this by modelling the data using the `brm()` function from the brms package (BRM stands for Bayesian Regression Model). We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).
 
-Add `library(brm)` in the `setup` chunk and run that chunk. Then, run the following code.
+Add `library(brms)` in the `setup` chunk and run that chunk again. Then, run the following code.
 
 ```{r}
 #| label: vot-bm
@@ -510,7 +512,7 @@ You will see the message `Compiling Stan program...` followed by `Start sampling
 
 ![](/img/mcmc-messages.png)
 
-We will get back to what all this means in the coming weeks. For now know that [Stan](https://mc-stan.org) is a programming language that can run Bayesian models. `brms()` is an R interface to Stan, so that you can use R and R syntax to run Bayesian models without having to learn Stan! (If you feel adventurous, nobody stops you from learning Stan too, although it is not required for this course).
+We will get back to what all this means in the coming weeks. For now know that [Stan](https://mc-stan.org) is a programming language that can run Bayesian models. `brm()` is an R interface to Stan, so that you can use R and R syntax to run Bayesian models without having to learn Stan! (If you feel adventurous, nobody stops you from learning Stan too, although it is not required for this course).
 
 After those initial messages, you will see a list of messages about **chains** and **interactions**, as in the figure below.
 
@@ -578,6 +580,7 @@ In other words:
 $$vot \sim Gaussian(\mu, \sigma)$$ $$\mu = Gaussian(11.62, 0.57)$$ $$\sigma = TruncGaussian(2.86, 0.44)$$
 
 Based on the model summary and on the tidy summary, we also know the **95% Credible Intervals** (CIs or CrIs) of the probability distributions of $\mu$ and $sigma$.
+They are in the columns called `conf.low` and `conf.high`.
 
 ::: {.callout-tip icon="false"}
 #### Credible Interval
@@ -592,6 +595,7 @@ A 95% (Bayesian) Credible Interval indicates the range of values we can be 95% c
 One way to describe probability distributions is to state the values of their parameters and their 95% CrIs, as we just did.
 
 Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week.
+<!-- ^ EP: We've done the basics of probability densities above—are we doing it differently next week, e.g., with bayesplot, or by extracting the samples from the model ourselves? That should be specified.-->
 
 In the meantime, read on to find out how to add titles and change axis labels to plots and how to position the legend!
 
@@ -674,13 +678,13 @@ alb_vot %>%
 
 -   `filter()` can filter data based on given values.
 
--   With `ifelse(), you can output values depending on a logical statement.`
+-   With `ifelse()`, you can output values depending on a logical statement.`
 
 -   Use logical operators to create logical statements: `==`, `!=`, `>`, `<`.
 
 -   `unique()` returns the unique values of a vector.
 
--   The `%in%` operator returns `TRUE` if the value to the left is one of the values in the list to its right, and `FALSE` if not.
+-   The `%in%` operator returns `TRUE` if the value on the operator's left-hand side is one of the values in the vector on the right-hand side, and `FALSE` if not.
 
 **Plotting**
 

@@ -359,7 +359,7 @@ Let's assume VOT values are **distributed according to a Gaussian distribution**
 <br>
 
 .f3[
-$$vot = Gaussian(\mu, \sigma)$$
+$$vot \sim Gaussian(\mu, \sigma)$$
 ]
 
 
@@ -463,7 +463,7 @@ $$vot \sim Gaussian(\mu, \sigma)$$
 **Parameters**: mean $\mu$ and SD $\sigma$.
 
 .f3[
-$$\mu = Gaussian(\mu_1, \sigma_1)$$
+$$\mu \sim Gaussian(\mu_1, \sigma_1)$$
 ]
 
 **Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
@@ -485,13 +485,13 @@ $$vot \sim Gaussian(\mu, \sigma)$$
 **Parameters**: mean $\mu$ and SD $\sigma$.
 
 .f3[
-$$\mu = Gaussian(\mu_1, \sigma_1)$$
+$$\mu \sim Gaussian(\mu_1, \sigma_1)$$
 ]
 
 **Hyperparameters**: mean $\mu_1$ and SD $\sigma_1$.
 
 .f3[
-$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
+$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$
 ]
 
 **Hyperparameters**: mean $\mu_2$ and SD $\sigma_2$.
@@ -511,6 +511,9 @@ ggplot(data = tibble(x = -5:5), aes(x)) +
   stat_function(fun = dnorm, n = 101, args = list(0, 1)) +
   theme(
     axis.text.x = element_blank()
+  ) +
+  labs(
+    title = expression(Example~of~Gaussian~distribution~of~mu)
   )
 ```
 ]
@@ -522,6 +525,9 @@ ggplot(data = tibble(x = 0:5), aes(x)) +
   geom_vline(xintercept = 0) +
   theme(
     axis.text.x = element_blank()
+  ) +
+  labs(
+    title = expression(Example~of~truncated~-~Gaussian~distribution~of~sigma)
   )
 ```
 ]
@@ -649,10 +655,10 @@ cat(vot_bm_summ[c(8:10)], sep = "\n")
 .pull-right[
 $$vot \sim Gaussian(\mu, \sigma)$$
 .purple[
-$$\mu = Gaussian(\mu_1, \sigma_1)$$
+$$\mu \sim Gaussian(\mu_1, \sigma_1)$$
 ]
 
-$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
+$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$
 ]
 
 ---
@@ -671,7 +677,7 @@ vot_int_p <- int_dens %>%
   scale_x_continuous(n.breaks = 6) +
   labs(
     title = expression(Probability~distribution~of~mu),
-    x = expression(mu[1]), y = "Probability density"
+    x = expression(mu), y = "Probability density"
   ) +
   ylim(0, 0.7)
 vot_int_p
@@ -743,10 +749,10 @@ cat(vot_bm_summ[c(12:14)], sep = "\n")
 .pull-right[
 $$vot \sim Gaussian(\mu, \sigma)$$
 
-$$\mu = Gaussian(\mu_1, \sigma_1)$$
+$$\mu \sim Gaussian(\mu_1, \sigma_1)$$
 
 .purple[
-$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$
+$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$
 ]
 ]
 
@@ -765,8 +771,8 @@ vot_sig_p <- sig_dens %>%
   geom_line(linewidth = 1) +
   scale_x_continuous(n.breaks = 6) +
   labs(
-    title = expression(Probability~distribution~of~mu),
-    x = expression(mu[1]), y = "Probability density"
+    title = expression(Probability~distribution~of~sigma),
+    x = expression(sigma), y = "Probability density"
   ) +
   ylim(0, 1)
 vot_sig_p

@@ -379,7 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="finding-unique-values" class="level3">
 <h3 class="anchored" data-anchor-id="finding-unique-values">Finding unique values</h3>
-<p>Let’s create a new column that states whether a consonant is voiced or voiceless.</p>
+<p>Let’s create a new column that states whether a consonant is voiced or voiceless. Because we’re modifying the data frame, let’s move back into the editor so that all of our manipulations are recorded.</p>
 <p>So, the data contains the following consonants:</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/cons_31662f193fb51e5de11ea9de4b3e62e6">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cons_ipa <span class="ot">&lt;-</span> alb_vot<span class="sc">$</span>consonant</span>
@@ -406,6 +406,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>voiceless: <code>c("ts", "k", "p", "t", "tS", "c")</code>.</p></li>
 <li><p>voiced: <code>c("b", "g", "d", "dz", "J", "dZ")</code>.</p></li>
 </ul>
+<p>Don’t worry about assigning these vectors to variables right now.</p>
 </section>
 <section id="the-in-operator" class="level3">
 <h3 class="anchored" data-anchor-id="the-in-operator">The <code>%in%</code> operator</h3>
@@ -426,14 +427,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Let’s unpack this. First of all, what is <code>label %in% c("ts", "k", "p", "t", "tS", "c")</code> doing?</p>
 <p>The <code>%in%</code> operator is a special logical operator that returns <code>TRUE</code> if the value to the left is one of the values in the list to its right, and <code>FALSE</code> if not.</p>
 <p>Try these in the Console:</p>
-<div class="cell" data-hash="tutorial-w04_cache/html/in_7331562282b92c551b63e023abd2e011">
+<div class="cell" data-hash="tutorial-w04_cache/html/in_66fcc1831cb7e58d9449ace2bc08f5e4">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># FALSE</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="st">"apples"</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"oranges"</span>, <span class="st">"banana"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="st">"apples"</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"oranges"</span>, <span class="st">"bananas"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
@@ -458,7 +459,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="voiceless-or-voiced" class="level3">
 <h3 class="anchored" data-anchor-id="voiceless-or-voiced">Voiceless or voiced?</h3>
-<p>So now run the code to create a new column <code>voicing</code>.</p>
+<p>So now run the code to create a new column <code>voicing</code> (this is the same code as above).</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/voi-2_2b5749748504a4fbb960edca3dc5f1c9">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="ot">&lt;-</span> alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -472,7 +473,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The <code>ifelse</code> function is doing the following:</p>
+<p>The <code>ifelse()</code> function is doing the following:</p>
 <ul>
 <li><p>If the value in the column <code>label</code> is among (<code>%in%</code>) the values in the vector <code>c("ts", "k", "p", "t", "tS", "c")</code>.</p></li>
 <li><p>Write <code>voiceless</code> in the <code>voicing</code> column.</p></li>
@@ -484,7 +485,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="violin-plots" class="level2">
 <h2 class="anchored" data-anchor-id="violin-plots">Violin plots</h2>
-<p>An efficient way of showing the distribution of continuous variables depending on discrete groups (like <code>attitude</code>) are the so-called <strong>violin plots</strong>.</p>
+<p>An efficient way of showing the distribution of continuous variables depending on discrete groups (like <code>voicing</code>) are the so-called <strong>violin plots</strong>.</p>
 <p>Go ahead and run the following code.</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/vot-vio_fc35d47bb7d31ce8f6ef6be4b1871979">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
@@ -530,7 +531,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="lets-add-some-colour" class="level3">
 <h3 class="anchored" data-anchor-id="lets-add-some-colour">Let’s add some colour</h3>
-<p>Let’s <strong>fill</strong> the violins with colour. For now, just colour the violins depending on <code>voicing</code></p>
+<p>Let’s <strong>fill</strong> the violins with colour. For now, just colour the violins depending on <code>voicing</code>.</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/vot-vio-jit-2_57d20354b9769547088a816e0261a33f">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>alb_vot <span class="sc">%&gt;%</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(voicing, vot, <span class="at">fill =</span> voicing)) <span class="sc">+</span></span>
@@ -569,14 +570,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    vot <span class="sc">&lt;</span> <span class="dv">20</span></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This should not look to alien! The first statement, <code>label %in% c("p", "t", "k")</code> works like the <code>%in%</code> statement we used above with <code>mutate()</code>.</p>
-<p>In <code>filter()</code>, you can add multiple statements to filter the data with, separated by commas. Here we have a second statement, <code>vot &lt; 20</code>, i.e.&nbsp;“give me VOT values that are less than 20 ms.</p>
-<p>You might have noticed that we need to assign the output of <code>filter()</code>, which is a data frame, to a new variable <code>alb_vot_vl</code>. This will be the data frame you will use in the next section.</p>
+<p>This should not look too alien! The first statement, <code>label %in% c("p", "t", "k")</code> works like the <code>%in%</code> statement we used above with <code>mutate()</code>.</p>
+<p>In <code>filter()</code>, you can add multiple statements to filter the data with, separated by commas. Here we have a second statement, <code>vot &lt; 20</code>, i.e.&nbsp;“give me VOT values that are less than 20 ms”. Combining statements like this will give you only those rows where both conditions apply.</p>
+<p>You might have noticed that we need to assign the output of <code>filter()</code>, which is a data frame, to a new variable <code>alb_vot_vl</code> (“vl” for “voiceless”). This will be the data frame you will use in the next section.</p>
 </section>
 </section>
 <section id="modelling-with-brm" class="level2">
 <h2 class="anchored" data-anchor-id="modelling-with-brm">Modelling with <code>brm()</code></h2>
-<p>In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution.</p>
+<p>In the lecture, we have seen that we can assume voiceless VOT values to be distributed according to a Gaussian distribution (you may also have encountered Gaussian distributions under the name “normal distribution”).</p>
 <p><span class="math display">\[vot \sim Gaussian(\mu, \sigma)\]</span></p>
 <p>We can calculate the sample mean and standard deviation easily, using the <code>summarise()</code> function, as you learnt in Week 2.</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/vot-msd_98fe57906c48733b935c57db8a006fac">
@@ -597,9 +598,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>But now we want to make inference from our sample (N = 24) to the entire population of VOT values of the Albanian voiceless plosives /p/, /t/, /k/.</p>
 <p>We want to estimate the following probability distributions:</p>
 <p><span class="math display">\[\mu = Gaussian(\mu_1, \sigma_1)\]</span> <span class="math display">\[\sigma = TruncGaussian(\mu_2, \sigma_2)\]</span></p>
-<p>In other words, we are trying to estimate the following parameters: <span class="math inline">\(\mu_1\)</span>, <span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\mu_2\)</span>, <span class="math inline">\(\sigma_2\)</span>.</p>
-<p>We can achieve this by modelling the data using the <code>brm()</code> function from the brms package (BRM stands for Bayesian Regression Model. We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).</p>
-<p>Add <code>library(brm)</code> in the <code>setup</code> chunk and run that chunk. Then, run the following code.</p>
+<p>In other words, we are trying to estimate the following parameters (called “hyperparameters”): <span class="math inline">\(\mu_1\)</span>, <span class="math inline">\(\sigma_1\)</span>, <span class="math inline">\(\mu_2\)</span>, <span class="math inline">\(\sigma_2\)</span>.</p>
+<p>We can achieve this by modelling the data using the <code>brm()</code> function from the brms package (BRM stands for Bayesian Regression Model). We will go into more details about what this means in the weeks to follow. For now, note that regression is a synonym of linear model, a type of modelling approach that you are learning in this course).</p>
+<p>Add <code>library(brms)</code> in the <code>setup</code> chunk and run that chunk again. Then, run the following code.</p>
 <div class="cell" data-hash="tutorial-w04_cache/html/vot-bm_a6d4fa1bcf59c669fbebde317e6013f5">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>alb_vot_bm <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  vot <span class="sc">~</span> <span class="dv">1</span>,</span>
@@ -613,7 +614,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>You will see the message <code>Compiling Stan program...</code> followed by <code>Start sampling</code> and <code>Running MCMC with 4 sequential chains...</code>. Something like in the figure below.</p>
 <p><img src="../img/mcmc-messages.png" class="img-fluid"></p>
-<p>We will get back to what all this means in the coming weeks. For now know that <a href="https://mc-stan.org">Stan</a> is a programming language that can run Bayesian models. <code>brms()</code> is an R interface to Stan, so that you can use R and R syntax to run Bayesian models without having to learn Stan! (If you feel adventurous, nobody stops you from learning Stan too, although it is not required for this course).</p>
+<p>We will get back to what all this means in the coming weeks. For now know that <a href="https://mc-stan.org">Stan</a> is a programming language that can run Bayesian models. <code>brm()</code> is an R interface to Stan, so that you can use R and R syntax to run Bayesian models without having to learn Stan! (If you feel adventurous, nobody stops you from learning Stan too, although it is not required for this course).</p>
 <p>After those initial messages, you will see a list of messages about <strong>chains</strong> and <strong>interactions</strong>, as in the figure below.</p>
 <p><img src="../img/mcmc-chains-info.png" class="img-fluid"></p>
 <p>These are about the MCMC stuff mentioned in one of the messages above: MCMC stands for Markov-Chain Monte Carlo. Keep reading for a quick intro.</p>
@@ -693,7 +694,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </ul>
 <p>In other words:</p>
 <p><span class="math display">\[vot \sim Gaussian(\mu, \sigma)\]</span> <span class="math display">\[\mu = Gaussian(11.62, 0.57)\]</span> <span class="math display">\[\sigma = TruncGaussian(2.86, 0.44)\]</span></p>
-<p>Based on the model summary and on the tidy summary, we also know the <strong>95% Credible Intervals</strong> (CIs or CrIs) of the probability distributions of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(sigma\)</span>.</p>
+<p>Based on the model summary and on the tidy summary, we also know the <strong>95% Credible Intervals</strong> (CIs or CrIs) of the probability distributions of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(sigma\)</span>. They are in the columns called <code>conf.low</code> and <code>conf.high</code>.</p>
 <div class="callout-tip callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -712,7 +713,7 @@ Credible Interval
 <li><p>As for the standard deviation (<span class="math inline">\(\sigma\)</span>), we can be 95% confident that it is between 2.18 and 3.88 ms.</p></li>
 </ul>
 <p>One way to describe probability distributions is to state the values of their parameters and their 95% CrIs, as we just did.</p>
-<p>Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week.</p>
+<p>Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week. <!-- ^ EP: We've done the basics of probability densities above—are we doing it differently next week, e.g., with bayesplot, or by extracting the samples from the model ourselves? That should be specified.--></p>
 <p>In the meantime, read on to find out how to add titles and change axis labels to plots and how to position the legend!</p>
 </section>
 </section>
@@ -783,10 +784,10 @@ Credible Interval
 <ul>
 <li><p><code>mutate()</code> creates new columns or mutates existing ones.</p></li>
 <li><p><code>filter()</code> can filter data based on given values.</p></li>
-<li><p>With <code>ifelse(), you can output values depending on a logical statement.</code></p></li>
+<li><p>With <code>ifelse()</code>, you can output values depending on a logical statement.</p></li>
 <li><p>Use logical operators to create logical statements: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>.</p></li>
 <li><p><code>unique()</code> returns the unique values of a vector.</p></li>
-<li><p>The <code>%in%</code> operator returns <code>TRUE</code> if the value to the left is one of the values in the list to its right, and <code>FALSE</code> if not.</p></li>
+<li><p>The <code>%in%</code> operator returns <code>TRUE</code> if the value on the operator’s left-hand side is one of the values in the vector on the right-hand side, and <code>FALSE</code> if not.</p></li>
 </ul>
 <p><strong>Plotting</strong></p>
 <ul>

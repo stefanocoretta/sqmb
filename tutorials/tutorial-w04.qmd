@@ -579,8 +579,7 @@ In other words:
 
 $$vot \sim Gaussian(\mu, \sigma)$$ $$\mu = Gaussian(11.62, 0.57)$$ $$\sigma = TruncGaussian(2.86, 0.44)$$
 
-Based on the model summary and on the tidy summary, we also know the **95% Credible Intervals** (CIs or CrIs) of the probability distributions of $\mu$ and $sigma$.
-They are in the columns called `conf.low` and `conf.high`.
+Based on the model summary and on the tidy summary, we also know the **95% Credible Intervals** (CIs or CrIs) of the probability distributions of $\mu$ and $sigma$. They are in the columns called `conf.low` and `conf.high`.
 
 ::: {.callout-tip icon="false"}
 #### Credible Interval
@@ -594,8 +593,7 @@ A 95% (Bayesian) Credible Interval indicates the range of values we can be 95% c
 
 One way to describe probability distributions is to state the values of their parameters and their 95% CrIs, as we just did.
 
-Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week.
-<!-- ^ EP: We've done the basics of probability densities above—are we doing it differently next week, e.g., with bayesplot, or by extracting the samples from the model ourselves? That should be specified.-->
+Another way is to visualise probability distributions by plotting probability densities. You will learn how to do this next week. <!-- ^ EP: We've done the basics of probability densities above—are we doing it differently next week, e.g., with bayesplot, or by extracting the samples from the model ourselves? That should be specified.-->
 
 In the meantime, read on to find out how to add titles and change axis labels to plots and how to position the legend!
 
@@ -678,7 +676,7 @@ alb_vot %>%
 
 -   `filter()` can filter data based on given values.
 
--   With `ifelse()`, you can output values depending on a logical statement.`
+-   With `ifelse()`, you can output values depending on a logical statement.
 
 -   Use logical operators to create logical statements: `==`, `!=`, `>`, `<`.
 

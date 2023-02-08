@@ -211,19 +211,6 @@ Learning from Data.*
 
 ### Week 4: Statistical models, Basics I
 
-::: {.callout-warning collapse="false"}
-#### Formative assessment 1
-
-- **DUE on Thursday 9 February at NOON**.
-
-- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
-
-- We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
-
-- The GitHub Classroom invitation link can be found on Learn.
-
-:::
-
 ::: {.callout-important collapse="false"}
 #### Learning Objectives
 
@@ -279,6 +266,20 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 :::
 
 ### Week 5: Linear models, Basics II
+
+
+::: {.callout-warning collapse="false"}
+#### Formative assessment 1
+
+- **DUE on Thursday 16 February at NOON**.
+
+- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
+
+- We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
+
+- The GitHub Classroom invitation link can be found on Learn.
+
+:::
 
 ::: {.callout-important collapse="true"}
 #### Learning Objectives

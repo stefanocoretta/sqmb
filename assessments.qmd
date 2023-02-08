@@ -11,7 +11,7 @@ See below for details.
 ## Formative assessments
 
 ::: {.callout-warning collapse="false" icon="false"}
-## Formative 1: Week 4 (**Thursday 9 February at NOON)**
+## Formative 1: Week 5 (**Thursday 16 February at NOON)**
 
 **Data summary and visualisation**
 

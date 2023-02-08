@@ -291,7 +291,7 @@ Let's assume VOT values are **distributed according to a Gaussian distribution**
 &lt;br&gt;
 
 .f3[
-`$$vot = Gaussian(\mu, \sigma)$$`
+`$$vot \sim Gaussian(\mu, \sigma)$$`
 ]
 
 
@@ -360,7 +360,7 @@ We want to make inferences about the population based on the sample.
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
 
 .f3[
-`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
+`$$\mu \sim Gaussian(\mu_1, \sigma_1)$$`
 ]
 
 **Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
@@ -382,13 +382,13 @@ Standard deviations are always positive! So we need a truncated Gaussian distrib
 **Parameters**: mean `\(\mu\)` and SD `\(\sigma\)`.
 
 .f3[
-`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
+`$$\mu \sim Gaussian(\mu_1, \sigma_1)$$`
 ]
 
 **Hyperparameters**: mean `\(\mu_1\)` and SD `\(\sigma_1\)`.
 
 .f3[
-`$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$`
+`$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$`
 ]
 
 **Hyperparameters**: mean `\(\mu_2\)` and SD `\(\sigma_2\)`.
@@ -557,10 +557,10 @@ layout: true
 .pull-right[
 `$$vot \sim Gaussian(\mu, \sigma)$$`
 .purple[
-`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
+`$$\mu \sim Gaussian(\mu_1, \sigma_1)$$`
 ]
 
-`$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$`
+`$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$`
 ]
 
 ---
@@ -607,10 +607,10 @@ layout: true
 .pull-right[
 `$$vot \sim Gaussian(\mu, \sigma)$$`
 
-`$$\mu = Gaussian(\mu_1, \sigma_1)$$`
+`$$\mu \sim Gaussian(\mu_1, \sigma_1)$$`
 
 .purple[
-`$$\sigma = TruncGaussian(\mu_2, \sigma_2)$$`
+`$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$`
 ]
 ]
 

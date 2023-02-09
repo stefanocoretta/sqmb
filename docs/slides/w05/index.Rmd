@@ -1,0 +1,632 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 5"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2023/02/14"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+```
+
+```{r read-data}
+polite <- read_csv("data/polite.csv") %>%
+  mutate(
+    attitude = recode_factor(attitude, "inf" = "informal", "pol" = "polite")
+  )
+
+alb_vot <- read_csv("data/alb_vot.csv") %>%
+  mutate(
+    vot = (voi_onset - release) * 1000
+  )
+
+alb_vot_vl <- alb_vot %>%
+  filter(
+    label %in% c("k", "p", "t"),
+    vot < 20
+  )
+```
+
+## Summary
+
+---
+
+layout: true
+
+## Comparing groups
+
+---
+
+```{r hnr}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude)) +
+  geom_violin() +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  labs(
+    y = "Harmonics-to-noise ratio (dB)",
+    title = "Harmonics-to-noise ratio is Korean speakers"
+  )
+```
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- We want to estimate the probability distribution of harmonics-to-noise ratio (HNR) in Korean speakers.
+
+  - Let's assume it is a Gaussian probability distribution.
+  
+  - So, `\(\text{HNR} \sim Gaussian(\mu, \sigma)\)`.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- But we also want to estimate the difference in the mean ($\mu$) in the informal vs polite attitude conditions!
+  
+  - In other words, we need to allow the model to estimate $\mu$ based on attitude (informal vs polite).
+]
+
+---
+
+.f3[
+$$\text{HNR} \sim Gaussian(\mu, \sigma)$$
+]
+
+--
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- $\beta_0$: mean HNR when [attitude = informal].
+
+- $\beta_1$: difference of mean HNR between [attitude = polite] and [attitude = informal].
+
+  - $\beta_1 = \mu_{pol} - \mu_{inf}$
+  
+  - **`\(\beta_1\)` is the effect of [attitude = polite] on mean HNR relative to the baseline mean HNR when [attitude = informal]**.
+
+- $attitude_{pol}$: is 0 for [attitude = informal] and 1 for [attitude = polite].
+]
+
+---
+
+.f3[
+$$\text{HNR} \sim Gaussian(\mu, \sigma)$$
+]
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**For [attitude = informal]**, $\mu$ is:
+
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol} = \beta_0 + \beta_1 \cdot 0 = \beta_0$$
+
+**For [attitude = polite]**, $\mu$ is:
+
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol} = \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1$$
+]
+
+---
+
+.f3[
+$$\text{HNR} \sim Gaussian(\mu, \sigma)$$
+]
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**For [attitude = informal]**, $\mu$ is:
+
+$$\mu_{\text{(attitude = informal)}} = \beta_0$$
+
+**For [attitude = polite]**, $\mu$ is:
+
+$$\mu_{\text{(attitude = polite)}} = \beta_0 + \beta_1$$
+]
+
+---
+
+.f3[
+$$\text{HNR} \sim Gaussian(\mu, \sigma)$$
+]
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+--
+
+<br>
+
+.f3[
+$$\beta_0 \sim Gaussian(\mu_0, \sigma_0)$$
+]
+
+.f3[
+$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- We estimate the probability distribution of mean HNR when [attitude = informal].
+
+- We estimate the probability distribution of the difference in mean HNR between [attitude = polite] and [attitude = informal]. 
+]
+
+---
+
+```{r hnr-bm, echo=FALSE}
+hnr_bm <- brm(
+  HNRmn ~ attitude,
+  data = polite,
+  backend = "cmdstanr",
+  cores = 4,
+  file = "./data/cache/hnr_bm",
+  seed = my_seed
+)
+```
+
+```{r hnr-bm-code, eval=FALSE, echo=TRUE}
+# Attach the brms package
+library(brms)
+
+# Run a Bayesian model
+vot_bm <- brm(
+  # This is the formula of the model.
+  HNRmn ~ 1 + attitude,
+  # This is the probability distribution family.
+  family = gaussian(),
+  # And the data.
+  data = polite
+)
+```
+
+---
+
+.f2.center[
+`HNRmn ~ 1 + attitude`
+]
+
+**Read as**: Model HNR values (`HNRmn`) as a function of (`~`) the mean (`1`) and attitude (`attitude`).
+
+--
+
+.f2.center[
+`HNRmn ~ attitude`
+]
+
+We can omit the `1` (it is implied by default when there are other terms in the formula)! **You can read as**: Model HNR values (`HNRmn`) as a function of (`~`) attitude (`attitude`).
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- The variable to the left of `~` is called the **outcome variable** (aka response variable, dependent variable).
+
+- The variable(s) to the right of `~` are called **predictor variables** (aka independent variables).
+]
+
+---
+
+.f2.center[
+`HNRmn ~ attitude`
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+😱 But... `attitude` is not a numeric predictor! 
+]
+
+```{r att-col}
+polite
+```
+
+
+---
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+The formula works with numeric variables.
+
+- But `attitude` is a categorical variable.
+
+- 🤔 Think about it: what does it mean to multiply $\beta_1$ by "informal" or "polite"?
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Let's talk about coding of categorical variables!
+]
+
+<br>
+
+**NOTE**: What follows is for you how to understand how coding works, but remember that this is done automatically by R for you so you never have to do it by hand!!!
+
+---
+
+layout: false
+layout: true
+
+## Coding categorical predictors
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Categorical predictors can be coded using numbers.**
+
+There are two common types of coding systems:
+
+- **Treatment** coding (this week's focus).
+
+- **Sum** coding.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+As with anything else in stats, **naming of coding systems is not an established matter** and the same coding can have different names, and vice versa the same name could refer to different systems.
+
+For an excellent overview, see <https://debruine.github.io/faux/articles/contrasts.html>.
+]
+
+---
+
+**Treatment** coding uses `0` and `1` to code categorical predictors.
+
+<br>
+
+.f3[
+|               | attitude_pol |
+| ------------- | -------:     |
+| informal      | 0            |
+| polite        | 1            |
+]
+
+---
+
+```{r att-coding}
+polite %>%
+  mutate(
+    attitude_pol = ifelse(attitude == "informal", 0, 1)
+  ) %>%
+  select(HNRmn, attitude, attitude_pol)
+```
+
+**NOTE**: Remember that this is done automatically by R under the hood for you so you never have to do it by hand!!!
+
+---
+
+.f3[
+|               | attitude_pol |
+| ------------- | -------:     |
+| informal      | 0            |
+| polite        | 1            |
+]
+
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+$$\mu_{\text{(attitude = informal)}} = \beta_0 + \beta_1 \cdot attitude\_pol = \beta_0 + \beta_1 \cdot 0 = \beta_0$$
+
+$$\mu_{\text{(attitude = polite)}} = \beta_0 + \beta_1 \cdot attitude\_pol = \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1$$
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+With **treatment coding**, the first level in the predictor is the **reference level** (in `attitude`, it is `informal`).
+
+The other level is compared against the reference level (`polite` vs `informal`).
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Level order**
+
+- By default, the ordering of levels in a categorical predictor is based on alphabetical order.
+
+- But you can specify the order manually using the `factor()` function. (You will see how in the tutorial).
+]
+
+---
+
+.f3[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+]
+
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+To reiterate from above:
+
+- $\beta_0$ corresponds to the mean NHR when [attitude = informal], because `informal` is the reference level of `attitude`.
+
+- $\beta_1$ corresponds to the **DIFFERENCE** between $\beta_0$ and mean HNR when [attitude = polite], because `polite` is the other level in `attitude`.
+
+  - In other words, we are comparing mean HNR when [attitude = polite] vs [attitude = informal].
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+For now, things are easy because we only have two levels (informal vs polite), but we will see an example with three levels later.
+]
+
+---
+
+layout: false
+layout: true
+
+## Modelling HNR by attitude
+
+---
+
+```{r hnr-bm-code-2, eval=FALSE, echo=TRUE}
+vot_bm <- brm(
+  # This is the formula of the model. We can omit `1`.
+  HNRmn ~ attitude,
+  # This is the probability distribution family.
+  family = gaussian(),
+  # And the data.
+  data = polite
+)
+```
+
+--
+
+$$\text{HNR} \sim Gaussian(\mu, \sigma)$$
+
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+
+$$\beta_0 \sim Gaussian(\mu_0, \sigma_0)$$
+
+$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$
+
+$$\sigma \sim TruncGaussian(\mu_2, \sigma_2)$$
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We need to estimate $\mu_0$, $\sigma_0$, $\mu_1$, $\sigma_1$, $\mu_2$, $\sigma_2$.
+]
+
+---
+
+```{r hnr-bm-summ}
+summary(hnr_bm)
+```
+
+---
+
+```{r hnr-bm-summ-2}
+hnr_bm_summ <- capture.output(summary(hnr_bm))
+cat(hnr_bm_summ[8:11], sep = "\n")
+```
+
+--
+
+<br>
+<br>
+
+.pull-left[
+- **Intercept**: $\mu_{\text{attitude = informal}} = \beta_0$.
+
+- **Estimate**: $\mu_0 = 16.27$ dB.
+
+- **Est.Error**: $\sigma_0 = 0.16$ dB.
+]
+
+.pull-right[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+
+.purple[
+$$\beta_0 \sim Gaussian(16.27, 0.16)$$
+]
+
+$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When [attitude = informal], the probability distribution of $\mu$ is the probability distribution of $\beta_0$, which is $Gaussian(16.27, 0.16)$.
+]
+
+---
+
+```{r hnr-int-p}
+hnr_bm_draws <- as_draws_df(hnr_bm)
+int_dens_l <- density(hnr_bm_draws$b_Intercept, adjust = 1.5)
+int_dens <- tibble(
+  x = int_dens_l$x,
+  y = int_dens_l$y
+)
+
+hnr_int_p <- int_dens %>%
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1) +
+  scale_x_continuous(n.breaks = 6) +
+  labs(
+    title = expression(Probability~distribution~of~beta[0]),
+    x = expression(beta[0]), y = "Probability density"
+  ) +
+  ylim(0, 3)
+hnr_int_p
+```
+
+---
+
+```{r hnr-int-p-2}
+ci_low <- 15.97
+ci_hi <- 16.59
+label_y <- 2.75
+
+hnr_int_p +
+  geom_ribbon(
+    aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
+    fill = "#9970ab",
+    alpha = 0.4
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_hi, y = label_y, yend = label_y,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_low, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "segment",
+    x = ci_hi, xend = ci_hi, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate("label", x = ci_low + (ci_hi-ci_low)/2, y = label_y, label = "95% CrI")
+```
+
+--
+
+There is a 95% probability that mean HNR when [attitude = informal] is between `r ci_low` and `r ci_hi` dB.
+
+
+---
+
+```{r nhr-bm-summ-3}
+hnr_bm_summ <- capture.output(summary(hnr_bm))
+cat(hnr_bm_summ[8:11], sep = "\n")
+```
+
+<br>
+<br>
+
+.pull-left[
+- **attitudepolite**: $\beta_1$.
+
+- **Estimate**: $\mu_0 = 1.25$ dB.
+
+- **Est.Error**: $\sigma_0 = 0.23$ dB.
+]
+
+.pull-right[
+$$\mu = \beta_0 + \beta_1 \cdot attitude_{pol}$$
+
+$$\beta_0 \sim Gaussian(16.27, 0.16)$$
+
+.purple[
+$$\beta_1 \sim Gaussian(1.25, 0.23)$$
+]
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When [attitude = polite], the probability distribution of the difference between $\mu_{\text{attitude = polite}}$ and $\mu_{\text{attitude = informal}}$ is the probability distribution of $\beta_1$, which is $Gaussian(1.25, 0.23)$.
+]
+
+---
+
+```{r hnr-att-p}
+att_dens_l <- density(hnr_bm_draws$b_attitudepolite, adjust = 1.5)
+att_dens <- tibble(
+  x = att_dens_l$x,
+  y = att_dens_l$y
+)
+
+hnr_att_p <- att_dens %>%
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1) +
+  scale_x_continuous(n.breaks = 6) +
+  labs(
+    title = expression(Probability~distribution~of~beta[1]),
+    x = expression(beta[1]), y = "Probability density"
+  ) +
+  ylim(0, 2)
+hnr_att_p
+```
+
+---
+
+```{r hnr-att-p-2}
+ci_low <- 0.8
+ci_hi <- 1.7
+label_y <- 2
+
+hnr_att_p +
+  geom_ribbon(
+    aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
+    fill = "#9970ab",
+    alpha = 0.4
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_hi, y = label_y, yend = label_y,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_low, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "segment",
+    x = ci_hi, xend = ci_hi, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate("label", x = ci_low + (ci_hi-ci_low)/2, y = label_y, label = "95% CrI")
+```
+
+--
+
+There is 95% probability that the difference in mean HNR between $\mu_{\text{attitude = polite}}$ and $\mu_{\text{attitude = informal}}$ is between `r ci_low` and `r ci_hi` dB.
+

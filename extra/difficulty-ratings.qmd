@@ -65,6 +65,7 @@ class_counts_2 <- class_rate %>%
 #| warning: false
 
 class_counts_2 %>%
+  filter(week < 4) %>%
   ggplot(aes(as.character(week), -rating_2)) +
   geom_vline(xintercept = c("1", "2", "3"), linewidth = 1.5, colour = "gray") +
   geom_point(aes(size = prop, fill = prop), shape = 21, colour = "black") +
@@ -77,9 +78,9 @@ class_counts_2 %>%
     linewidth = 2, colour = "#31a354"
   ) +
   annotate("text", x = 0.6, y = -2, label = "very\neasy", fontface = "italic") +
-  annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
-  annotate("text", x = 0.6, y = 0, label = "neither", fontface = "italic") +
-  annotate("text", x = 0.6, y = 1, label = "difficult", fontface = "italic") +
+  # annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
+  # annotate("text", x = 0.6, y = 0, label = "neither", fontface = "italic") +
+  # annotate("text", x = 0.6, y = 1, label = "difficult", fontface = "italic") +
   labs(y = "Difficulty", x = "Week", fill = "Percentage") +
   ylim(-2.5, 1) +
   theme(axis.text.y = element_blank())
@@ -87,3 +88,8 @@ class_counts_2 %>%
 ggsave("img/difficulty-ratings.png", width = 7, height = 4)
 ```
 
+Week 1 sets the baseline difficulty (the majority of you said that week was "very easy").
+
+Then for each week from Week 2 on the plot shows whether difficulty has increased, decreased or stayed the same.
+
+So far, there has been an increase in difficulty from Week 1 to Week 2 and from Week 2 to Week 3.

@@ -41,7 +41,7 @@ class: center, middle, inverse, title-slide
 
 
 
-## Summary
+## Summary from last week
 
 ---
 
@@ -550,6 +550,364 @@ When [attitude = polite], the probability distribution of the difference between
 
 There is 95% probability that the difference in mean HNR between `\(\mu_{\text{attitude = polite}}\)` and `\(\mu_{\text{attitude = informal}}\)` is between 0.8 and 1.7 dB.
 
+---
+
+&lt;img src="index_files/figure-html/hnr-sig-p-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/hnr-sig-p-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+--
+
+There is a 95% probability that the standard deviation of the probability distribution of HNR values is between 1.54 and 1.86 dB.
+
+---
+
+&lt;img src="index_files/figure-html/hnr-pp-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+.f6[**Posterior predictive checks**: the model can be assessed by visually inspecting the plot above. The closer the match between the light blue distributions and the dark blue distribution, the better the model captures the data.]
+
+---
+
+layout: false
+layout: true
+
+## Modelling VOT by stop
+
+---
+
+&lt;img src="index_files/figure-html/vot-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/vot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/vot-3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- We want to estimate the probability distribution of Voice Onset Time (VOT) in Albanian voiceless stops /k, p, t/.
+
+  - Let's assume it is a Gaussian probability distribution.
+  
+  - So, `\(\text{VOT} \sim Gaussian(\mu, \sigma)\)`.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- But we also want to estimate the difference in the mean (`\(\mu\)`) in each stop /k, p, t/!
+  
+  - In other words, we need to allow the model to estimate `\(\mu\)` based on the stop.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+😱 But... `stop` is not a numeric predictor! 
+]
+
+---
+
+**Treatment** coding uses `0` and `1` to code categorical predictors. **But** now we have three levels (`k, p, t`) so `0` and `1` are not enough.
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+In treatment coding, **N-1 dummy variables** are created where N is the number of levels.
+
+- `attitude` has two levels (informal vs polite) so we need `\(N-1 = 2-1 = 1\)` dummy variable: `attitude_pol`.
+
+- `stop` has three levels (/k, p, t/) so we need `\(N-1 = 3-1 = 2\)` dummy variables: `stop_p` and `stop_t`.
+]
+
+--
+
+&lt;br&gt;
+
+|   | stop_p | stop_t |
+|---|--------|--------|
+| k | 0      | 0      |
+| p | 1      | 0      |
+| t | 0      | 1      |
+
+
+---
+
+.f3[
+`$$\text{VOT} \sim Gaussian(\mu, \sigma)$$`
+]
+
+--
+
+.f3[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- `\(\beta_0\)`: mean VOT when [stop = /k/].
+
+  - `k` is the reference level because of the alphabetical order in `k, p, t`.
+
+- `\(\beta_1\)`: difference of mean VOT between [stop = /p/] and [stop = /k/].
+
+  - `\(\beta_1 = \mu_{p} - \mu_{k}\)`
+  
+  - **`\(\beta_1\)` is the effect of [stop = /p/] on mean VOT relative to the baseline mean VOT when [stop = k]**.
+
+- `\(stop_p\)`: is 0 for [stop = /k/] and [stop = /t/] and 1 for [stop = /p/].
+]
+
+---
+
+.f3[
+`$$\text{VOT} \sim Gaussian(\mu, \sigma)$$`
+]
+
+.f3[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- `\(\beta_2\)`: difference of mean VOT between [stop = /t/] and [stop = /k/].
+
+  - `\(\beta_2 = \mu_{t} - \mu_{k}\)`
+  
+  - **`\(\beta_2\)` is the effect of [stop = /t/] on mean VOT relative to the baseline mean VOT when [stop = k]**.
+
+- `\(stop_t\)`: is 0 for [stop = /k/] and [stop = /p/] and 1 for [stop = /t/].
+]
+
+---
+
+
+.f3[
+`$$\text{VOT} \sim Gaussian(\mu, \sigma)$$`
+]
+
+.f3[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+`$$\mu_{\text{(stop = k)}} = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$`
+
+`$$\mu_{\text{(stop = p)}} = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$`
+
+`$$\mu_{\text{(stop = t)}} = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$`
+]
+
+---
+
+`$$\text{VOT} \sim Gaussian(\mu, \sigma)$$`
+
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+
+`$$\beta_0 \sim Gaussian(\mu_0, \sigma_0)$$`
+
+`$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$`
+
+`$$\beta_2 \sim Gaussian(\mu_2, \sigma_2)$$`
+
+`$$\sigma \sim TruncGaussian(\mu_3, \sigma_3)$$`
+
+--
+
+&lt;br&gt;
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We need to estimate `\(\mu_0\)`, `\(\sigma_0\)`, `\(\mu_1\)`, `\(\sigma_1\)`, `\(\mu_2\)`, `\(\sigma_2\)`, `\(\mu_3\)`, `\(\sigma_3\)`.
+]
+
+---
+
+
+
+
+```r
+# Run a Bayesian model
+vot_bm &lt;- brm(
+  # This is the formula of the model.
+  vot ~ stop,
+  # This is the probability distribution family.
+  family = gaussian(),
+  # And the data.
+  data = alb_vot_vl
+)
+```
+
+---
+
+
+```
+##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: vot ~ stop 
+##    Data: alb_vot_vl (Number of observations: 45) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    54.12      4.44    45.35    63.01 1.00     3233     2426
+## stopp       -40.55      6.27   -53.23   -28.35 1.00     3669     2833
+## stopt       -39.42      6.32   -51.81   -27.36 1.00     3259     2577
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma    16.77      1.82    13.71    20.89 1.00     3141     2785
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+
+
+```
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    54.12      4.44    45.35    63.01 1.00     3233     2426
+## stopp       -40.55      6.27   -53.23   -28.35 1.00     3669     2833
+## stopt       -39.42      6.32   -51.81   -27.36 1.00     3259     2577
+```
+
+--
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **Intercept**: `\(\mu_{\text{stop = k}} = \beta_0\)`.
+
+- **Estimate**: `\(\mu_0 = 54.12\)` ms.
+
+- **Est.Error**: `\(\sigma_0 = 4.44\)` ms.
+]
+
+.pull-right[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+
+.purple[
+`$$\beta_0 \sim Gaussian(54.12, 4.14)$$`
+]
+
+`$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$`
+
+`$$\beta_2 \sim Gaussian(\mu_2, \sigma_2)$$`
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When [stop = k], the probability distribution of `\(\mu\)` is the probability distribution of `\(\beta_0\)`, which is `\(Gaussian(54.12, 4.12)\)`.
+]
+
+---
+
+
+
+```
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    54.12      4.44    45.35    63.01 1.00     3233     2426
+## stopp       -40.55      6.27   -53.23   -28.35 1.00     3669     2833
+## stopt       -39.42      6.32   -51.81   -27.36 1.00     3259     2577
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **stopp**: `\(\beta_1\)`.
+
+- **Estimate**: `\(\mu_1 = -40.55\)` ms.
+
+- **Est.Error**: `\(\sigma_1 = 6.27\)` ms.
+]
+
+.pull-right[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+
+`$$\beta_0 \sim Gaussian(54.12, 4.14)$$`
+
+.purple[
+`$$\beta_1 \sim Gaussian(-40.55, 6.27)$$`
+]
+
+`$$\beta_2 \sim Gaussian(\mu_2, \sigma_2)$$`
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When [stop = p], the probability distribution of the difference between `\(\mu_{\text{stop = p}}\)` and `\(\mu_{\text{stop = k}}\)` is the probability distribution of `\(\beta_1\)`, which is `\(Gaussian(-40.55, 6.27)\)`.
+]
+
+---
+
+
+```
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept    54.12      4.44    45.35    63.01 1.00     3233     2426
+## stopp       -40.55      6.27   -53.23   -28.35 1.00     3669     2833
+## stopt       -39.42      6.32   -51.81   -27.36 1.00     3259     2577
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **stopp**: `\(\beta_2\)`.
+
+- **Estimate**: `\(\mu_2 = -39.42\)` ms.
+
+- **Est.Error**: `\(\sigma_2 = 6.32\)` ms.
+]
+
+.pull-right[
+`$$\mu = \beta_0 + \beta_1 \cdot stop_p + \beta_2 \cdot stop_t$$`
+
+`$$\beta_0 \sim Gaussian(54.12, 4.14)$$`
+
+`$$\beta_1 \sim Gaussian(-40.55, 6.27)$$`
+
+.purple[
+`$$\beta_2 \sim Gaussian(-39.42, 6.32)$$`
+]
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When [stop = t], the probability distribution of the difference between `\(\mu_{\text{stop = t}}\)` and `\(\mu_{\text{stop = k}}\)` is the probability distribution of `\(\beta_2\)`, which is `\(Gaussian(-39.42, 6.32)\)`.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**IMPORTANT**
+
+- While `\(\beta_0\)` is the probability distribution of mean VOT when [stop = k]
+
+- `\(\beta_1\)` and `\(\beta_2\)` are the probability distributions of the **DIFFERENCE** between mean VOT when [stop = p] and when [stop = k], and when [stop = t] and when [stop = k], respectively.
+
+- `\(\beta_1\)` and `\(\beta_2\)` are **NOT** the probability distributions of the mean VOT when [stop = p] and when [stop = t]!
+]
+
+---
+
+## Summary
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- 
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

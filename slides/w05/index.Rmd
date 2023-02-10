@@ -69,6 +69,21 @@ alb_vot_vl <- alb_vot %>%
 
 ## Summary from last week
 
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Probability distributions**
+
+  - Continuous vs discrete distributions.
+  - Describe distributions: density functions and parameters.
+  
+- **Modelling continuous variables**
+
+  - The Gaussian distribution has two parameters: mean $\mu$ and SD $\sigma$.
+
+  - We can describe $\mu$ and $\sigma$ as probability distributions and estimate the (hyper-)parameters of those probability distributions.
+  
+- `brm()` from brms.
+]
+
 ---
 
 layout: true
@@ -1037,5 +1052,19 @@ When [stop = t], the probability distribution of the difference between $\mu_{\t
 ## Summary
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- 
+- **Comparing groups** with `brm()`
+
+  - `outcome ~ predictor`.
+  - Categorical predictor with 2 and 3 levels.
+
+- **Treatment coding** of categorical predictors.
+
+  - N-1 **dummy variables**, where N is number of levels in the predictor.
+  - Level ordering is *alphabetical* but you can specify your own.
+  - **NOTE**: you don't have to apply treatment coding yourself! It's done under the hood by R.
+
+- **Remember**
+
+  - The **Intercept** $\beta_0$ is the mean of the reference level.
+  - The other $\beta$'s are the **difference** of the other levels relative to the reference level.
 ]

@@ -211,12 +211,11 @@ Learning from Data.*
 
 ### Week 4: Statistical models, Basics I
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
 
-- How can we talk about uncertainty?
 - What are probability distributions?
 - How can we describe probability distributions with statistical parameters?
 - What are the frequentist and Bayesian view of statistical parameters?
@@ -231,7 +230,7 @@ Learning from Data.*
 - Interpret the summary of the model and understand the meaning of the reported estimates.
 :::
 
-::: {.callout-note collapse="false"}
+::: {.callout-note collapse="true"}
 #### Homework
 
 **Set-up your laptop**
@@ -244,7 +243,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 - [Lecture slides](slides/w04/).
@@ -253,7 +252,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
   - [alb_vot.csv](data/alb_vot.csv)
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Suggested readings
 
 **Main textbooks**
@@ -281,24 +280,34 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
 
-- How can we use linear models with categorical (rather than continuous) predictors?
-- Why do we need to code categorical predictors as numbers? And which are the most common coding methods?
-- How can we represent a linear model using a formula?
-- How do you interpret a linear model with both continuous and categorical predictors?
+- How do we model variables using categorical predictors?
+- Which are the most common coding systems for categorical predictors?
+- How do we interpret the model output when there are categorical predictors?
+- How can we quickly check model goodness?
 
 
 **Skills**
 
 - Master contrast coding in R for categorical predictors.
-- Fit, interpret and plot linear models with continuous and categorical predictors.
-- Understand treatment and sum coding.
-- Advanced reporting of model specification and results.
+- Understand treatment coding.
+- Fit, interpret and plot models with a categorical predictor.
+- Reporting of model specification and results.
 :::
+
+::: {.callout-tip collapse="false"}
+#### Materials
+
+- [Lecture slides](slides/w05/).
+<!-- - [Workshop tutorial](tutorials/tutorial-w04.qmd). -->
+<!-- - Workshop files (right-click and download): -->
+  <!-- - [alb_vot.csv](data/alb_vot.csv) -->
+:::
+
 
 ### Flexible Learning Week
 

@@ -715,6 +715,12 @@ pp_check(hnr_bm, nsamples = 50)
 ---
 
 layout: false
+class: center middle reverse
+
+# MID-TERM COURSE EVALUATION
+
+---
+
 layout: true
 
 ## Modelling VOT by stop

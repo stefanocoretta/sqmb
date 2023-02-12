@@ -1,0 +1,49 @@
+---
+title: "SQM tutorial - Week 5"
+editor: visual
+execute: 
+  cache: true
+---
+
+```{r}
+#| label: pkgs
+#| message: false
+#| echo: false
+
+library(tidyverse)
+theme_set(theme_light())
+
+library(brms)
+library(broom.mixed)
+```
+
+## Emotional valence of sense words
+
+```{r}
+#| label: senses
+
+senses <- read_csv("data/winter_2016_senses_valence.csv") %>%
+  filter(
+    Modality %in% c("Smell", "Taste")
+  )
+```
+
+```{r}
+#| label: val-dens
+
+senses %>%
+  ggplot(aes(Val)) +
+  geom_density(fill = "gray", alpha = 0.5) +
+  geom_rug()
+
+```
+
+```{r}
+#| label: val-dens-mod
+
+senses %>%
+  ggplot(aes(Val, fill = Modality)) +
+  geom_density(alpha = 0.5) +
+  geom_rug()
+
+```

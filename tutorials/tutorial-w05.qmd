@@ -379,4 +379,149 @@ Based on this plot, we can say that the model suggests a different mean emotiona
 
 To reiterate from above, based on the 95% CrI of `b_ModalityTaste`, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 grater than that of smell words.
 
-You might ask now: *Is this different relevant?* Unfortunately, statistics will not be able to answer that question. Only conceptual theories of lexical emotional valence can (or cannot)!
+You might ask now: *Is this different relevant?* Unfortunately, statistics cannot help you to answer that question (remember, *we* imbue numbers with meaning). Only conceptual theories of lexical emotional valence can (or cannot)!
+
+## Morphological processing and reaction times
+
+You might remember the `shallow.csv` data we used in Week 2, from Song et al. 2020. *Second language users exhibit shallow morphological processing*. DOI: [10.1017/S0272263120000170](https://doi.org/10.1017/S0272263120000170).
+
+The study compared results of English L1 vs L2 participants and of left- vs right-branching words, but for this tutorial we will only be looking at the L1 and left-branching data.
+
+The data file also contains data from the filler items, which we filter out.
+
+```{r}
+#| label: shallow
+
+shallow <- read_csv("data/shallow.csv") %>%
+  filter(
+    Group == "L1",
+    Branching == "Left",
+    Critical_Filler == "Critical",
+    RT > 0
+  )
+shallow
+```
+
+The study consisted of a lexical decision task in which participants where first shown a prime, followed by a target word for which they had to indicate whether it was a real word or a nonce word.
+
+The prime word belonged to one of three possible groups (`Releation_type` in the data) each of which refers to the morphological relation of the prime and the target word:
+
+-   `Unrelated`: for example, *prolong* (assuming *unkindness* as target, \[\[un-kind\]-ness\]).
+
+-   `Constituent`: *unkind*.
+
+-   `NonConstituent`: *kindness*.
+
+The expectation is that lexical decision for native English participants should be facilitated in the `Constituent` condition, but not in the `Unrelated` and `NonConstituent` conditions (if you are curious as to why that is expectation, I refer you to the paper).
+
+Let's interpret that as:
+
+> The `Constituent` condition should elicit shorter reaction times than the other two conditions.
+
+Before moving on, let's visualise the reaction times (`RT`) values which are in milliseconds.
+
+```{r}
+#| label: rt-dens
+
+shallow %>%
+  ggplot(aes(RT)) +
+  geom_density() +
+  geom_rug()
+```
+
+You will notice that `RT` can only be *positive*: reaction time is a numeric continuous variable, bounded to positive numbers only!
+
+**Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution**. Each case might be a bit different, but when a variable is bounded it is very safe to assume that the values of the variable do not follow a Gaussian distribution.[^3]
+
+[^3]: In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution and we got lucky that this assumption in principle holds for the values in the data sample because emotional valence as measured in the study is bounded between 1 and 8. In most cases you won't be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.
+
+### Log-transformation
+
+But we have a trick in our pocket: just calculate the **logarithm** of the values and they will conform to a Gaussian distribution! You can calculate the logarithm (or log) of a number in R using the `log()` function. Calculating the logs of a variable is known as a **log-transformation**.
+
+I will illustrate what this looks like with the first five values of `RT` in `shallow`.
+
+```{r}
+#| label: log
+
+RT <- c(603, 739, 370, 821, 1035)
+RT
+
+log(RT)
+
+```
+
+So the log of 603 is `6.4`, the log of `739` is `6.6` and so on.
+
+The `shallow` data table already has a column with the log-transformed RTs: `logRT`. So let's plot that now.
+
+```{r}
+#| label: rt-log-dens
+
+shallow %>%
+  ggplot(aes(logRT)) +
+  geom_density() +
+  geom_rug()
+```
+
+**Warning**: it is usually not possible to rely on the shape of the probability density to determine if the probability is Gaussian or not! Rather, ask yourself the following question: are the values bounded to positive numbers only? If the answer is "yes", then the variable is **not** Gaussian and you know you can log-transform it.
+
+::: callout-tip
+#### Log-normal distribution
+
+Variables that are Gaussian (normal) when they are log-transformed follow the **log-normal** distribution.
+:::
+
+Now let's look at a violin and strip plot with `Relation_type` on the *x*-axis and `logRT` on the *y*-axis.
+
+```{r}
+#| label: rt-rel-type
+
+shallow %>%
+  ggplot(aes(Relation_type, logRT, fill = Relation_type)) +
+  geom_violin() +
+  geom_jitter(width = 0.1, alpha = 0.2)
+
+```
+
+Based on this, we can see that the bulk of the distribution (the place where the violin is wider) falls somewhat lower on the log-RT scale for the `Constituent` condition relative to the other conditions.
+
+### Model RTs by relation type
+
+Now it's your turn! With the following guidance, go ahead and run a model with `brm()` to investigate the effect of relation type on log-RT. Inspect the model summary and plot the posterior probabilities.
+
+`Relation_type` is a categorical variable with three levels, so here's what treatment coding looks like (we need N-1 = 3-1 = 2 dummy variables).
+
+|                            | relation_ncons | relation_unrel |
+|----------------------------|----------------|----------------|
+| relation = constituent     | 0              | 0              |
+| relation = non-constituent | 1              | 0              |
+| relation = unrelated       | 0              | 1              |
+
+Here is a few formulae. Try to go through them and unpack them.
+
+$$
+\text{logRT} \sim Gaussian(\mu, \sigma).
+$$
+
+$$
+\mu = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{unrel}
+$$
+
+$$\beta_0 \sim Gaussian(\mu_0, \sigma_0)$$
+
+$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$
+
+$$\beta_2 \sim Gaussian(\mu_2, \sigma_2)$$
+
+$$
+\sigma \sim TruncGaussian(\mu_3, \sigma_3)
+$$
+
+Focus especially on $\beta_0$, $\beta_1$ and $\beta_2$. What do they correspond to?
+
+Fit the model with `brm()`. What does the R formula for this model look like in R?
+
+Check the model summary. What can you say based on the estimates and the CrIs?
+
+Plot the *posterior probability distributions* of $\beta_0$, $\beta_1$ and $\beta_2$ and the conditional probability distributions of mean log-RTs for each relation type.

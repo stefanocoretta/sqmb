@@ -19,31 +19,364 @@ library(broom.mixed)
 
 ## Emotional valence of sense words
 
+We will model data from Winter, 2016. *Taste and smell words form an affectively loaded part of the English lexicon*. DOI: [10.1080/23273798.2016.1193619](https://doi.org/10.1080/23273798.2016.1193619). The study looked at the emotional valence of sense words in English, in the domains of taste and smell.
+
+To download the file with the data right-click on the following link and download the file: [senses_valence.csv](../data/senses_valence.csv). (Note that tutorial files are also linked in the [Syllabus](../syllabus.qmd)). Remember to save the file in `data/` in the course project folder.
+
+Create a new `.Rmd` file first, save it in `code/` and name it `tutorial-w05` (the extension `.Rmd` is added automatically!).
+
+I leave to you creating title headings in your file as you please. Remember to to add `knitr::opts_knit$set(root.dir = here::here())` in the `setup` chunk and to attach the tidyverse.
+
+Let's read the data. The original data also include words from other senses, so for this tutorial we will filter the data to include only smell and taste words.
+
 ```{r}
 #| label: senses
 
-senses <- read_csv("data/winter_2016_senses_valence.csv") %>%
+senses_valence <- read_csv("data/senses_valence.csv") %>%
   filter(
     Modality %in% c("Smell", "Taste")
   )
 ```
 
+There are three columns:
+
+-   `Word`: the English word \[categorical\].
+
+-   `Modality`: `Taste` or `Smell` \[categorical\].
+
+-   `Val`: emotional valence \[numeric, continuous\]. The higher the number the more positive the valence.
+
+Let's quickly check the range of values in `Val`.
+
+```{r}
+#| label: val-range
+
+range(senses_valence$Val)
+
+```
+
+This is what the density plot of `Val` looks like.
+
 ```{r}
 #| label: val-dens
 
-senses %>%
+senses_valence %>%
   ggplot(aes(Val)) +
   geom_density(fill = "gray", alpha = 0.5) +
   geom_rug()
 
 ```
 
+And if we separate by `Modality` we can see that the density of taste words is shifted towards higher values than that of smell words.
+
 ```{r}
 #| label: val-dens-mod
 
-senses %>%
+senses_valence %>%
   ggplot(aes(Val, fill = Modality)) +
   geom_density(alpha = 0.5) +
   geom_rug()
 
 ```
+
+The plot thus suggests that, in this sample of 72 words, taste words are generally associated with a somewhat higher emotional valence than smell words.
+
+### Modelling emotional valence
+
+Now that we got an overview of what the data looks like, let's move onto modelling it with `brm()`!
+
+Let's assume, as we did with the VOT values, that the emotional valence values come from a Gaussian distribution.[^1] In notation:
+
+[^1]: Note that, in real-life research contexts, you should decide which distribution to use for different outcome variables by drawing on previous research that has assessed the possible distribution families for those variables, on domain-specific expertise or common-sense. You will see that in most cases with linguistic phenomena we know very little about the nature of the variables we work with, hence it can be difficult to know which family of distributions to use.
+
+$$
+\text{val} \sim Gaussian(\mu, \sigma)
+$$
+
+Now, we want to estimate $\mu$ so that we keep into consideration whether the modality is "smell" or "taste". In other words, we want to model valence as a function of modality, in R code `Val ~ Modality`.
+
+`Modality` is a categorical variable (a `chr` character column in `sense_valence`) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since `Modality` has 2 levels, we need N-1 = 1 dummy variable (let's call it `modality_taste`).
+
+This is how the coding looks like:
+
+|                  | modality_taste |
+|------------------|----------------|
+| modality = smell | 0              |
+| modality = taste | 1              |
+
+Now we allow $\mu$ to vary depending on modality.
+
+$$
+\mu = \beta_0 + \beta_1 \cdot modality_{Taste}
+$$
+
+Let's unpack that.
+
+-   $\beta_0$ is the **mean valence** $\mu$ when \[modality = smell\].
+
+    -   $\mu_{mod = taste} = \beta_0 + \beta_1 \cdot 0 = \beta_0$.
+
+-   $\beta_1$ is the **difference in mean valence** $\mu$ between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\].
+
+    -   $\mu_{mod = smell} = \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1$.
+
+    -   $\beta_1 = \mu_{mod=taste} - \mu_{mod=smell}$.
+
+Now we can define the probability distributions of $\beta_0$ and $\beta_1$.
+
+$$
+\beta_0 \sim Gaussian(\mu_0, \sigma_0)
+$$
+
+$$
+\beta_1 \sim Gaussian(\mu_1, \sigma_1)
+$$
+
+And the usual for $\sigma$.
+
+$$
+\sigma \sim TruncGaussian(\mu_2, \sigma_2)
+$$
+
+All together, we need to estimate the following parameters: $\mu_0, \sigma_0, \mu_1, \sigma_1, \mu_2, \sigma_2$.
+
+### Run the model
+
+Now we know what the model will do, we can run it.
+
+Before that though, create a folder called `cache/` in the `data/` folder of the RStudio project of the course. We will use this folder to save the output of model fitting so that you don't have to refit the model every time.
+
+After you have created the folder, run the following code.
+
+```{r}
+#| label: val-bm
+
+val_bm <- brm(
+  Val ~ Modality,
+  family = gaussian(),
+  data = senses_valence,
+  backend = "cmdstanr",
+  # Save model output to file
+  file = "data/cache/val_bm"
+)
+
+```
+
+The model will be fitted and saved in `data/cache/` with the file name `val_bm.rds`. If you now re-run the same code again, you will notice that `brm()` does not fit the model again, but rather reads it from the file (no output is shown, but trust me, it works!).
+
+### Model interpretation
+
+Let's inspect the model summary.
+
+```{r}
+#| label: val-bm-summ
+
+summary(val_bm)
+
+```
+
+Look at the `Population-Level Effects` part of the summary.
+
+```{r}
+#| label: val-bm-summ-1
+#| echo: false
+
+cat(capture.output(summary(val_bm))[8:11], sep = "\n")
+
+```
+
+We get two "effects" or **coefficients**:
+
+-   `Intercept`: this is our $\beta_0$.
+
+-   `ModalityTaste`: this is our $\beta_1$.
+
+Each coefficient has an `Estimate` and an `Est.Error` (estimate error). As we have seen last week, these are the mean and SD of the probability distribution of the coefficients.
+
+In notation:
+
+$$
+\beta_0 = Gaussian(5.47, 0.06)
+$$
+
+$$
+\beta_1 = Gaussian(0.34, 0.08)
+$$
+
+This means that:
+
+-   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06.
+
+-   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08.
+
+Now look at the **Credible Intervals** (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:
+
+-   We can be 95% confident that (or, there is 95% probability that), based on the data and the model, the mean emotional valence of smell words is between 5.35 and 5.59.
+
+-   There is a 95% probability that the difference in mean emotional valence between taste and smell words is between 0.18 and 0.5. In other words, the emotional valence increases by 0.18 to 0.5 in taste words relative to smell words.
+
+## Plotting probability distributions
+
+They say a plot is better than a thousand words, so why don't we plot the probability distributions of the `Intercept` ($\beta_0$) and `ModalityTaste` ($\beta_1$) coefficients?
+
+Before we do, just a quick terminological clarification.
+
+### Posterior probability distributions
+
+::: {.callout-tip icon="false"}
+#### Posterior probability distribution
+
+The probability distributions of model coefficients obtained through model fitting with `brm()` are called **posterior probability distributions**.
+:::
+
+We will see why they are called that and what *prior* probability distributions are, but for the time being, just remember that when we talk about posterior probability distributions we are talking about the probability distributions of the model coefficients.
+
+So, how do we plot posterior probability distributions?
+
+There are different methods, each of which has its own advantages and disadvantages. Some methods require extra packages, while others work with the packages you already know of.
+
+To simply things, we will use a method that works out of the box with just ggplot2. The first step to plot posterior distributions is to extract the values to be plotted from the model output.
+
+### Posterior draws
+
+Which values, you might ask? The coefficient values obtained with the MCMC draws. (Remember we talked about Markov Chain Monte Carlo iterations last week?). In order to estimate the coefficients, `brm()` runs a number of MCMC iterations and at each iteration a value for each coefficient in the model is proposed (this is a simplification, if you want to know more about the inner working of MCMCs, check the Statistical (Re)Thinking book).
+
+At the end, what you get is a list of values for each coefficient in the model. These are called the **posterior draws**. The probability distribution of the posterior draws of a coefficient is the posterior probability distribution of that coefficient.
+
+And, if you take the mean and standard deviation of the posterior draws of a coefficient, you get the `Estimate` and `Est.Error` values in the model output!
+
+You can easily extract the posterior draws of all the model's coefficients with the `as_draws_df()` function from the brms package.
+
+```{r}
+#| label: int-draws
+
+val_bm_draws <- as_draws_df(val_bm)
+val_bm_draws
+```
+
+Check the first three columns of the tibble. These are our $\beta_0$, $\beta_1$ and $\sigma$ from the model formulae above!
+
+-   `b_Intercept`: $\beta_0$.
+
+-   `b_ModalityTaste`: $\beta_1$.
+
+-   `sigma`: $\sigma$.
+
+Fantastic! Now that we have the posterior draws as a nice tibble, we can use `geom_density()` from ggplot2 to plot the probability density.
+
+### Plotting posteriors
+
+Let's start with the posterior probability, or *posterior* for short, of `b_Intercept`.
+
+```{r}
+#| label: int-dens
+
+val_bm_draws %>%
+  ggplot(aes(b_Intercept)) +
+  geom_density(fill = "gray", alpha = 0.5) +
+  labs(
+    title = "Posterior probability distribution of Intercept"
+  )
+
+```
+
+Nice, uh?
+
+Now with `b_ModalityTaste`.
+
+```{r}
+#| label: modtaste-dens
+
+val_bm_draws %>%
+  ggplot(aes(b_ModalityTaste)) +
+  geom_density(fill = "gray", alpha = 0.5) +
+  labs(
+    title = "Posterior probability distribution of ModalityTaste"
+  )
+```
+
+If you feel like it, go ahead and plot the posterior distribution of `sigma` as well.
+
+## Plotting conditional probability distributions
+
+This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words?
+
+This is where **conditional posterior probability distributions** (or conditional probabilities for short) come in!
+
+They are posterior probability distributions as the ones we have plotted above, but they are **conditional** on specific values of each predictor in the model.
+
+In the `val_bm` model we had only included one predictor (we will see how to include more in the coming weeks): `Modality`, which has two levels `Smell` and `Taste`.
+
+How do we obtain the conditional probabilities of emotional valence for smell and taste words respectively?
+
+The formula of $\mu$ above can help us solve the mystery.
+
+$$
+\mu = \beta_0 + \beta_1 \cdot modality_{Taste}
+$$
+
+The conditional probability of mean emotional valence in smell words is just $\beta_0$. Why? When \[modality = smell\], $modality_{Taste}$ is 0, so:
+
+$$
+\beta_0 + \beta_1 \cdot 0 = \beta_0
+$$
+
+In other words, the conditional probability of mean emotional valence in smell words is equal to the posterior probability of `b_Intercept`. This is so because `Modality` is coded using the treatment coding system (nothing mysterious here).
+
+But what about taste words? Here's where we need to do some maths/data processing.
+
+When \[modality = taste\], $modality_{Taste}$ is 1, so:
+
+$$
+\beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1
+$$
+
+So to get the *conditional posterior probability* of mean emotional valence for taste words, we need to **sum the posterior draws** of `b_Intercept` ($\beta_0$) and `b_ModalityTaste` ($\beta_1$).
+
+It couldn't be easier than using the `mutate()` function from dplyr.
+
+```{r}
+#| label: taste-draws
+
+val_bm_draws <- val_bm_draws %>%
+  mutate(
+    taste = b_Intercept + b_ModalityTaste
+  )
+
+```
+
+Now, we can just plot the probability density of `taste` to get the conditional posterior probability distribution of mean emotional valence for taste words.
+
+```{r}
+#| label: taste-dens
+
+val_bm_draws %>%
+  ggplot(aes(taste)) +
+  geom_density(fill = "gray", alpha = 0.5) +
+  labs(
+    title = "Conditional distribution of emotional valence in taste words"
+  )
+
+```
+
+What if you want to show both the conditional probability of emotional valence in smell and taste words? Easy![^2]
+
+[^2]: The following code is a bit of a hack. There is a better way to do this using `pivot_longer()` from the [tidyr](https://tidyr.tidyverse.org) package. We will learn how to use this and other functions from that package later in the course.
+
+```{r}
+#| label: mod-dens
+
+val_bm_draws %>%
+  ggplot() +
+  geom_density(aes(b_Intercept), fill = "red", alpha = 0.5) +
+  geom_density(aes(taste), fill = "blue", alpha = 0.5) +
+  labs(
+    title = "Conditional distributions of mean emotional valence in smell vs taste words"
+  )
+```
+
+Based on this plot, we can say that the model suggests a different mean emotional valence for smell vs taste words and that taste words have a more positive emotional valence than smell words.
+
+To reiterate from above, based on the 95% CrI of `b_ModalityTaste`, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 grater than that of smell words.
+
+You might ask now: *Is this different relevant?* Unfortunately, statistics will not be able to answer that question. Only conceptual theories of lexical emotional valence can (or cannot)!

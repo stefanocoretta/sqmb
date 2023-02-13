@@ -303,9 +303,9 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 #### Materials
 
 - [Lecture slides](slides/w05/).
-<!-- - [Workshop tutorial](tutorials/tutorial-w04.qmd). -->
-<!-- - Workshop files (right-click and download): -->
-  <!-- - [alb_vot.csv](data/alb_vot.csv) -->
+- [Workshop tutorial](tutorials/tutorial-w05.qmd).
+- Workshop files (right-click and download):
+  - [senses_valence.csv](data/senses_valence.csv)
 :::
 
 

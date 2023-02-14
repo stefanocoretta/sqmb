@@ -272,7 +272,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 - **DUE on Thursday 16 February at NOON**.
 
-- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoeling/sqmb-f1>.
+- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoelel/sqmb-f1>.
 
 - We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
 
@@ -324,7 +324,11 @@ There will be no classes.
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 2
 
-Info to follow.
+- **DUE on Thursday 2 March at NOON**.
+
+- F2 requires you to find a data table and fit a model with one continuous predictor and one categorical variable. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
+
+- The GitHub Classroom invitation link for this assessment can be found on Learn.
 
 :::
 

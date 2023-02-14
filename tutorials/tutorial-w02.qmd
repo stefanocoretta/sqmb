@@ -3,6 +3,11 @@ title: "SQM tutorial - Week 2"
 editor: visual
 ---
 
+```{r}
+#| include: false
+set.seed(32986)
+```
+
 ## Some basics
 
 In the tutorial last week you've been playing around with R and variables.

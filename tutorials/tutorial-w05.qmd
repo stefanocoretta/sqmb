@@ -122,7 +122,7 @@ $$
 \mu_{mod = smell} &= \beta_0 + \beta_1 \cdot 0 \\
 \mu_{mod = smell} &= \beta_0 \\
 \end{aligned}
-$$ 
+$$
 
 <!-- EP: You originally had written here \mu_{mod = taste} = \beta_0, but based on the prose and the table, I think it should be \mu_{mod = smell}. I've made this change in the next point as well so that everything is consistent. -->
 
@@ -134,9 +134,9 @@ $$
 \mu_{mod = taste} &= \beta_0 + \beta_1 \cdot 1 \\
 \mu_{mod = taste} &= \beta_0 + \beta_1 \\
 \end{aligned}
-$$ 
+$$
 
-- How do we know that $\beta_1$ really represents the difference between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\]? Remember that $\mu_{mod = smell} = \beta_0$, as we said in the first point above. We can substitute this into the equation from the last point, and then isolate $\beta_1$ step by step as follows:
+-   How do we know that $\beta_1$ really represents the difference between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\]? Remember that $\mu_{mod = smell} = \beta_0$, as we said in the first point above. We can substitute this into the equation from the last point, and then isolate $\beta_1$ step by step as follows:
 
 $$
 \begin{aligned}
@@ -233,11 +233,9 @@ $$
 
 This means that:
 
--   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06.
-<!-- EP: This is correct/consistent with above. -->
+-   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06. <!-- EP: This is correct/consistent with above. -->
 
--   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08.
-<!-- EP: So is this. -->
+-   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08. <!-- EP: So is this. -->
 
 Now look at the **Credible Intervals** (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:
 
@@ -331,10 +329,7 @@ If you feel like it, go ahead and plot the posterior distribution of `sigma` as 
 
 ## Plotting conditional probability distributions
 
-This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words? 
-So far, we only know the probability distribution of mean valence for smell words ($\beta_0$), and _how that valence is changed_ for taste words ($\beta_1$).
-We don't yet know the probability distribution of mean emotional valence for taste words.
-How do we find that distribution?
+This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words? So far, we only know the probability distribution of mean valence for smell words ($\beta_0$), and *how that valence is changed* for taste words ($\beta_1$). We don't yet know the probability distribution of mean emotional valence for taste words. How do we find that distribution?
 
 This is where **conditional posterior probability distributions** (or conditional probabilities for short) come in!
 
@@ -368,9 +363,7 @@ $$
 
 So to get the *conditional posterior probability* of mean emotional valence for taste words, we need to **sum the posterior draws** of `b_Intercept` ($\beta_0$) and `b_ModalityTaste` ($\beta_1$): $\beta_0 + \beta_1$.
 
-It couldn't be easier than using the `mutate()` function from dplyr.
-Remember that `mutate()` creates a new column (here, called `taste`) based on the values of other columns.
-Here, we're just adding together the values in `b_Intercept` and those in `b_ModalityTaste` (a.k.a., the posterior draws for each of those coefficients).
+It couldn't be easier than using the `mutate()` function from dplyr. Remember that `mutate()` creates a new column (here, called `taste`) based on the values of other columns. Here, we're just adding together the values in `b_Intercept` and those in `b_ModalityTaste` (a.k.a., the posterior draws for each of those coefficients).
 
 ```{r}
 #| label: taste-draws
@@ -420,8 +413,7 @@ You might ask now: *Is this difference relevant?* Unfortunately, statistics cann
 
 ## Morphological processing and reaction times
 
-So far, we've seen how to work with treatment-coded variables with only two levels.
-In this last section, we'll take a look at how to use dummy coding for a variable with three levels.
+So far, we've seen how to work with treatment-coded variables with only two levels. In this last section, we'll take a look at how to use dummy coding for a variable with three levels.
 
 You might remember the `shallow.csv` data we used in Week 2, from Song et al. 2020. *Second language users exhibit shallow morphological processing*. DOI: [10.1017/S0272263120000170](https://doi.org/10.1017/S0272263120000170).
 
@@ -471,8 +463,7 @@ shallow %>%
 
 You will notice that `RT` can only be *positive*: reaction time is a numeric continuous variable, bounded to positive numbers only!
 
-Remember how we talked above about choosing an appropriate distribution to model your data?
-**Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution**. Each case might be a bit different, but when a variable is bounded (e.g., by zero), it is very safe to assume that the values of the variable do not follow a Gaussian distribution.[^3]
+Remember how we talked above about choosing an appropriate distribution to model your data? **Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution**. Each case might be a bit different, but when a variable is bounded (e.g., by zero), it is very safe to assume that the values of the variable do not follow a Gaussian distribution.[^3]
 
 [^3]: In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution, and we got lucky that this assumption in principle holds for the values in the data sample, because emotional valence as measured in the study is actually bounded between 1 and 8. In most cases you won't be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.
 
@@ -527,31 +518,51 @@ shallow %>%
 
 Based on this, we can see that the bulk of the distribution (the place where the violin is wider) falls somewhat lower on the log-RT scale for the `Constituent` condition relative to the other conditions.
 
+### Ordering levels of a categorical predictor
+
+By default, the levels in `Relation_type` follow the order: Constituent, NonConstituent, Unrelated (this is the default alphabetical order).
+
+There is nothing bad with this *per se*, but maybe we can reorder them so that they are in this order: Unrelated, NonConstituent, Constituent.
+
+This might make a bit more sense from a conceptual point of view (you can think of the unrelated condition as the "baseline" condition).
+
+To order levels in R, we can use a **factor** variable/column.
+
+```{r}
+#| label: factor
+
+shallow <- shallow %>%
+  mutate(
+    Relation_type = factor(Relation_type, levels = c("Unrelated", "NonConstituent", "Constituent"))
+  )
+```
+
+This overwrites the `Relation_type` column so that the levels are in the specified order. You can check this in the Environment tab: click on the blue arrow next to `shallow` to see the column list and now `Relation_type` is a `Factor` column with 3 levels.
+
 ### Model RTs by relation type
 
 Now it's your turn! With the following guidance, go ahead and run a model with `brm()` to investigate the effect of relation type on log-RT. Inspect the model summary and plot the posterior probabilities.
 
 `Relation_type` is a categorical variable with three levels, so here's what treatment coding looks like (there will be N-1 = 3-1 = 2 dummy variables).
 
-|                            | relation_ncons | relation_unrel |
-|----------------------------|----------------|----------------|
-| relation = constituent     | 0              | 0              |
-| relation = non-constituent | 1              | 0              |
-| relation = unrelated       | 0              | 1              |
+|                            | relation_ncons | relation_cons |
+|----------------------------|----------------|---------------|
+| relation = unrelated       | 0              | 0             |
+| relation = non-constituent | 1              | 0             |
+| relation = constituent     | 0              | 1             |
 
 Here are a few formulae that describe in mathematical notation the model that we'll need to fit. Try to go through them and unpack them based on what you've learned above and in the lecture.
 
 $$
 \begin{aligned}
 \text{logRT} &\sim Gaussian(\mu, \sigma) \\
-\mu &= \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{unrel} \\
+\mu &= \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
 \beta_0 &\sim Gaussian(\mu_0, \sigma_0)\\
 \beta_1 &\sim Gaussian(\mu_1, \sigma_1)\\
 \beta_2 &\sim Gaussian(\mu_2, \sigma_2)\\
 \sigma &\sim TruncGaussian(\mu_3, \sigma_3)
 \end{aligned}
 $$
-
 
 Focus especially on $\beta_0$, $\beta_1$ and $\beta_2$. What do they correspond to?
 

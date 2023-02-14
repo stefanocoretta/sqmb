@@ -189,6 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#morphological-processing-and-reaction-times" id="toc-morphological-processing-and-reaction-times" class="nav-link" data-scroll-target="#morphological-processing-and-reaction-times">Morphological processing and reaction times</a>
   <ul class="collapse">
   <li><a href="#log-transformation" id="toc-log-transformation" class="nav-link" data-scroll-target="#log-transformation">Log-transformation</a></li>
+  <li><a href="#ordering-levels-of-a-categorical-predictor" id="toc-ordering-levels-of-a-categorical-predictor" class="nav-link" data-scroll-target="#ordering-levels-of-a-categorical-predictor">Ordering levels of a categorical predictor</a></li>
   <li><a href="#model-rts-by-relation-type" id="toc-model-rts-by-relation-type" class="nav-link" data-scroll-target="#model-rts-by-relation-type">Model RTs by relation type</a></li>
   </ul></li>
   </ul>
@@ -263,7 +264,7 @@ dbl (1): Val
 <p><img src="tutorial-w05_files/figure-html/val-dens-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>And if we separate by <code>Modality</code> we can see that the density of taste words is shifted towards higher values than that of smell words.</p>
+<p>And if we separate by <code>Modality</code> (by using the <code>fill</code> parameter), we can see that the density of taste words is shifted towards higher values than that of smell words.</p>
 <div class="cell" data-hash="tutorial-w05_cache/html/val-dens-mod_8b52ba24bb2d9f480f71d4baaa71d0d8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>senses_valence <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Val, <span class="at">fill =</span> Modality)) <span class="sc">+</span></span>
@@ -281,9 +282,9 @@ dbl (1): Val
 <p><span class="math display">\[
 \text{val} \sim Gaussian(\mu, \sigma)
 \]</span></p>
-<p>Now, we want to estimate <span class="math inline">\(\mu\)</span> so that we keep into consideration whether the modality is “smell” or “taste”. In other words, we want to model valence as a function of modality, in R code <code>Val ~ Modality</code>.</p>
-<p><code>Modality</code> is a categorical variable (a <code>chr</code> character column in <code>sense_valence</code>) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since <code>Modality</code> has 2 levels, we need N-1 = 1 dummy variable (let’s call it <code>modality_taste</code>).</p>
-<p>This is how the coding looks like:</p>
+<p>Now, we want to estimate <span class="math inline">\(\mu\)</span> so that we take into consideration whether the modality is “smell” or “taste”. In other words, we want to model valence as a function of modality, in R code <code>Val ~ Modality</code>.</p>
+<p><code>Modality</code> is a categorical variable (a <code>chr</code> character column in <code>sense_valence</code>) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since <code>Modality</code> has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it’s called <code>modality_taste</code>). <!-- EP: Saying "we need this variable" and "let's call it X" is confusing, because students might think that they have to create this variable, even though we've just said that R does all of this behind the scenes. --></p>
+<p>This is what the coding looks like:</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -302,22 +303,46 @@ dbl (1): Val
 </tr>
 </tbody>
 </table>
-<p>Now we allow <span class="math inline">\(\mu\)</span> to vary depending on modality.</p>
+<p>(R assigns the reference level, i.e., 0, to “smell”, because “s” comes before “t” in the alphabet.)</p>
+<p>Now we allow <span class="math inline">\(\mu\)</span> to vary depending on modality. (You might recognise the form of this equation from school, where you probably saw the formula for a line: <span class="math inline">\(y = b + m \cdot x\)</span>, where <span class="math inline">\(b\)</span> is the y-intercept, and <span class="math inline">\(m\)</span> is the slope. Exact same thing here! That’s why it’s called “linear” regression).</p>
 <p><span class="math display">\[
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 \]</span></p>
-<p>Let’s unpack that.</p>
+<p>Let’s unpack that. There’s a bit of algebra in what follows, so take your time if this is a bit out of your comfort zone. But it’s worth it—comfort with basic algebra will also help you become more comfortable working with linear models.</p>
 <ul>
-<li><p><span class="math inline">\(\beta_0\)</span> is the <strong>mean valence</strong> <span class="math inline">\(\mu\)</span> when [modality = smell].</p>
-<ul>
-<li><span class="math inline">\(\mu_{mod = taste} = \beta_0 + \beta_1 \cdot 0 = \beta_0\)</span>.</li>
-</ul></li>
-<li><p><span class="math inline">\(\beta_1\)</span> is the <strong>difference in mean valence</strong> <span class="math inline">\(\mu\)</span> between the mean valence when [modality = smell] and the mean valence when [modality = taste].</p>
-<ul>
-<li><p><span class="math inline">\(\mu_{mod = smell} = \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1\)</span>.</p></li>
-<li><p><span class="math inline">\(\beta_1 = \mu_{mod=taste} - \mu_{mod=smell}\)</span>.</p></li>
-</ul></li>
+<li><span class="math inline">\(\beta_0\)</span> is the <strong>mean valence</strong> <span class="math inline">\(\mu\)</span> when [modality = smell]. That’s because the variable <span class="math inline">\(modality_{Taste}\)</span> takes on the value 0 when [modality = smell] (as we can see from the table above). Multiplying by 0 means that <span class="math inline">\(\beta_1\)</span> vanishes from the equation, and all that’s left is <span class="math inline">\(\beta_0\)</span>.</li>
 </ul>
+<p><span class="math display">\[
+\begin{aligned}
+\mu &amp;= \beta_0 + \beta_1 \cdot modality_{Taste}\\
+\mu_{mod = smell} &amp;= \beta_0 + \beta_1 \cdot 0 \\
+\mu_{mod = smell} &amp;= \beta_0 \\
+\end{aligned}
+\]</span></p>
+
+<!-- EP: You originally had written here \mu_{mod = taste} = \beta_0, but based on the prose and the table, I think it should be \mu_{mod = smell}. I've made this change in the next point as well so that everything is consistent. -->
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> is the <strong>difference in mean valence</strong> <span class="math inline">\(\mu\)</span> between the mean valence when [modality = smell] and the mean valence when [modality = taste]. That’s because <span class="math inline">\(modality_{Taste}\)</span> takes on the value 1 when [modality = taste], and multiplying <span class="math inline">\(\beta_1\)</span> by 1 leaves it unchanged in the equation.</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+\mu &amp;= \beta_0 + \beta_1 \cdot modality_{Taste}\\
+\mu_{mod = taste} &amp;= \beta_0 + \beta_1 \cdot 1 \\
+\mu_{mod = taste} &amp;= \beta_0 + \beta_1 \\
+\end{aligned}
+\]</span></p>
+<ul>
+<li>How do we know that <span class="math inline">\(\beta_1\)</span> really represents the difference between the mean valence when [modality = smell] and the mean valence when [modality = taste]? Remember that <span class="math inline">\(\mu_{mod = smell} = \beta_0\)</span>, as we said in the first point above. We can substitute this into the equation from the last point, and then isolate <span class="math inline">\(\beta_1\)</span> step by step as follows:</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+\mu_{mod = taste} &amp;= \beta_0 + \beta_1 \\
+\mu_{mod = taste} &amp;= \mu_{mod=smell} + \beta_1 \\
+\mu_{mod = taste} - \mu_{mod=smell} &amp;= \beta_1
+\end{aligned}
+\]</span></p>
+<p>So, <span class="math inline">\(\beta_1\)</span> really is the difference between the means of these two levels of <code>Modality</code>.</p>
+<!-- EP: ^ This expression with subtraction is the order you had originally—it's worth double-checking my math to make sure I didn't accidentally switch things up!-->
 <p>Now we can define the probability distributions of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
 <p><span class="math display">\[
 \beta_0 \sim Gaussian(\mu_0, \sigma_0)
@@ -334,7 +359,7 @@ dbl (1): Val
 <section id="run-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="run-the-model">Run the model</h3>
 <p>Now we know what the model will do, we can run it.</p>
-<p>Before that though, create a folder called <code>cache/</code> in the <code>data/</code> folder of the RStudio project of the course. We will use this folder to save the output of model fitting so that you don’t have to refit the model every time.</p>
+<p>Before that though, create a folder called <code>cache/</code> in the <code>data/</code> folder of the RStudio project of the course. We will use this folder to save the output of model fitting so that you don’t have to refit the model every time. (This is useful because as models get more and more complex, they can take quite a while to fit.)</p>
 <p>After you have created the folder, run the following code.</p>
 <div class="cell" data-hash="tutorial-w05_cache/html/val-bm_606246269f128e1f05ec0864c7a180b4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>val_bm <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
@@ -346,7 +371,7 @@ dbl (1): Val
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"data/cache/val_bm"</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The model will be fitted and saved in <code>data/cache/</code> with the file name <code>val_bm.rds</code>. If you now re-run the same code again, you will notice that <code>brm()</code> does not fit the model again, but rather reads it from the file (no output is shown, but trust me, it works!).</p>
+<p>The model will be fitted and saved in <code>data/cache/</code> with the file name <code>val_bm.rds</code>. If you now re-run the same code again, you will notice that <code>brm()</code> does not fit the model again, but rather reads it from the file (no output is shown, but trust me, it works! Check the contents of <code>data/cache/</code> to see for yourself.).</p>
 </section>
 <section id="model-interpretation" class="level3">
 <h3 class="anchored" data-anchor-id="model-interpretation">Model interpretation</h3>
@@ -399,8 +424,8 @@ ModalityTaste     0.34      0.08     0.18     0.50 1.00     3866     2984</code>
 \]</span></p>
 <p>This means that:</p>
 <ul>
-<li><p>The probability distribution of the mean valence when [modality = smell] is a Gaussian distribution with mean = 5.47 and SD = 0.06.</p></li>
-<li><p>The probability distribution of the difference between the mean valence of [modality = taste] and that of [modality = smell] is a Gaussian distribution with mean = 0.34 and SD = 0.08.</p></li>
+<li><p>The probability distribution of the mean valence when [modality = smell] is a Gaussian distribution with mean = 5.47 and SD = 0.06. <!-- EP: This is correct/consistent with above. --></p></li>
+<li><p>The probability distribution of the difference between the mean valence of [modality = taste] and that of [modality = smell] is a Gaussian distribution with mean = 0.34 and SD = 0.08. <!-- EP: So is this. --></p></li>
 </ul>
 <p>Now look at the <strong>Credible Intervals</strong> (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:</p>
 <ul>
@@ -451,13 +476,14 @@ Posterior probability distribution
 </div>
 </div>
 </div>
-<p>Check the first three columns of the tibble. These are our <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma\)</span> from the model formulae above!</p>
+<p>Check the first three columns of the tibble (don’t worry about the other columns for now—those are technical things that are important for brms, but not so important for us). The first three columns are our <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma\)</span> from the model formulae above!</p>
 <ul>
 <li><p><code>b_Intercept</code>: <span class="math inline">\(\beta_0\)</span>.</p></li>
 <li><p><code>b_ModalityTaste</code>: <span class="math inline">\(\beta_1\)</span>.</p></li>
 <li><p><code>sigma</code>: <span class="math inline">\(\sigma\)</span>.</p></li>
 </ul>
-<p>Fantastic! Now that we have the posterior draws as a nice tibble, we can use <code>geom_density()</code> from ggplot2 to plot the probability density.</p>
+<p>(Why is there a <code>b</code> at the beginning of <code>b_Intercept</code> and <code>b_ModalityTaste</code>? Well, “b” is for “beta”, and it’s brms’s way of telling us what kind of coefficient we’re working with.)</p>
+<p>Fantastic! Now that we have the posterior draws as a nice tibble, we can use <code>geom_density()</code> from ggplot2 to plot the probability density, a.k.a., the posterior probability distribution, for each coefficient.</p>
 </section>
 <section id="plotting-posteriors" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-posteriors">Plotting posteriors</h3>
@@ -473,7 +499,7 @@ Posterior probability distribution
 <p><img src="tutorial-w05_files/figure-html/int-dens-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Nice, uh?</p>
+<p>Nice, huh?</p>
 <p>Now with <code>b_ModalityTaste</code>.</p>
 <div class="cell" data-hash="tutorial-w05_cache/html/modtaste-dens_05eb35514ea48cbad74e0799b36f1fbf">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>val_bm_draws <span class="sc">%&gt;%</span></span>
@@ -491,27 +517,27 @@ Posterior probability distribution
 </section>
 <section id="plotting-conditional-probability-distributions" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-conditional-probability-distributions">Plotting conditional probability distributions</h2>
-<p>This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words?</p>
+<p>This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words? So far, we only know the probability distribution of mean valence for smell words (<span class="math inline">\(\beta_0\)</span>), and <em>how that valence is changed</em> for taste words (<span class="math inline">\(\beta_1\)</span>). We don’t yet know the probability distribution of mean emotional valence for taste words. How do we find that distribution?</p>
 <p>This is where <strong>conditional posterior probability distributions</strong> (or conditional probabilities for short) come in!</p>
-<p>They are posterior probability distributions as the ones we have plotted above, but they are <strong>conditional</strong> on specific values of each predictor in the model.</p>
+<p>They are posterior probability distributions like the ones we have plotted above, but they are <strong>conditional</strong> on specific values of each predictor in the model.</p>
 <p>In the <code>val_bm</code> model we had only included one predictor (we will see how to include more in the coming weeks): <code>Modality</code>, which has two levels <code>Smell</code> and <code>Taste</code>.</p>
 <p>How do we obtain the conditional probabilities of emotional valence for smell and taste words respectively?</p>
 <p>The formula of <span class="math inline">\(\mu\)</span> above can help us solve the mystery.</p>
 <p><span class="math display">\[
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 \]</span></p>
-<p>The conditional probability of mean emotional valence in smell words is just <span class="math inline">\(\beta_0\)</span>. Why? When [modality = smell], <span class="math inline">\(modality_{Taste}\)</span> is 0, so:</p>
+<p>The conditional probability of mean emotional valence in smell words is just <span class="math inline">\(\beta_0\)</span>. Why? Remember that when [modality = smell], <span class="math inline">\(modality_{Taste}\)</span> is 0, so:</p>
 <p><span class="math display">\[
 \beta_0 + \beta_1 \cdot 0 = \beta_0
 \]</span></p>
 <p>In other words, the conditional probability of mean emotional valence in smell words is equal to the posterior probability of <code>b_Intercept</code>. This is so because <code>Modality</code> is coded using the treatment coding system (nothing mysterious here).</p>
-<p>But what about taste words? Here’s where we need to do some maths/data processing.</p>
+<p>But what about taste words? Here’s where we need to do some more maths/data processing.</p>
 <p>When [modality = taste], <span class="math inline">\(modality_{Taste}\)</span> is 1, so:</p>
 <p><span class="math display">\[
 \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1
 \]</span></p>
-<p>So to get the <em>conditional posterior probability</em> of mean emotional valence for taste words, we need to <strong>sum the posterior draws</strong> of <code>b_Intercept</code> (<span class="math inline">\(\beta_0\)</span>) and <code>b_ModalityTaste</code> (<span class="math inline">\(\beta_1\)</span>).</p>
-<p>It couldn’t be easier than using the <code>mutate()</code> function from dplyr.</p>
+<p>So to get the <em>conditional posterior probability</em> of mean emotional valence for taste words, we need to <strong>sum the posterior draws</strong> of <code>b_Intercept</code> (<span class="math inline">\(\beta_0\)</span>) and <code>b_ModalityTaste</code> (<span class="math inline">\(\beta_1\)</span>): <span class="math inline">\(\beta_0 + \beta_1\)</span>.</p>
+<p>It couldn’t be easier than using the <code>mutate()</code> function from dplyr. Remember that <code>mutate()</code> creates a new column (here, called <code>taste</code>) based on the values of other columns. Here, we’re just adding together the values in <code>b_Intercept</code> and those in <code>b_ModalityTaste</code> (a.k.a., the posterior draws for each of those coefficients).</p>
 <div class="cell" data-hash="tutorial-w05_cache/html/taste-draws_779e6fd25538caa748d9409cc9bcf02f">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>val_bm_draws <span class="ot">&lt;-</span> val_bm_draws <span class="sc">%&gt;%</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -543,12 +569,13 @@ Posterior probability distribution
 <p><img src="tutorial-w05_files/figure-html/mod-dens-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Based on this plot, we can say that the model suggests a different mean emotional valence for smell vs taste words and that taste words have a more positive emotional valence than smell words.</p>
-<p>To reiterate from above, based on the 95% CrI of <code>b_ModalityTaste</code>, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 grater than that of smell words.</p>
-<p>You might ask now: <em>Is this different relevant?</em> Unfortunately, statistics cannot help you to answer that question (remember, <em>we</em> imbue numbers with meaning). Only conceptual theories of lexical emotional valence can (or cannot)!</p>
+<p>Based on this plot, we can say that the model suggests a different mean emotional valence for smell vs.&nbsp;taste words, and that taste words (blue) have a more positive emotional valence than smell words (red).</p>
+<p>To reiterate from above, based on the 95% CrI of <code>b_ModalityTaste</code>, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 greater than that of smell words.</p>
+<p>You might ask now: <em>Is this difference relevant?</em> Unfortunately, statistics cannot help you to answer that question (remember, <em>we</em> imbue numbers with meaning). Only conceptual theories of lexical emotional valence can (or cannot)!</p>
 </section>
 <section id="morphological-processing-and-reaction-times" class="level2">
 <h2 class="anchored" data-anchor-id="morphological-processing-and-reaction-times">Morphological processing and reaction times</h2>
+<p>So far, we’ve seen how to work with treatment-coded variables with only two levels. In this last section, we’ll take a look at how to use dummy coding for a variable with three levels.</p>
 <p>You might remember the <code>shallow.csv</code> data we used in Week 2, from Song et al.&nbsp;2020. <em>Second language users exhibit shallow morphological processing</em>. DOI: <a href="https://doi.org/10.1017/S0272263120000170">10.1017/S0272263120000170</a>.</p>
 <p>The study compared results of English L1 vs L2 participants and of left- vs right-branching words, but for this tutorial we will only be looking at the L1 and left-branching data.</p>
 <p>The data file also contains data from the filler items, which we filter out.</p>
@@ -587,7 +614,7 @@ dbl (3): ACC, RT, logRT
 <li><p><code>Constituent</code>: <em>unkind</em>.</p></li>
 <li><p><code>NonConstituent</code>: <em>kindness</em>.</p></li>
 </ul>
-<p>The expectation is that lexical decision for native English participants should be facilitated in the <code>Constituent</code> condition, but not in the <code>Unrelated</code> and <code>NonConstituent</code> conditions (if you are curious as to why that is expectation, I refer you to the paper).</p>
+<p>The expectation is that lexical decision for native English participants should be facilitated in the <code>Constituent</code> condition, but not in the <code>Unrelated</code> and <code>NonConstituent</code> conditions (if you are curious as to why that is the expectation, I refer you to the paper).</p>
 <p>Let’s interpret that as:</p>
 <blockquote class="blockquote">
 <p>The <code>Constituent</code> condition should elicit shorter reaction times than the other two conditions.</p>
@@ -603,10 +630,10 @@ dbl (3): ACC, RT, logRT
 </div>
 </div>
 <p>You will notice that <code>RT</code> can only be <em>positive</em>: reaction time is a numeric continuous variable, bounded to positive numbers only!</p>
-<p><strong>Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution</strong>. Each case might be a bit different, but when a variable is bounded it is very safe to assume that the values of the variable do not follow a Gaussian distribution.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>Remember how we talked above about choosing an appropriate distribution to model your data? <strong>Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution</strong>. Each case might be a bit different, but when a variable is bounded (e.g., by zero), it is very safe to assume that the values of the variable do not follow a Gaussian distribution.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <section id="log-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="log-transformation">Log-transformation</h3>
-<p>But we have a trick in our pocket: just calculate the <strong>logarithm</strong> of the values and they will conform to a Gaussian distribution! You can calculate the logarithm (or log) of a number in R using the <code>log()</code> function. Calculating the logs of a variable is known as a <strong>log-transformation</strong>.</p>
+<p>But we have a trick in our pocket: just calculate the <strong>logarithm</strong> of the values and they will conform to a Gaussian distribution! This is a common trick in psycholinguistics for modelling reaction time data. You can calculate the logarithm (or log) of a number in R using the <code>log()</code> function. Calculating the logs of a variable is known as a <strong>log-transformation</strong>.</p>
 <p>I will illustrate what this looks like with the first five values of <code>RT</code> in <code>shallow</code>.</p>
 <div class="cell" data-hash="tutorial-w05_cache/html/log_df734e5397b8750ea51b7d2b80354b03">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>RT <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">603</span>, <span class="dv">739</span>, <span class="dv">370</span>, <span class="dv">821</span>, <span class="dv">1035</span>)</span>
@@ -665,21 +692,35 @@ Log-normal distribution
 </div>
 <p>Based on this, we can see that the bulk of the distribution (the place where the violin is wider) falls somewhat lower on the log-RT scale for the <code>Constituent</code> condition relative to the other conditions.</p>
 </section>
+<section id="ordering-levels-of-a-categorical-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="ordering-levels-of-a-categorical-predictor">Ordering levels of a categorical predictor</h3>
+<p>By default, the levels in <code>Relation_type</code> follow the order: Constituent, NonConstituent, Unrelated (this is the default alphabetical order).</p>
+<p>There is nothing bad with this <em>per se</em>, but maybe we can reorder them so that they are in this order: Unrelated, NonConstituent, Constituent.</p>
+<p>This might make a bit more sense from a conceptual point of view (you can think of the unrelated condition as the “baseline” condition).</p>
+<p>To order levels in R, we can use a <strong>factor</strong> variable/column.</p>
+<div class="cell" data-hash="tutorial-w05_cache/html/factor_b3ed9cf4403d1f8abcba2c1b0185818a">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>shallow <span class="ot">&lt;-</span> shallow <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Relation_type =</span> <span class="fu">factor</span>(Relation_type, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Unrelated"</span>, <span class="st">"NonConstituent"</span>, <span class="st">"Constituent"</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This overwrites the <code>Relation_type</code> column so that the levels are in the specified order. You can check this in the Environment tab: click on the blue arrow next to <code>shallow</code> to see the column list and now <code>Relation_type</code> is a <code>Factor</code> column with 3 levels.</p>
+</section>
 <section id="model-rts-by-relation-type" class="level3">
 <h3 class="anchored" data-anchor-id="model-rts-by-relation-type">Model RTs by relation type</h3>
 <p>Now it’s your turn! With the following guidance, go ahead and run a model with <code>brm()</code> to investigate the effect of relation type on log-RT. Inspect the model summary and plot the posterior probabilities.</p>
-<p><code>Relation_type</code> is a categorical variable with three levels, so here’s what treatment coding looks like (we need N-1 = 3-1 = 2 dummy variables).</p>
+<p><code>Relation_type</code> is a categorical variable with three levels, so here’s what treatment coding looks like (there will be N-1 = 3-1 = 2 dummy variables).</p>
 <table class="table">
 <thead>
 <tr class="header">
 <th></th>
 <th>relation_ncons</th>
-<th>relation_unrel</th>
+<th>relation_cons</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>relation = constituent</td>
+<td>relation = unrelated</td>
 <td>0</td>
 <td>0</td>
 </tr>
@@ -689,27 +730,25 @@ Log-normal distribution
 <td>0</td>
 </tr>
 <tr class="odd">
-<td>relation = unrelated</td>
+<td>relation = constituent</td>
 <td>0</td>
 <td>1</td>
 </tr>
 </tbody>
 </table>
-<p>Here is a few formulae. Try to go through them and unpack them.</p>
+<p>Here are a few formulae that describe in mathematical notation the model that we’ll need to fit. Try to go through them and unpack them based on what you’ve learned above and in the lecture.</p>
 <p><span class="math display">\[
-\text{logRT} \sim Gaussian(\mu, \sigma).
-\]</span></p>
-<p><span class="math display">\[
-\mu = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{unrel}
-\]</span></p>
-<p><span class="math display">\[\beta_0 \sim Gaussian(\mu_0, \sigma_0)\]</span></p>
-<p><span class="math display">\[\beta_1 \sim Gaussian(\mu_1, \sigma_1)\]</span></p>
-<p><span class="math display">\[\beta_2 \sim Gaussian(\mu_2, \sigma_2)\]</span></p>
-<p><span class="math display">\[
-\sigma \sim TruncGaussian(\mu_3, \sigma_3)
+\begin{aligned}
+\text{logRT} &amp;\sim Gaussian(\mu, \sigma) \\
+\mu &amp;= \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 &amp;\sim Gaussian(\mu_0, \sigma_0)\\
+\beta_1 &amp;\sim Gaussian(\mu_1, \sigma_1)\\
+\beta_2 &amp;\sim Gaussian(\mu_2, \sigma_2)\\
+\sigma &amp;\sim TruncGaussian(\mu_3, \sigma_3)
+\end{aligned}
 \]</span></p>
 <p>Focus especially on <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>. What do they correspond to?</p>
-<p>Fit the model with <code>brm()</code>. What does the R formula for this model look like in R?</p>
+<p>Fit the model with <code>brm()</code>. What does the R formula for this model look like?</p>
 <p>Check the model summary. What can you say based on the estimates and the CrIs?</p>
 <p>Plot the <em>posterior probability distributions</em> of <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> and the <em>conditional probability distributions</em> of mean log-RTs for each relation type.</p>
 <p>A hint for the conditional probability distributions: to plot these you need to <em>sum</em> the posterior draws of the beta coefficients depending on the level of relation type. Use the formula of <span class="math inline">\(\mu\)</span> to guide you: the process is the same as with the emotional valence data above, but now there are 3 levels instead of two.</p>
@@ -724,7 +763,7 @@ Log-normal distribution
 <ol>
 <li id="fn1"><p>Note that, in real-life research contexts, you should decide which distribution to use for different outcome variables by drawing on previous research that has assessed the possible distribution families for those variables, on domain-specific expertise or common-sense. You will see that in most cases with linguistic phenomena we know very little about the nature of the variables we work with, hence it can be difficult to know which family of distributions to use.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The following code is a bit of a hack. There is a better way to do this using <code>pivot_longer()</code> from the <a href="https://tidyr.tidyverse.org">tidyr</a> package. We will learn how to use this and other functions from that package later in the course.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution and we got lucky that this assumption in principle holds for the values in the data sample because emotional valence as measured in the study is bounded between 1 and 8. In most cases you won’t be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution, and we got lucky that this assumption in principle holds for the values in the data sample, because emotional valence as measured in the study is actually bounded between 1 and 8. In most cases you won’t be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

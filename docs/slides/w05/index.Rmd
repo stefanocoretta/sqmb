@@ -116,7 +116,7 @@ polite %>%
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- But we also want to estimate the difference in the mean ($\mu$) in the informal vs polite attitude conditions!
+- But we also want to estimate the difference in the mean (`\(\mu\)`) in the informal vs polite attitude conditions!
   
   - In other words, we need to allow the model to estimate $\mu$ based on attitude (informal vs polite).
 ]

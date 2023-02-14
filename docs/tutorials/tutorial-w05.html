@@ -711,7 +711,8 @@ Log-normal distribution
 <p>Focus especially on <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>. What do they correspond to?</p>
 <p>Fit the model with <code>brm()</code>. What does the R formula for this model look like in R?</p>
 <p>Check the model summary. What can you say based on the estimates and the CrIs?</p>
-<p>Plot the <em>posterior probability distributions</em> of <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> and the conditional probability distributions of mean log-RTs for each relation type.</p>
+<p>Plot the <em>posterior probability distributions</em> of <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> and the <em>conditional probability distributions</em> of mean log-RTs for each relation type.</p>
+<p>A hint for the conditional probability distributions: to plot these you need to <em>sum</em> the posterior draws of the beta coefficients depending on the level of relation type. Use the formula of <span class="math inline">\(\mu\)</span> to guide you: the process is the same as with the emotional valence data above, but now there are 3 levels instead of two.</p>
 
 
 </section>

@@ -524,4 +524,6 @@ Fit the model with `brm()`. What does the R formula for this model look like in 
 
 Check the model summary. What can you say based on the estimates and the CrIs?
 
-Plot the *posterior probability distributions* of $\beta_0$, $\beta_1$ and $\beta_2$ and the conditional probability distributions of mean log-RTs for each relation type.
+Plot the *posterior probability distributions* of $\beta_0$, $\beta_1$ and $\beta_2$ and the *conditional probability distributions* of mean log-RTs for each relation type.
+
+A hint for the conditional probability distributions: to plot these you need to *sum* the posterior draws of the beta coefficients depending on the level of relation type. Use the formula of $\mu$ to guide you: the process is the same as with the emotional valence data above, but now there are 3 levels instead of two.

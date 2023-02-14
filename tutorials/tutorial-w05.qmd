@@ -67,7 +67,7 @@ senses_valence %>%
 
 ```
 
-And if we separate by `Modality` we can see that the density of taste words is shifted towards higher values than that of smell words.
+And if we separate by `Modality` (by using the `fill` parameter), we can see that the density of taste words is shifted towards higher values than that of smell words.
 
 ```{r}
 #| label: val-dens-mod
@@ -93,34 +93,62 @@ $$
 \text{val} \sim Gaussian(\mu, \sigma)
 $$
 
-Now, we want to estimate $\mu$ so that we keep into consideration whether the modality is "smell" or "taste". In other words, we want to model valence as a function of modality, in R code `Val ~ Modality`.
+Now, we want to estimate $\mu$ so that we take into consideration whether the modality is "smell" or "taste". In other words, we want to model valence as a function of modality, in R code `Val ~ Modality`.
 
-`Modality` is a categorical variable (a `chr` character column in `sense_valence`) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since `Modality` has 2 levels, we need N-1 = 1 dummy variable (let's call it `modality_taste`).
+`Modality` is a categorical variable (a `chr` character column in `sense_valence`) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since `Modality` has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it's called `modality_taste`). <!-- EP: Saying "we need this variable" and "let's call it X" is confusing, because students might think that they have to create this variable, even though we've just said that R does all of this behind the scenes. -->
 
-This is how the coding looks like:
+This is what the coding looks like:
 
 |                  | modality_taste |
 |------------------|----------------|
 | modality = smell | 0              |
 | modality = taste | 1              |
 
-Now we allow $\mu$ to vary depending on modality.
+(R assigns the reference level, i.e., 0, to "smell", because "s" comes before "t" in the alphabet.)
+
+Now we allow $\mu$ to vary depending on modality. (You might recognise the form of this equation from school, where you probably saw the formula for a line: $y = b + m \cdot x$, where $b$ is the y-intercept, and $m$ is the slope. Exact same thing here! That's why it's called "linear" regression).
 
 $$
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 $$
 
-Let's unpack that.
+Let's unpack that. There's a bit of algebra in what follows, so take your time if this is a bit out of your comfort zone. But it's worth it---comfort with basic algebra will also help you become more comfortable working with linear models.
 
--   $\beta_0$ is the **mean valence** $\mu$ when \[modality = smell\].
+-   $\beta_0$ is the **mean valence** $\mu$ when \[modality = smell\]. That's because the variable $modality_{Taste}$ takes on the value 0 when \[modality = smell\] (as we can see from the table above). Multiplying by 0 means that $\beta_1$ vanishes from the equation, and all that's left is $\beta_0$.
 
-    -   $\mu_{mod = taste} = \beta_0 + \beta_1 \cdot 0 = \beta_0$.
+$$
+\begin{aligned}
+\mu &= \beta_0 + \beta_1 \cdot modality_{Taste}\\
+\mu_{mod = smell} &= \beta_0 + \beta_1 \cdot 0 \\
+\mu_{mod = smell} &= \beta_0 \\
+\end{aligned}
+$$ 
 
--   $\beta_1$ is the **difference in mean valence** $\mu$ between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\].
+<!-- EP: You originally had written here \mu_{mod = taste} = \beta_0, but based on the prose and the table, I think it should be \mu_{mod = smell}. I've made this change in the next point as well so that everything is consistent. -->
 
-    -   $\mu_{mod = smell} = \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1$.
+-   $\beta_1$ is the **difference in mean valence** $\mu$ between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\]. That's because $modality_{Taste}$ takes on the value 1 when \[modality = taste\], and multiplying $\beta_1$ by 1 leaves it unchanged in the equation.
 
-    -   $\beta_1 = \mu_{mod=taste} - \mu_{mod=smell}$.
+$$
+\begin{aligned}
+\mu &= \beta_0 + \beta_1 \cdot modality_{Taste}\\
+\mu_{mod = taste} &= \beta_0 + \beta_1 \cdot 1 \\
+\mu_{mod = taste} &= \beta_0 + \beta_1 \\
+\end{aligned}
+$$ 
+
+- How do we know that $\beta_1$ really represents the difference between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\]? Remember that $\mu_{mod = smell} = \beta_0$, as we said in the first point above. We can substitute this into the equation we just came up with for $\beta_1$, and then isolate $\beta_1$ step by step as follows:
+
+$$
+\begin{aligned}
+\mu_{mod = taste} &= \beta_0 + \beta_1 \\
+\mu_{mod = taste} &= \mu_{mod=smell} + \beta_1 \\
+\mu_{mod = taste} - \mu_{mod=smell} &= \beta_1
+\end{aligned}
+$$
+
+So, $\beta_1$ really is the difference between the means of these two levels of `Modality`.
+
+<!-- EP: ^ This expression with subtraction is the order you had originally—it's worth double-checking my math to make sure I didn't accidentally switch things up!-->
 
 Now we can define the probability distributions of $\beta_0$ and $\beta_1$.
 
@@ -144,7 +172,7 @@ All together, we need to estimate the following parameters: $\mu_0, \sigma_0, \m
 
 Now we know what the model will do, we can run it.
 
-Before that though, create a folder called `cache/` in the `data/` folder of the RStudio project of the course. We will use this folder to save the output of model fitting so that you don't have to refit the model every time.
+Before that though, create a folder called `cache/` in the `data/` folder of the RStudio project of the course. We will use this folder to save the output of model fitting so that you don't have to refit the model every time. (This is useful because as models get more and more complex, they can take quite a while to fit.)
 
 After you have created the folder, run the following code.
 
@@ -162,7 +190,7 @@ val_bm <- brm(
 
 ```
 
-The model will be fitted and saved in `data/cache/` with the file name `val_bm.rds`. If you now re-run the same code again, you will notice that `brm()` does not fit the model again, but rather reads it from the file (no output is shown, but trust me, it works!).
+The model will be fitted and saved in `data/cache/` with the file name `val_bm.rds`. If you now re-run the same code again, you will notice that `brm()` does not fit the model again, but rather reads it from the file (no output is shown, but trust me, it works! Check the contents of `data/cache/` to see for yourself.).
 
 ### Model interpretation
 
@@ -206,8 +234,10 @@ $$
 This means that:
 
 -   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06.
+<!-- EP: This is correct/consistent with above. -->
 
 -   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08.
+<!-- EP: So is this. -->
 
 Now look at the **Credible Intervals** (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:
 
@@ -254,7 +284,7 @@ val_bm_draws <- as_draws_df(val_bm)
 val_bm_draws
 ```
 
-Check the first three columns of the tibble. These are our $\beta_0$, $\beta_1$ and $\sigma$ from the model formulae above!
+Check the first three columns of the tibble (don't worry about the other columns for now---those are technical things that are important for brms, but not so important for us). The first three columns are our $\beta_0$, $\beta_1$ and $\sigma$ from the model formulae above!
 
 -   `b_Intercept`: $\beta_0$.
 
@@ -262,7 +292,9 @@ Check the first three columns of the tibble. These are our $\beta_0$, $\beta_1$ 
 
 -   `sigma`: $\sigma$.
 
-Fantastic! Now that we have the posterior draws as a nice tibble, we can use `geom_density()` from ggplot2 to plot the probability density.
+(Why is there a `b` at the beginning of `b_Intercept` and `b_ModalityTaste`? Well, "b" is for "beta", and it's brms's way of telling us what kind of coefficient we're working with.)
+
+Fantastic! Now that we have the posterior draws as a nice tibble, we can use `geom_density()` from ggplot2 to plot the probability density, a.k.a., the posterior probability distribution, for each coefficient.
 
 ### Plotting posteriors
 
@@ -280,7 +312,7 @@ val_bm_draws %>%
 
 ```
 
-Nice, uh?
+Nice, huh?
 
 Now with `b_ModalityTaste`.
 
@@ -299,11 +331,14 @@ If you feel like it, go ahead and plot the posterior distribution of `sigma` as 
 
 ## Plotting conditional probability distributions
 
-This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words?
+This is all great, but what if you wanted to know the probability distribution of mean emotional valence in either smell or taste words? 
+So far, we only know the probability distribution of mean valence for smell words ($\beta_0$), and _how that valence is changed_ for taste words ($\beta_1$).
+We don't yet know the probability distribution of mean emotional valence for taste words.
+How do we find that distribution?
 
 This is where **conditional posterior probability distributions** (or conditional probabilities for short) come in!
 
-They are posterior probability distributions as the ones we have plotted above, but they are **conditional** on specific values of each predictor in the model.
+They are posterior probability distributions like the ones we have plotted above, but they are **conditional** on specific values of each predictor in the model.
 
 In the `val_bm` model we had only included one predictor (we will see how to include more in the coming weeks): `Modality`, which has two levels `Smell` and `Taste`.
 
@@ -315,7 +350,7 @@ $$
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 $$
 
-The conditional probability of mean emotional valence in smell words is just $\beta_0$. Why? When \[modality = smell\], $modality_{Taste}$ is 0, so:
+The conditional probability of mean emotional valence in smell words is just $\beta_0$. Why? Remember that when \[modality = smell\], $modality_{Taste}$ is 0, so:
 
 $$
 \beta_0 + \beta_1 \cdot 0 = \beta_0
@@ -323,7 +358,7 @@ $$
 
 In other words, the conditional probability of mean emotional valence in smell words is equal to the posterior probability of `b_Intercept`. This is so because `Modality` is coded using the treatment coding system (nothing mysterious here).
 
-But what about taste words? Here's where we need to do some maths/data processing.
+But what about taste words? Here's where we need to do some more maths/data processing.
 
 When \[modality = taste\], $modality_{Taste}$ is 1, so:
 
@@ -331,9 +366,11 @@ $$
 \beta_0 + \beta_1 \cdot 1 = \beta_0 + \beta_1
 $$
 
-So to get the *conditional posterior probability* of mean emotional valence for taste words, we need to **sum the posterior draws** of `b_Intercept` ($\beta_0$) and `b_ModalityTaste` ($\beta_1$).
+So to get the *conditional posterior probability* of mean emotional valence for taste words, we need to **sum the posterior draws** of `b_Intercept` ($\beta_0$) and `b_ModalityTaste` ($\beta_1$): $\beta_0 + \beta_1$.
 
 It couldn't be easier than using the `mutate()` function from dplyr.
+Remember that `mutate()` creates a new column (here, called `taste`) based on the values of other columns.
+Here, we're just adding together the values in `b_Intercept` and those in `b_ModalityTaste` (a.k.a., the posterior draws for each of those coefficients).
 
 ```{r}
 #| label: taste-draws
@@ -375,13 +412,16 @@ val_bm_draws %>%
   )
 ```
 
-Based on this plot, we can say that the model suggests a different mean emotional valence for smell vs taste words and that taste words have a more positive emotional valence than smell words.
+Based on this plot, we can say that the model suggests a different mean emotional valence for smell vs. taste words, and that taste words (blue) have a more positive emotional valence than smell words (red).
 
-To reiterate from above, based on the 95% CrI of `b_ModalityTaste`, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 grater than that of smell words.
+To reiterate from above, based on the 95% CrI of `b_ModalityTaste`, there is a 95% probability that the mean emotional valence of taste words is 0.18 to 0.5 greater than that of smell words.
 
-You might ask now: *Is this different relevant?* Unfortunately, statistics cannot help you to answer that question (remember, *we* imbue numbers with meaning). Only conceptual theories of lexical emotional valence can (or cannot)!
+You might ask now: *Is this difference relevant?* Unfortunately, statistics cannot help you to answer that question (remember, *we* imbue numbers with meaning). Only conceptual theories of lexical emotional valence can (or cannot)!
 
 ## Morphological processing and reaction times
+
+So far, we've seen how to work with treatment-coded variables with only two levels.
+In this last section, we'll take a look at how to use dummy coding for a variable with three levels.
 
 You might remember the `shallow.csv` data we used in Week 2, from Song et al. 2020. *Second language users exhibit shallow morphological processing*. DOI: [10.1017/S0272263120000170](https://doi.org/10.1017/S0272263120000170).
 
@@ -412,7 +452,7 @@ The prime word belonged to one of three possible groups (`Releation_type` in the
 
 -   `NonConstituent`: *kindness*.
 
-The expectation is that lexical decision for native English participants should be facilitated in the `Constituent` condition, but not in the `Unrelated` and `NonConstituent` conditions (if you are curious as to why that is expectation, I refer you to the paper).
+The expectation is that lexical decision for native English participants should be facilitated in the `Constituent` condition, but not in the `Unrelated` and `NonConstituent` conditions (if you are curious as to why that is the expectation, I refer you to the paper).
 
 Let's interpret that as:
 
@@ -431,13 +471,14 @@ shallow %>%
 
 You will notice that `RT` can only be *positive*: reaction time is a numeric continuous variable, bounded to positive numbers only!
 
-**Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution**. Each case might be a bit different, but when a variable is bounded it is very safe to assume that the values of the variable do not follow a Gaussian distribution.[^3]
+Remember how we talked above about choosing an appropriate distribution to model your data?
+**Variables that are bounded to positive numbers are known not to be distributed according to a Gaussian distribution**. Each case might be a bit different, but when a variable is bounded (e.g., by zero), it is very safe to assume that the values of the variable do not follow a Gaussian distribution.[^3]
 
-[^3]: In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution and we got lucky that this assumption in principle holds for the values in the data sample because emotional valence as measured in the study is bounded between 1 and 8. In most cases you won't be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.
+[^3]: In fact, we have assumed above that emotional valence is distributed according to a Gaussian distribution, and we got lucky that this assumption in principle holds for the values in the data sample, because emotional valence as measured in the study is actually bounded between 1 and 8. In most cases you won't be lucky, so always carefully think about the nature of your variables. Again, only conceptual theories of the phenomena you are investigating will be able to help.
 
 ### Log-transformation
 
-But we have a trick in our pocket: just calculate the **logarithm** of the values and they will conform to a Gaussian distribution! You can calculate the logarithm (or log) of a number in R using the `log()` function. Calculating the logs of a variable is known as a **log-transformation**.
+But we have a trick in our pocket: just calculate the **logarithm** of the values and they will conform to a Gaussian distribution! This is a common trick in psycholinguistics for modelling reaction time data. You can calculate the logarithm (or log) of a number in R using the `log()` function. Calculating the logs of a variable is known as a **log-transformation**.
 
 I will illustrate what this looks like with the first five values of `RT` in `shallow`.
 
@@ -490,7 +531,7 @@ Based on this, we can see that the bulk of the distribution (the place where the
 
 Now it's your turn! With the following guidance, go ahead and run a model with `brm()` to investigate the effect of relation type on log-RT. Inspect the model summary and plot the posterior probabilities.
 
-`Relation_type` is a categorical variable with three levels, so here's what treatment coding looks like (we need N-1 = 3-1 = 2 dummy variables).
+`Relation_type` is a categorical variable with three levels, so here's what treatment coding looks like (there will be N-1 = 3-1 = 2 dummy variables).
 
 |                            | relation_ncons | relation_unrel |
 |----------------------------|----------------|----------------|
@@ -498,29 +539,23 @@ Now it's your turn! With the following guidance, go ahead and run a model with `
 | relation = non-constituent | 1              | 0              |
 | relation = unrelated       | 0              | 1              |
 
-Here is a few formulae. Try to go through them and unpack them.
+Here are a few formulae that describe in mathematical notation the model that we'll need to fit. Try to go through them and unpack them based on what you've learned above and in the lecture.
 
 $$
-\text{logRT} \sim Gaussian(\mu, \sigma).
+\begin{aligned}
+\text{logRT} &\sim Gaussian(\mu, \sigma) \\
+\mu &= \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{unrel} \\
+\beta_0 &\sim Gaussian(\mu_0, \sigma_0)\\
+\beta_1 &\sim Gaussian(\mu_1, \sigma_1)\\
+\beta_2 &\sim Gaussian(\mu_2, \sigma_2)\\
+\sigma &\sim TruncGaussian(\mu_3, \sigma_3)
+\end{aligned}
 $$
 
-$$
-\mu = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{unrel}
-$$
-
-$$\beta_0 \sim Gaussian(\mu_0, \sigma_0)$$
-
-$$\beta_1 \sim Gaussian(\mu_1, \sigma_1)$$
-
-$$\beta_2 \sim Gaussian(\mu_2, \sigma_2)$$
-
-$$
-\sigma \sim TruncGaussian(\mu_3, \sigma_3)
-$$
 
 Focus especially on $\beta_0$, $\beta_1$ and $\beta_2$. What do they correspond to?
 
-Fit the model with `brm()`. What does the R formula for this model look like in R?
+Fit the model with `brm()`. What does the R formula for this model look like?
 
 Check the model summary. What can you say based on the estimates and the CrIs?
 

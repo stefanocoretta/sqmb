@@ -1,0 +1,160 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 6 - Binary outcomes"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2023/03/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+```
+
+```{r read-data}
+shallow <- read_csv("data/shallow.csv") %>%
+  filter(
+    Group == "L1",
+    Branching == "Left",
+    Critical_Filler == "Critical",
+    RT > 0
+  ) %>%
+  mutate(
+    Accuracy = ifelse(ACC == 1, "correct", "incorrect")
+  )
+```
+
+## Summary from last week
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+...
+
+- `outcome ~ predictor`
+]
+
+---
+
+layout: true
+
+## Binary outcomes
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Morphological processing**
+
+- English L1 and L2 participants (L2 participants are native speakers of Cantonese).
+
+- **Lexical decision task** (word vs non-word).
+
+- Each trial:
+
+  - **Prime**: *prolong* (unrelated), *unkind* (constituent), *kindness* (non-constituent).
+
+  - **Target**: *unkindness* ([[un]-[kind]]-ness).
+
+- Reaction times and accuracy.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We will focus on accuracy (correct identification of real word) for L1 participants.
+]
+
+---
+
+```{r shal}
+shallow %>%
+  ggplot(aes(Relation_type, fill = Accuracy)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Proportion of correct vs incorrect responses",
+    x = "Prime relation type",
+    y = "Proportion"
+  )
+```
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Binary variables follow the **Bernoulli distribution**.
+
+- The Bernoulli distribution has one parameter: $p$.
+
+$$Bernoulli(p)$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Let's assume $B$ is a binary variable, whose values are $a$ or $b$.
+
+  - $p$ is the probability that $B = b$.
+
+  - $q$ is the probability that $B = a$, i.e. $1 - p$.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**No rain vs rain**
+
+- Probability $p$ that tomorrow rains is 0.7 (70% probability), probability $q$ that tomorrow does not rain is $1 - 0.7 = 0.3$ (30% probability).
+]
+
+---
+
+.f3[
+$$\text{acc} \sim Bernoulli(p)$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- Accuracy $\text{acc}$ is a binary variable: incorrect vs correct.
+
+- $p$ is the probability of obtaining a "correct" response.
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Alas, we cannot model probabilities **directly**, because they are bounded between 0 and 1. We need to covert them so that they are not bounded.
+]

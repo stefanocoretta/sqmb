@@ -264,7 +264,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 :::
 
-### Week 5: Linear models, Basics II
+### Week 5: Statistical models, Basics II
 
 
 ::: {.callout-warning collapse="false"}
@@ -332,9 +332,9 @@ There will be no classes.
 
 :::
 
-### Week 7: Linear models: Intermediate I
+### Week 7: Statistical models: Intermediate I
 
-### Week 8: Linear models: Intermediate II
+### Week 8: Statistical models: Intermediate II
 
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 3

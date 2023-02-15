@@ -48,22 +48,21 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Intake form**
 
-- **You must complete the intake form before coming to the Tuesday lecture.**
-- The link to the form will be circulated via Learn.
+-   **You must complete the intake form before coming to the Tuesday lecture.**
+-   The link to the form will be circulated via Learn.
 
 **Install R and RStudio**
 
-- If you with to use your own laptop for the workshops, instead of the Lab PCs, you need to install both R and RStudio.
-- **NOTE**: If you have installed either R or RStudio prior to January 2023, please make sure you delete both R and RStudio from your laptop.
-- Please, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
-
+-   If you with to use your own laptop for the workshops, instead of the Lab PCs, you need to install both R and RStudio.
+-   **NOTE**: If you have installed either R or RStudio prior to January 2023, please make sure you delete both R and RStudio from your laptop.
+-   Please, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
 :::
 
 ::: {.callout-tip collapse="true"}
 #### Materials
 
-- [Lecture slides](slides/w01/).
-- [Workshop tutorial](tutorials/tutorial-w01.qmd).
+-   [Lecture slides](slides/w01/).
+-   [Workshop tutorial](tutorials/tutorial-w01.qmd).
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -71,22 +70,21 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Main textbooks**
 
-- Statistics for Linguists with R, by Bodo Winter (**S4LR**) Ch. 1. [via library]
-- R for Data Science (**R4DS**) [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html). [online book]
-- Statistical (Re)thinking, by Richard McElreath (**SReT**), Ch. 1. [via library]
+-   Statistics for Linguists with R, by Bodo Winter (**S4LR**) Ch. 1. \[via library\]
+-   R for Data Science (**R4DS**) [Ch. 1](https://r4ds.had.co.nz/introduction.html), [Ch. 2](https://r4ds.had.co.nz/explore-intro.html). \[online book\]
+-   Statistical (Re)thinking, by Richard McElreath (**SReT**), Ch. 1. \[via library\]
 
 **Papers**
 
-- [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
-- [Jafar 2018](https://doi.org/10.1136/emermed-2017-207158). What is positionality and should it be expressed in quantitative studies?
+-   [Darwin Holmes 2020](https://doi.org/10.34293/education.v8i4.3232). Researcher Positionality - A Consideration of Its Influence and Place in Qualitative Research - A New Researcher Guide
+-   [Jafar 2018](https://doi.org/10.1136/emermed-2017-207158). What is positionality and should it be expressed in quantitative studies?
 
 **From the lecture**
 
-- [Silberzahn et al. 2018](https://doi.org/10.1177/2515245917747646
-). Many Analysts, One Data Set: Making Transparent How Variations in Analytic Choices Affect Results
-- [Coretta et al. (in principle)](https://doi.org/10.31234/osf.io/q8t2k). Multidimensional signals and analytic flexibility: Estimating degrees of freedom in human speech analyses
-- [Cumming 2014](https://doi.org/10.1177%2F0956797613504966). The New Statistics: Why and How
-- [Kurschke and Liddell 2018](https://doi.org/10.3758/s13423-016-1221-4). The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective
+-   [Silberzahn et al. 2018](https://doi.org/10.1177/2515245917747646). Many Analysts, One Data Set: Making Transparent How Variations in Analytic Choices Affect Results
+-   [Coretta et al. (in principle)](https://doi.org/10.31234/osf.io/q8t2k). Multidimensional signals and analytic flexibility: Estimating degrees of freedom in human speech analyses
+-   [Cumming 2014](https://doi.org/10.1177%2F0956797613504966). The New Statistics: Why and How
+-   [Kurschke and Liddell 2018](https://doi.org/10.3758/s13423-016-1221-4). The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective
 :::
 
 ### Week 2: Data wrangling
@@ -96,10 +94,10 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Questions**
 
-- What are the types of statistical variables?
-- Which summary measures are appropriate for which types of variables?
-- What are common measures central tendency?
-- What are common measures of dispersion?
+-   What are the types of statistical variables?
+-   Which summary measures are appropriate for which types of variables?
+-   What are common measures central tendency?
+-   What are common measures of dispersion?
 
 **Skills**
 
@@ -112,10 +110,10 @@ Examples from different branches of linguistics will be used to provide you with
 ::: {.callout-tip collapse="true"}
 #### Materials
 
-- [Lecture slides](slides/w02/).
-- [Workshop tutorial](tutorials/tutorial-w02.qmd).
-- Workshop files (right-click and download):
-  - [shallow.csv](data/shallow.csv)
+-   [Lecture slides](slides/w02/).
+-   [Workshop tutorial](tutorials/tutorial-w02.qmd).
+-   Workshop files (right-click and download):
+    -   [shallow.csv](data/shallow.csv)
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -123,8 +121,8 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Main textbooks**
 
-- **S4LR** Ch. 3. [via library]
-- **R4DS** [Ch. 4](https://r4ds.had.co.nz/workflow-basics.html) and [Ch. 5](https://r4ds.had.co.nz/transform.html). [online book]
+-   **S4LR** Ch. 3. \[via library\]
+-   **R4DS** [Ch. 4](https://r4ds.had.co.nz/workflow-basics.html) and [Ch. 5](https://r4ds.had.co.nz/transform.html). \[online book\]
 :::
 
 ### Week 3: Data visualisation
@@ -134,18 +132,17 @@ Examples from different branches of linguistics will be used to provide you with
 
 **Questions**
 
-- What are the principles of good data visualisation?
-- Which are the main components of a plot?
-- Which are the appropriate plots for different types of data?
-- How can we visualise uncertainty?
-
+-   What are the principles of good data visualisation?
+-   Which are the main components of a plot?
+-   Which are the appropriate plots for different types of data?
+-   How can we visualise uncertainty?
 
 **Skills**
 
-- Create common types of plots with ggplot2.
-- Use colour and shape to effectively convey meaning.
-- Describe a plot in writing and comment on observable patterns.
-- Filter and mutate data.
+-   Create common types of plots with ggplot2.
+-   Use colour and shape to effectively convey meaning.
+-   Describe a plot in writing and comment on observable patterns.
+-   Filter and mutate data.
 :::
 
 ::: {.callout-note collapse="true"}
@@ -158,17 +155,16 @@ From Week 4 on, we will need to use software that unfortunately is not currently
 **Note that it will take up to an hour to install everything and you might encounter errors, so please do this asap. DO NOT WAIT NEXT WEEK.**
 
 You can find the full instructions here: [set-up instructions](setup.qmd).
-
 :::
 
 ::: {.callout-tip collapse="true"}
 #### Materials
 
-- [Lecture slides](slides/w03/).
-- [Workshop tutorial](tutorials/tutorial-w03.qmd).
-- Workshop files (right-click and download):
-  - [polite.csv](data/polite.csv)
-  - [glot_status.rds](data/glot_status.rds)
+-   [Lecture slides](slides/w03/).
+-   [Workshop tutorial](tutorials/tutorial-w03.qmd).
+-   Workshop files (right-click and download):
+    -   [polite.csv](data/polite.csv)
+    -   [glot_status.rds](data/glot_status.rds)
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -176,58 +172,55 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 **Main textbooks**
 
-- **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). [online book]
-- [ggplot2](https://ggplot2.tidyverse.org) documentation.
+-   **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). \[online book\]
+-   [ggplot2](https://ggplot2.tidyverse.org) documentation.
 
 **From the lecture**
 
-- [Spiegelhalter 2020](https://www.penguin.co.uk/books/294857/the-art-of-statistics-by-spiegelhalter-david/9780241258767). *The Art of Statistics:
-Learning from Data.*
+-   [Spiegelhalter 2020](https://www.penguin.co.uk/books/294857/the-art-of-statistics-by-spiegelhalter-david/9780241258767). *The Art of Statistics: Learning from Data.*
 
 **Extra**
 
-- [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/).
-- **Data viz catalogues**
-  - [Directory of visualisations](https://clauswilke.com/dataviz/directory-of-visualizations.html)
-  - [Data viz catalogue](https://datavizcatalogue.com/index.html)
-  - [Data Viz project](https://datavizproject.com)
-  - [Top 50](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
-  - [Data Viz](https://datavizm20.classes.andrewheiss.com/)
-- **Tutorials**
-  - [Raincloud plots](https://wellcomeopenresearch.org/articles/4-63)
-  - [Labels](https://www.cararthompson.com/talks/user2022/)
-  - [Graphic design](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/)
-- **Colour**
-  - [ColorBrewer2](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3).
-  - [MetBrewer](https://github.com/BlakeRMills/MetBrewer)
-  - [Use colour wisely](https://albert-rapp.de/post/2022-02-19-ggplot2-color-tips-from-datawrapper/).
-- **Caveats**
-  - [Same stats different data](https://www.autodesk.com/research/publications/same-stats-different-graphs).
-  - [Behind bars](https://stats.stackexchange.com/questions/349422/does-it-make-sense-to-add-error-bars-in-a-bar-chart-of-frequencies/367889#367889).
-  - [Issues with error bars](https://www.data-to-viz.com/caveat/error_bar.html).
-  - [I've stopped using boxplots](https://nightingaledvs.com/ive-stopped-using-box-plots-should-you/).
-
+-   [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/).
+-   **Data viz catalogues**
+    -   [Directory of visualisations](https://clauswilke.com/dataviz/directory-of-visualizations.html)
+    -   [Data viz catalogue](https://datavizcatalogue.com/index.html)
+    -   [Data Viz project](https://datavizproject.com)
+    -   [Top 50](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+    -   [Data Viz](https://datavizm20.classes.andrewheiss.com/)
+-   **Tutorials**
+    -   [Raincloud plots](https://wellcomeopenresearch.org/articles/4-63)
+    -   [Labels](https://www.cararthompson.com/talks/user2022/)
+    -   [Graphic design](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/)
+-   **Colour**
+    -   [ColorBrewer2](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3).
+    -   [MetBrewer](https://github.com/BlakeRMills/MetBrewer)
+    -   [Use colour wisely](https://albert-rapp.de/post/2022-02-19-ggplot2-color-tips-from-datawrapper/).
+-   **Caveats**
+    -   [Same stats different data](https://www.autodesk.com/research/publications/same-stats-different-graphs).
+    -   [Behind bars](https://stats.stackexchange.com/questions/349422/does-it-make-sense-to-add-error-bars-in-a-bar-chart-of-frequencies/367889#367889).
+    -   [Issues with error bars](https://www.data-to-viz.com/caveat/error_bar.html).
+    -   [I've stopped using boxplots](https://nightingaledvs.com/ive-stopped-using-box-plots-should-you/).
 :::
 
-### Week 4: Statistical models, Basics I
+### Week 4: Statistical modeling basics
 
 ::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
 
-- What are probability distributions?
-- How can we describe probability distributions with statistical parameters?
-- What are the frequentist and Bayesian view of statistical parameters?
-- How can we estimate parameters using statistical models?
-
+-   What are probability distributions?
+-   How can we describe probability distributions with statistical parameters?
+-   What are the frequentist and Bayesian view of statistical parameters?
+-   How can we estimate parameters using statistical models?
 
 **Skills**
 
-- Transform data by creating new columns and filtering based on specific values.
-- Use logical operators to transform data.
-- Fit a statistical model to estimate the mean and standard deviation of a Gaussian variable with `brm()`.
-- Interpret the summary of the model and understand the meaning of the reported estimates.
+-   Transform data by creating new columns and filtering based on specific values.
+-   Use logical operators to transform data.
+-   Fit a statistical model to estimate the mean and standard deviation of a Gaussian variable with `brm()`.
+-   Interpret the summary of the model and understand the meaning of the reported estimates.
 :::
 
 ::: {.callout-note collapse="true"}
@@ -240,16 +233,15 @@ From Week 4 on, we will need to use software that unfortunately is not currently
 **In the tragic event you did not go through the installation instructions last week, DO IT NOW AT YOUR OWN PERIL.** I won't be able to help you with the installation during the workshop.
 
 You can find the full instructions here: [set-up instructions](setup.qmd).
-
 :::
 
 ::: {.callout-tip collapse="true"}
 #### Materials
 
-- [Lecture slides](slides/w04/).
-- [Workshop tutorial](tutorials/tutorial-w04.qmd).
-- Workshop files (right-click and download):
-  - [alb_vot.csv](data/alb_vot.csv)
+-   [Lecture slides](slides/w04/).
+-   [Workshop tutorial](tutorials/tutorial-w04.qmd).
+-   Workshop files (right-click and download):
+    -   [alb_vot.csv](data/alb_vot.csv)
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -257,27 +249,24 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 **Main textbooks**
 
-- **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). [online book]
-- [ggplot2](https://ggplot2.tidyverse.org) documentation.
-- **S4LR** Ch 3 [via library].
-- **SReT** Ch 2, sparingly (we have not covered everything in the chapter yet) [via library].
-
+-   **R4DS** [Ch. 3](https://r4ds.had.co.nz/data-visualisation.html). \[online book\]
+-   [ggplot2](https://ggplot2.tidyverse.org) documentation.
+-   **S4LR** Ch 3. \[via library\]
+-   **SReT** Ch 2, sparingly (we have not covered everything in the chapter yet). \[via library\]
 :::
 
-### Week 5: Statistical models, Basics II
-
+### Week 5: Categorical predictors
 
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 1
 
-- **DUE on Thursday 16 February at NOON**.
+-   **DUE on Thursday 16 February at NOON**.
 
-- Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoelel/sqmb-f1>.
+-   Formative assessment 1 requires you to read, mutate and plot a given data set. You can preview the formative instructions here: <https://github.com/uoelel/sqmb-f1>.
 
-- We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
+-   We will use GitHub Classroom for all assessments. For an overview of how GitHub Classroom works, watch [these videos](https://youtube.com/playlist?list=PLiqxyEAY_i3kItjlvEYN1VCwHvAdP6hZW).
 
-- The GitHub Classroom invitation link can be found on Learn.
-
+-   The GitHub Classroom invitation link can be found on Learn.
 :::
 
 ::: {.callout-important collapse="false"}
@@ -285,29 +274,37 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 **Questions**
 
-- How do we model variables using categorical predictors?
-- Which are the most common coding systems for categorical predictors?
-- How do we interpret the model output when there are categorical predictors?
-- How can we quickly check model goodness?
-
+-   How do we model variables using categorical predictors?
+-   Which are the most common coding systems for categorical predictors?
+-   How do we interpret the model output when there are categorical predictors?
+-   How can we quickly check model goodness?
 
 **Skills**
 
-- Master contrast coding in R for categorical predictors.
-- Understand treatment coding.
-- Fit, interpret and plot models with a categorical predictor.
-- Reporting of model specification and results.
+-   Master contrast coding in R for categorical predictors.
+-   Understand treatment coding.
+-   Fit, interpret and plot models with a categorical predictor.
+-   Reporting of model specification and results.
 :::
 
 ::: {.callout-tip collapse="false"}
 #### Materials
 
-- [Lecture slides](slides/w05/).
-- [Workshop tutorial](tutorials/tutorial-w05.qmd).
-- Workshop files (right-click and download):
-  - [senses_valence.csv](data/senses_valence.csv)
+-   [Lecture slides](slides/w05/).
+-   [Workshop tutorial](tutorials/tutorial-w05.qmd).
+-   Workshop files (right-click and download):
+    -   [senses_valence.csv](data/senses_valence.csv)
 :::
 
+::: {.callout-tip collapse="true"}
+#### Suggested readings
+
+**Main textbooks**
+
+-   **R4DS** [Ch. 15](https://r4ds.had.co.nz/factors.html). \[online book\]
+-   **S4LR** Ch 7. \[via library\]
+-   **SReT** Sec 5.3. \[via library\]
+:::
 
 ### Flexible Learning Week
 
@@ -319,28 +316,62 @@ There is no homework as such, so take the time to revise the materials and/or ca
 There will be no classes.
 :::
 
-### Week 6: Linear models: Binary outcomes
+### Week 6: Binary outcomes
 
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 2
 
-- **DUE on Thursday 2 March at NOON**.
+-   **DUE on Thursday 2 March at NOON**.
 
-- F2 requires you to find a data table and fit a model with one continuous predictor and one categorical variable. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
+-   F2 requires you to find a data table and fit a model with one continuous predictor and one categorical variable. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
 
-- The GitHub Classroom invitation link for this assessment can be found on Learn.
-
+-   The GitHub Classroom invitation link for this assessment can be found on Learn.
 :::
 
-### Week 7: Statistical models: Intermediate I
+::: {.callout-important collapse="true"}
+#### Learning Objectives
 
-### Week 8: Statistical models: Intermediate II
+**Questions**
+
+-   How can we visualise proportions of binary outcomes (yes/no, correct/incorrect, ...)?
+-   Which distribution do binary outcomes follow?
+-   What is the relationship between probabilities and log-odds?
+-   How do we interpret log-odds and odds?
+
+**Skills**
+
+-   Plot binary data as proportions in ggplot2.
+-   Pivot data from long to wide and vice versa with tidyr.
+-   Fit, interpret and plot linear models with binary outcome variables, using the Bernoulli distribution family.
+-   Convert between log-odds, odds and probabilities.
+:::
+
+### Week 7: Interactions between predictors
+
+::: {.callout-important collapse="true"}
+#### Learning Objectives
+
+**Questions**
+
+-   How can we model the effects of multiple predictors?
+-   How do we model interactions between two predictors?
+-   How do we represent interactions using formulae?
+-   What is a factorial design?
+
+**Skills**
+
+-   Join two or more data tables together using dplyr.
+-   Run and interpret models with multiple predictors.
+-   Interpret interactions between two predictors.
+-   Plot posterior and conditional probabilities from models with interactions.
+:::
+
+### Week 8: Continuous predictors
 
 ::: {.callout-warning collapse="false"}
 #### Formative assessment 3
 
 Info to follow.
-
 :::
 
 ### Week 9: Statistical inference
@@ -351,7 +382,6 @@ Info to follow.
 #### Summative assessment 1
 
 Info to follow.
-
 :::
 
 ### Thursday 27 April
@@ -360,5 +390,4 @@ Info to follow.
 #### Summative assessment 2
 
 Info to follow.
-
 :::

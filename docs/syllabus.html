@@ -112,12 +112,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#week-1-quantitative-methods-and-uncertainty" id="toc-week-1-quantitative-methods-and-uncertainty" class="nav-link" data-scroll-target="#week-1-quantitative-methods-and-uncertainty">Week 1: Quantitative methods and uncertainty</a></li>
   <li><a href="#week-2-data-wrangling" id="toc-week-2-data-wrangling" class="nav-link" data-scroll-target="#week-2-data-wrangling">Week 2: Data wrangling</a></li>
   <li><a href="#week-3-data-visualisation" id="toc-week-3-data-visualisation" class="nav-link" data-scroll-target="#week-3-data-visualisation">Week 3: Data visualisation</a></li>
-  <li><a href="#week-4-statistical-models-basics-i" id="toc-week-4-statistical-models-basics-i" class="nav-link" data-scroll-target="#week-4-statistical-models-basics-i">Week 4: Statistical models, Basics I</a></li>
-  <li><a href="#week-5-statistical-models-basics-ii" id="toc-week-5-statistical-models-basics-ii" class="nav-link" data-scroll-target="#week-5-statistical-models-basics-ii">Week 5: Statistical models, Basics II</a></li>
+  <li><a href="#week-4-statistical-modeling-basics" id="toc-week-4-statistical-modeling-basics" class="nav-link" data-scroll-target="#week-4-statistical-modeling-basics">Week 4: Statistical modeling basics</a></li>
+  <li><a href="#week-5-categorical-predictors" id="toc-week-5-categorical-predictors" class="nav-link" data-scroll-target="#week-5-categorical-predictors">Week 5: Categorical predictors</a></li>
   <li><a href="#flexible-learning-week" id="toc-flexible-learning-week" class="nav-link" data-scroll-target="#flexible-learning-week">Flexible Learning Week</a></li>
-  <li><a href="#week-6-linear-models-binary-outcomes" id="toc-week-6-linear-models-binary-outcomes" class="nav-link" data-scroll-target="#week-6-linear-models-binary-outcomes">Week 6: Linear models: Binary outcomes</a></li>
-  <li><a href="#week-7-statistical-models-intermediate-i" id="toc-week-7-statistical-models-intermediate-i" class="nav-link" data-scroll-target="#week-7-statistical-models-intermediate-i">Week 7: Statistical models: Intermediate I</a></li>
-  <li><a href="#week-8-statistical-models-intermediate-ii" id="toc-week-8-statistical-models-intermediate-ii" class="nav-link" data-scroll-target="#week-8-statistical-models-intermediate-ii">Week 8: Statistical models: Intermediate II</a></li>
+  <li><a href="#week-6-binary-outcomes" id="toc-week-6-binary-outcomes" class="nav-link" data-scroll-target="#week-6-binary-outcomes">Week 6: Binary outcomes</a></li>
+  <li><a href="#week-7-interactions-between-predictors" id="toc-week-7-interactions-between-predictors" class="nav-link" data-scroll-target="#week-7-interactions-between-predictors">Week 7: Interactions between predictors</a></li>
+  <li><a href="#week-8-continuous-predictors" id="toc-week-8-continuous-predictors" class="nav-link" data-scroll-target="#week-8-continuous-predictors">Week 8: Continuous predictors</a></li>
   <li><a href="#week-9-statistical-inference" id="toc-week-9-statistical-inference" class="nav-link" data-scroll-target="#week-9-statistical-inference">Week 9: Statistical inference</a></li>
   <li><a href="#thursday-30-march" id="toc-thursday-30-march" class="nav-link" data-scroll-target="#thursday-30-march">Thursday 30 March</a></li>
   <li><a href="#thursday-27-april" id="toc-thursday-27-april" class="nav-link" data-scroll-target="#thursday-27-april">Thursday 27 April</a></li>
@@ -469,8 +469,8 @@ Suggested readings
 </div>
 </div>
 </section>
-<section id="week-4-statistical-models-basics-i" class="level3">
-<h3 class="anchored" data-anchor-id="week-4-statistical-models-basics-i">Week 4: Statistical models, Basics I</h3>
+<section id="week-4-statistical-modeling-basics" class="level3">
+<h3 class="anchored" data-anchor-id="week-4-statistical-modeling-basics">Week 4: Statistical modeling basics</h3>
 <div class="callout-important callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -558,15 +558,15 @@ Suggested readings
 <ul>
 <li><strong>R4DS</strong> <a href="https://r4ds.had.co.nz/data-visualisation.html">Ch. 3</a>. [online book]</li>
 <li><a href="https://ggplot2.tidyverse.org">ggplot2</a> documentation.</li>
-<li><strong>S4LR</strong> Ch 3 [via library].</li>
-<li><strong>SReT</strong> Ch 2, sparingly (we have not covered everything in the chapter yet) [via library].</li>
+<li><strong>S4LR</strong> Ch 3. [via library]</li>
+<li><strong>SReT</strong> Ch 2, sparingly (we have not covered everything in the chapter yet). [via library]</li>
 </ul>
 </div>
 </div>
 </div>
 </section>
-<section id="week-5-statistical-models-basics-ii" class="level3">
-<h3 class="anchored" data-anchor-id="week-5-statistical-models-basics-ii">Week 5: Statistical models, Basics II</h3>
+<section id="week-5-categorical-predictors" class="level3">
+<h3 class="anchored" data-anchor-id="week-5-categorical-predictors">Week 5: Categorical predictors</h3>
 <div class="callout-warning callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -640,11 +640,32 @@ Materials
 </div>
 </div>
 </div>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Suggested readings
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Main textbooks</strong></p>
+<ul>
+<li><strong>R4DS</strong> <a href="https://r4ds.had.co.nz/factors.html">Ch. 15</a>. [online book]</li>
+<li><strong>S4LR</strong> Ch 7. [via library]</li>
+<li><strong>SReT</strong> Sec 5.3. [via library]</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 <section id="flexible-learning-week" class="level3">
 <h3 class="anchored" data-anchor-id="flexible-learning-week">Flexible Learning Week</h3>
 <div class="callout-note callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -653,7 +674,7 @@ Homework
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>There is no homework as such, so take the time to revise the materials and/or catch up with the previous weeks’ materials.</p>
 <p>There will be no classes.</p>
@@ -661,10 +682,10 @@ Homework
 </div>
 </div>
 </section>
-<section id="week-6-linear-models-binary-outcomes" class="level3">
-<h3 class="anchored" data-anchor-id="week-6-linear-models-binary-outcomes">Week 6: Linear models: Binary outcomes</h3>
+<section id="week-6-binary-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="week-6-binary-outcomes">Week 6: Binary outcomes</h3>
 <div class="callout-warning callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -673,7 +694,7 @@ Formative assessment 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-20" class="callout-20-contents callout-collapse collapse show">
+<div id="callout-21" class="callout-21-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <ul>
 <li><p><strong>DUE on Thursday 2 March at NOON</strong>.</p></li>
@@ -683,14 +704,72 @@ Formative assessment 2
 </div>
 </div>
 </div>
+<div class="callout-important callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How can we visualise proportions of binary outcomes (yes/no, correct/incorrect, …)?</li>
+<li>Which distribution do binary outcomes follow?</li>
+<li>What is the relationship between probabilities and log-odds?</li>
+<li>How do we interpret log-odds and odds?</li>
+</ul>
+<p><strong>Skills</strong></p>
+<ul>
+<li>Plot binary data as proportions in ggplot2.</li>
+<li>Pivot data from long to wide and vice versa with tidyr.</li>
+<li>Fit, interpret and plot linear models with binary outcome variables, using the Bernoulli distribution family.</li>
+<li>Convert between log-odds, odds and probabilities.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
-<section id="week-7-statistical-models-intermediate-i" class="level3">
-<h3 class="anchored" data-anchor-id="week-7-statistical-models-intermediate-i">Week 7: Statistical models: Intermediate I</h3>
+<section id="week-7-interactions-between-predictors" class="level3">
+<h3 class="anchored" data-anchor-id="week-7-interactions-between-predictors">Week 7: Interactions between predictors</h3>
+<div class="callout-important callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How can we model the effects of multiple predictors?</li>
+<li>How do we model interactions between two predictors?</li>
+<li>How do we represent interactions using formulae?</li>
+<li>What is a factorial design?</li>
+</ul>
+<p><strong>Skills</strong></p>
+<ul>
+<li>Join two or more data tables together using dplyr.</li>
+<li>Run and interpret models with multiple predictors.</li>
+<li>Interpret interactions between two predictors.</li>
+<li>Plot posterior and conditional probabilities from models with interactions.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
-<section id="week-8-statistical-models-intermediate-ii" class="level3">
-<h3 class="anchored" data-anchor-id="week-8-statistical-models-intermediate-ii">Week 8: Statistical models: Intermediate II</h3>
+<section id="week-8-continuous-predictors" class="level3">
+<h3 class="anchored" data-anchor-id="week-8-continuous-predictors">Week 8: Continuous predictors</h3>
 <div class="callout-warning callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -699,7 +778,7 @@ Formative assessment 3
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-21" class="callout-21-contents callout-collapse collapse show">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Info to follow.</p>
 </div>
@@ -712,7 +791,7 @@ Formative assessment 3
 <section id="thursday-30-march" class="level3">
 <h3 class="anchored" data-anchor-id="thursday-30-march">Thursday 30 March</h3>
 <div class="callout-warning callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -721,7 +800,7 @@ Summative assessment 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-22" class="callout-22-contents callout-collapse collapse show">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Info to follow.</p>
 </div>
@@ -731,7 +810,7 @@ Summative assessment 1
 <section id="thursday-27-april" class="level3">
 <h3 class="anchored" data-anchor-id="thursday-27-april">Thursday 27 April</h3>
 <div class="callout-warning callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -740,7 +819,7 @@ Summative assessment 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse show">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Info to follow.</p>
 </div>

@@ -1,0 +1,634 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 6 - Binary outcomes"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2023/03/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+```
+
+```{r read-data}
+shallow <- read_csv("data/shallow.csv") %>%
+  filter(
+    Group == "L1",
+    Branching == "Left",
+    Critical_Filler == "Critical",
+    RT > 0
+  ) %>%
+  mutate(
+    Accuracy = ifelse(ACC == 1, "correct", "incorrect")
+  )
+```
+
+## Summary from last week
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+...
+
+- `outcome ~ predictor`
+]
+
+---
+
+layout: true
+
+## Binary outcomes
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Morphological processing**
+
+- English L1 and L2 participants (L2 participants are native speakers of Cantonese).
+
+- **Lexical decision task** (word vs non-word).
+
+- Each trial:
+
+  - **Prime**: *prolong* (unrelated), *unkind* (constituent), *kindness* (non-constituent).
+
+  - **Target**: *unkindness* ([[un]-[kind]]-ness).
+
+- Reaction times and accuracy.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We will focus on accuracy (correct identification of real word) for L1 participants.
+]
+
+---
+
+```{r shal}
+shallow %>%
+  ggplot(aes(Relation_type, fill = Accuracy)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Proportion of correct vs incorrect responses",
+    x = "Prime relation type",
+    y = "Proportion"
+  )
+```
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Binary variables follow the **Bernoulli distribution**.
+
+- The Bernoulli distribution has one parameter: $p$.
+
+$$Bernoulli(p)$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Let's assume $B$ is a binary variable, whose values are $a$ or $b$.
+
+  - $p$ is the probability that $B = b$.
+
+  - $q$ is the probability that $B = a$, i.e. $1 - p$.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**No rain vs rain**
+
+- Probability $p$ that tomorrow rains is 0.7 (70% probability), probability $q$ that tomorrow does not rain is $1 - 0.7 = 0.3$ (30% probability).
+]
+
+---
+
+.f3[
+$$
+\begin{aligned}
+\text{acc} &\sim Bernoulli(p) \\
+p &=\text{ ...}
+\end{aligned}
+$$
+]
+
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- Accuracy $\text{acc}$ is a binary variable: incorrect vs correct.
+
+- $p$ is the probability of obtaining a "correct" response.
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Alas, we cannot model probabilities **directly**, because they are bounded between 0 and 1. We need to covert them to something else so that they are not bounded.
+]
+
+---
+
+.f3[
+$$
+\begin{aligned}
+\text{acc} &\sim Bernoulli(p) \\
+logit(p) &=\text{ ...}
+\end{aligned}
+$$
+]
+
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- The **logit** (*log*istic un*it*) function converts probabilities to **log-odds**.
+
+- The model can work with log-odds because they are not bounded.
+
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- The **logistic** function converts log-odds to **probabilities**.
+
+- The logistic function is the *inverse* of the logit function.
+
+]
+
+---
+
+layout: false
+layout: true
+
+## Probabilities and log-odds
+
+---
+
+```{r p-log-odds, warning=FALSE}
+dots <- tibble(
+  p = seq(0.1, 0.9, by = 0.1),
+  log_odds = qlogis(p)
+)
+
+tibble(
+  p = seq(0, 1, by = 0.001),
+  log_odds = qlogis(p)
+) %>%
+  ggplot(aes(log_odds, p)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed") +
+  geom_hline(yintercept = 0, colour = "#8856a7", size = 1) +
+  geom_hline(yintercept = 1, colour = "#8856a7", size = 1) +
+  geom_vline(xintercept = 0, alpha = 0.5) +
+  geom_line(size = 2) +
+  # geom_point(data = dots, size = 4) +
+  geom_point(x = 0, y = 0.5, colour = "#8856a7", size = 4) +
+  scale_x_continuous(breaks = seq(-6, 6, by = 1), minor_breaks = NULL, limits = c(-6, 6)) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.1), minor_breaks = NULL) +
+  labs(
+    title = "Correspondence between log-odds and probabilities",
+    x = "Log-odds",
+    y = "Probability"
+  )
+```
+
+???
+
+On logit vs logistic function: <https://stats.stackexchange.com/a/120364>.
+
+---
+
+Use `qlogis()` (logit function) to go from probabilities to log-odds.
+
+```{r qlogis, echo=TRUE}
+qlogis(0.3)
+qlogis(0.5)
+qlogis(0.7)
+```
+
+---
+
+Use `plogis()` (logistic function) to go from log-odds to probabilities.
+
+```{r plogis, echo=TRUE}
+plogis(-1)
+plogis(0)
+plogis(1)
+```
+
+---
+
+layout: false
+layout: true
+
+## Binary outcomes
+
+---
+
+.f3[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & \sim Gaussian(\mu, \sigma)
+\end{aligned}
+$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- The units of $Gaussian(\mu, \sigma)$ are log-odds.
+
+- The estimates in the model summary will be in log-odds.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+But first let's order the levels in `Accuracy` as `"incorrect", "correct"`!
+
+- We do this because we want to estimate $p$ so that it is the probability of getting a "correct" response.
+]
+
+---
+
+```{r acc-ord, echo=TRUE}
+shallow <- shallow %>%
+  mutate(
+    Accuracy = factor(Accuracy, level = c("incorrect", "correct"))
+  )
+
+levels(shallow$Accuracy)
+```
+
+
+
+---
+
+Let's start small (intercept-only model).
+
+```{r acc-bm, echo=TRUE}
+acc_bm <- brm(
+  Accuracy ~ 1,
+  family = bernoulli(),
+  data = shallow,
+  backend = "cmdstanr",
+  file = "data/cache/acc_bm"
+)
+```
+
+---
+
+```{r acc-summ, echo=TRUE}
+summary(acc_bm)
+```
+
+---
+
+```{r acc-summ-2}
+cat(capture.output(summary(acc_bm))[8:10], sep = "\n")
+```
+
+
+<br>
+<br>
+
+.pull-left[
+- **Intercept**: $logit(p)$.
+
+- **Estimate**: $\mu = 1.32$ log-odds.
+
+- **Est.Error**: $\sigma = 0.11$ log-odds.
+]
+
+.pull-right[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & \sim Gaussian(1.32, 0.11)
+\end{aligned}
+$$
+]
+
+---
+
+```{r acc-int}
+acc_bm_draws <- as_draws_df(acc_bm)
+int_dens_l <- density(acc_bm_draws$b_Intercept, adjust = 1.5)
+int_dens <- tibble(
+  x = int_dens_l$x,
+  y = int_dens_l$y
+)
+
+ci_low <- 1.11
+ci_hi <- 1.53
+label_y <- 3.75
+
+int_dens %>%
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1) +
+  scale_x_continuous(n.breaks = 6) +
+  labs(
+    title = expression(Probability~distribution~of~logit(p)),
+    x = expression(logit(p)), y = "Probability density"
+  ) +
+  ylim(0, 4) +
+  geom_ribbon(
+    aes(x = ifelse(x >= ci_low & x <= ci_hi, x, NA), ymin = 0, ymax = y),
+    fill = "#9970ab",
+    alpha = 0.4
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_hi, y = label_y, yend = label_y,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate(
+    "segment",
+    x = ci_low, xend = ci_low, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate(
+    "segment",
+    x = ci_hi, xend = ci_hi, y = 0, yend = label_y,
+    linetype = "dashed"
+  ) +
+  annotate("label", x = ci_low + (ci_hi-ci_low)/2, y = label_y, label = "95% CrI")
+```
+
+There is a 95% probability that the log-odds of the probability of getting a "correct" response are between `r ci_low` and `r ci_hi`.
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- There is a 95% probability that the log-odds of the probability of getting a "correct" response are between `r ci_low` and `r ci_hi`.
+
+- Or in probability terms, there is a 95% probability that the probability of getting a "correct" response is between `r round(plogis(ci_low), 2)` and `r round(plogis(ci_hi), 2)`.
+]
+
+--
+
+<br>
+
+```{r acc-int-prob, echo=TRUE}
+round(plogis(1.11), 2)
+
+round(plogis(1.53), 2)
+```
+
+---
+
+layout: false
+layout: true
+
+## Accuracy by relation type
+
+---
+
+```{r rel-ord, echo=TRUE}
+shallow <- shallow %>%
+  mutate(
+    Relation_type = factor(Relation_type, level = c("Unrelated", "NonConstituent", "Constituent"))
+  )
+
+levels(shallow$Relation_type)
+```
+
+
+---
+
+.f3[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+```{r acc-bm-2, echo=TRUE}
+acc_bm_2 <- brm(
+  Accuracy ~ Relation_type,
+  family = bernoulli(),
+  data = shallow,
+  backend = "cmdstanr",
+  file = "data/cache/acc_bm_2"
+)
+```
+
+---
+
+```{r acc-bm-2-summ}
+cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
+```
+
+<br>
+<br>
+
+.pull-left[
+- **Intercept**: $\beta_0$.
+
+- **Estimate**: $\mu = 1.02$ log-odds.
+
+- **Est.Error**: $\sigma = 0.17$ log-odds.
+]
+
+.pull-right[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 & \sim Gaussian(1.02, 0.17) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+--
+
+We can be 95% confident that the log-odds of getting a "correct" response when the relation type is unrelated is between 0.71 and 1.36, which corresponds to a probability between `r round(plogis(0.71), 2)` and `r round(plogis(1.36), 2)`.
+
+---
+
+```{r acc-bm-2-summ-2}
+cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
+```
+
+<br>
+<br>
+
+.pull-left[
+- **Intercept**: $\beta_0$.
+
+- **Estimate**: $\mu = 0.19$ log-odds.
+
+- **Est.Error**: $\sigma = 0.25$ log-odds.
+]
+
+.pull-right[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 & \sim Gaussian(1.02, 0.17) \\
+\beta_1 & \sim Gaussian(0.19, 0.25) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+--
+
+We can be 95% confident that when the relation type is non-constituent there is a change in log-odds between -0.3 and +0.67.
+
+---
+
+```{r acc-bm-2-summ-3}
+cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
+```
+
+<br>
+<br>
+
+```{r plog, echo=TRUE}
+round(plogis(1.02), 2)
+round(plogis(1.02+0.19), 2)
+```
+
+On average, the probability of getting a "correct" response when relation type is non-constituent is **4 percentage points higher** than the probability when relation type is unrelated.
+
+---
+
+```{r acc-bm-2-summ-4}
+cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
+```
+
+<br>
+
+```{r plog-2, echo=TRUE}
+round(plogis(0.71), 2); round(plogis(0.71-0.3), 2)
+round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
+```
+
+---
+
+```{r acc-bm-2-draws}
+acc_bm_2_draws <- as_draws_df(acc_bm_2) %>%
+  mutate(
+    Unrelated = b_Intercept,
+    NonConstituent = b_Intercept + b_Relation_typeNonConstituent,
+    Constituent = b_Intercept + b_Relation_typeConstituent
+  ) %>%
+  select(Unrelated:Constituent) %>%
+  pivot_longer(Unrelated:Constituent, "Relation_type") %>%
+  mutate(
+    Relation_type = factor(Relation_type, level = c("Unrelated", "NonConstituent", "Constituent"))
+  )
+```
+
+```{r acc-bm-2-cond}
+acc_bm_2_draws %>%
+  filter(Relation_type != "Constituent") %>%
+  ggplot(aes(plogis(value), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Conditional posterior probability of 'correct' response",
+    x = "Probability", y = "Probability density"
+  )
+```
+
+---
+
+```{r acc-bm-2-summ-5}
+cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
+```
+
+<br>
+
+There is a 95% probability that when the relation type is constituent there is an increase in log-odds between 0.3 and 1.42.
+
+```{r plog-3, echo=TRUE}
+round(plogis(0.71), 2); round(plogis(0.71+0.3), 2)
+round(plogis(1.36), 2); round(plogis(1.36+1.42), 2)
+```
+
+---
+
+```{r acc-bm-2-cond-2}
+acc_bm_2_draws %>%
+  ggplot(aes(plogis(value), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Conditional posterior probability of 'correct' response",
+    x = "Probability", y = "Probability density"
+  )
+```
+
+---
+
+layout: false
+layout: true
+
+## Credible intervals
+
+---
+
+```{r acc-bm-2-quant, echo=TRUE}
+library(posterior)
+
+acc_bm_2_draws %>%
+  group_by(Relation_type) %>%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.025),
+    q95_hi = quantile2(value, probs = 0.95),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+

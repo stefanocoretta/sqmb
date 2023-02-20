@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S2)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Stefano Coretta" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="../xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="../custom.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S2)
+]
+.subtitle[
+## Week 6 - Binary outcomes
+]
+.author[
+### Dr Stefano Coretta
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2023/03/01
+]
+
+---
+
+
+
+
+
+
+## Summary from last week
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+...
+
+- `outcome ~ predictor`
+]
+
+---
+
+layout: true
+
+## Binary outcomes
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Morphological processing**
+
+- English L1 and L2 participants (L2 participants are native speakers of Cantonese).
+
+- **Lexical decision task** (word vs non-word).
+
+- Each trial:
+
+  - **Prime**: *prolong* (unrelated), *unkind* (constituent), *kindness* (non-constituent).
+
+  - **Target**: *unkindness* ([[un]-[kind]]-ness).
+
+- Reaction times and accuracy.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We will focus on accuracy (correct identification of real word) for L1 participants.
+]
+
+---
+
+&lt;img src="index_files/figure-html/shal-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Binary variables follow the **Bernoulli distribution**.
+
+- The Bernoulli distribution has one parameter: `\(p\)`.
+
+`$$Bernoulli(p)$$`
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- Let's assume `\(B\)` is a binary variable, whose values are `\(a\)` or `\(b\)`.
+
+  - `\(p\)` is the probability that `\(B = b\)`.
+
+  - `\(q\)` is the probability that `\(B = a\)`, i.e. `\(1 - p\)`.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**No rain vs rain**
+
+- Probability `\(p\)` that tomorrow rains is 0.7 (70% probability), probability `\(q\)` that tomorrow does not rain is `\(1 - 0.7 = 0.3\)` (30% probability).
+]
+
+---
+
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp;\sim Bernoulli(p) \\
+p &amp;=\text{ ...}
+\end{aligned}`
+$$
+]
+
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- Accuracy `\(\text{acc}\)` is a binary variable: incorrect vs correct.
+
+- `\(p\)` is the probability of obtaining a "correct" response.
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Alas, we cannot model probabilities **directly**, because they are bounded between 0 and 1. We need to covert them to something else so that they are not bounded.
+]
+
+---
+
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp;\sim Bernoulli(p) \\
+logit(p) &amp;=\text{ ...}
+\end{aligned}`
+$$
+]
+
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- The **logit** (*log*istic un*it*) function converts probabilities to **log-odds**.
+
+- The model can work with log-odds because they are not bounded.
+
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- The **logistic** function converts log-odds to **probabilities**.
+
+- The logistic function is the *inverse* of the logit function.
+
+]
+
+---
+
+layout: false
+layout: true
+
+## Probabilities and log-odds
+
+---
+
+&lt;img src="index_files/figure-html/p-log-odds-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+???
+
+On logit vs logistic function: &lt;https://stats.stackexchange.com/a/120364&gt;.
+
+---
+
+Use `qlogis()` (logit function) to go from probabilities to log-odds.
+
+
+```r
+qlogis(0.3)
+```
+
+```
+## [1] -0.8472979
+```
+
+```r
+qlogis(0.5)
+```
+
+```
+## [1] 0
+```
+
+```r
+qlogis(0.7)
+```
+
+```
+## [1] 0.8472979
+```
+
+---
+
+Use `plogis()` (logistic function) to go from log-odds to probabilities.
+
+
+```r
+plogis(-1)
+```
+
+```
+## [1] 0.2689414
+```
+
+```r
+plogis(0)
+```
+
+```
+## [1] 0.5
+```
+
+```r
+plogis(1)
+```
+
+```
+## [1] 0.7310586
+```
+
+---
+
+layout: false
+layout: true
+
+## Binary outcomes
+
+---
+
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; \sim Gaussian(\mu, \sigma)
+\end{aligned}`
+$$
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- The units of `\(Gaussian(\mu, \sigma)\)` are log-odds.
+
+- The estimates in the model summary will be in log-odds.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+But first let's order the levels in `Accuracy` as `"incorrect", "correct"`!
+
+- We do this because we want to estimate `\(p\)` so that it is the probability of getting a "correct" response.
+]
+
+---
+
+
+```r
+shallow &lt;- shallow %&gt;%
+  mutate(
+    Accuracy = factor(Accuracy, level = c("incorrect", "correct"))
+  )
+
+levels(shallow$Accuracy)
+```
+
+```
+## [1] "incorrect" "correct"
+```
+
+
+
+---
+
+Let's start small (intercept-only model).
+
+
+```r
+acc_bm &lt;- brm(
+  Accuracy ~ 1,
+  family = bernoulli(),
+  data = shallow,
+  backend = "cmdstanr",
+  file = "data/cache/acc_bm"
+)
+```
+
+---
+
+
+```r
+summary(acc_bm)
+```
+
+```
+##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: Accuracy ~ 1 
+##    Data: shallow (Number of observations: 518) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     1.32      0.11     1.11     1.53 1.00     1218     1913
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+
+
+```
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept     1.32      0.11     1.11     1.53 1.00     1218     1913
+```
+
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **Intercept**: `\(logit(p)\)`.
+
+- **Estimate**: `\(\mu = 1.32\)` log-odds.
+
+- **Est.Error**: `\(\sigma = 0.11\)` log-odds.
+]
+
+.pull-right[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; \sim Gaussian(1.32, 0.11)
+\end{aligned}`
+$$
+]
+
+---
+
+&lt;img src="index_files/figure-html/acc-int-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+There is a 95% probability that the log-odds of the probability of getting a "correct" response are between 1.11 and 1.53.
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- There is a 95% probability that the log-odds of the probability of getting a "correct" response are between 1.11 and 1.53.
+
+- Or in probability terms, there is a 95% probability that the probability of getting a "correct" response is between 0.75 and 0.82.
+]
+
+--
+
+&lt;br&gt;
+
+
+```r
+round(plogis(1.11), 2)
+```
+
+```
+## [1] 0.75
+```
+
+```r
+round(plogis(1.53), 2)
+```
+
+```
+## [1] 0.82
+```
+
+---
+
+layout: false
+layout: true
+
+## Accuracy by relation type
+
+---
+
+
+```r
+shallow &lt;- shallow %&gt;%
+  mutate(
+    Relation_type = factor(Relation_type, level = c("Unrelated", "NonConstituent", "Constituent"))
+  )
+
+levels(shallow$Relation_type)
+```
+
+```
+## [1] "Unrelated"      "NonConstituent" "Constituent"
+```
+
+
+---
+
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+
+```r
+acc_bm_2 &lt;- brm(
+  Accuracy ~ Relation_type,
+  family = bernoulli(),
+  data = shallow,
+  backend = "cmdstanr",
+  file = "data/cache/acc_bm_2"
+)
+```
+
+---
+
+
+```
+## Population-Level Effects: 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **Intercept**: `\(\beta_0\)`.
+
+- **Estimate**: `\(\mu = 1.02\)` log-odds.
+
+- **Est.Error**: `\(\sigma = 0.17\)` log-odds.
+]
+
+.pull-right[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 &amp; \sim Gaussian(1.02, 0.17) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+--
+
+We can be 95% confident that the log-odds of getting a "correct" response when the relation type is unrelated is between 0.71 and 1.36, which corresponds to a probability between 0.67 and 0.8.
+
+---
+
+
+```
+## Population-Level Effects: 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+.pull-left[
+- **Intercept**: `\(\beta_0\)`.
+
+- **Estimate**: `\(\mu = 0.19\)` log-odds.
+
+- **Est.Error**: `\(\sigma = 0.25\)` log-odds.
+]
+
+.pull-right[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+\beta_0 &amp; \sim Gaussian(1.02, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.19, 0.25) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+--
+
+We can be 95% confident that when the relation type is non-constituent there is a change in log-odds between -0.3 and +0.67.
+
+---
+
+
+```
+## Population-Level Effects: 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+```
+
+&lt;br&gt;
+&lt;br&gt;
+
+
+```r
+round(plogis(1.02), 2)
+```
+
+```
+## [1] 0.73
+```
+
+```r
+round(plogis(1.02+0.19), 2)
+```
+
+```
+## [1] 0.77
+```
+
+On average, the probability of getting a "correct" response when relation type is non-constituent is **4 percentage points higher** than the probability when relation type is unrelated.
+
+---
+
+
+```
+## Population-Level Effects: 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+```
+
+&lt;br&gt;
+
+
+```r
+round(plogis(0.71), 2); round(plogis(0.71-0.3), 2)
+```
+
+```
+## [1] 0.67
+```
+
+```
+## [1] 0.6
+```
+
+```r
+round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
+```
+
+```
+## [1] 0.8
+```
+
+```
+## [1] 0.88
+```
+
+---
+
+
+
+&lt;img src="index_files/figure-html/acc-bm-2-cond-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```
+## Population-Level Effects: 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+```
+
+&lt;br&gt;
+
+There is a 95% probability that when the relation type is constituent there is an increase in log-odds between 0.3 and 1.42.
+
+
+```r
+round(plogis(0.71), 2); round(plogis(0.71+0.3), 2)
+```
+
+```
+## [1] 0.67
+```
+
+```
+## [1] 0.73
+```
+
+```r
+round(plogis(1.36), 2); round(plogis(1.36+1.42), 2)
+```
+
+```
+## [1] 0.8
+```
+
+```
+## [1] 0.94
+```
+
+---
+
+&lt;img src="index_files/figure-html/acc-bm-2-cond-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+library(posterior)
+
+acc_bm_2_draws %&gt;%
+  group_by(Relation_type) %&gt;%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.025),
+    q95_hi = quantile2(value, probs = 0.95),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+```
+## # A tibble: 3 × 5
+##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
+##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Unrelated       0.705   1.31     0.67     0.79
+## 2 NonConstituent  0.853   1.51     0.7      0.82
+## 3 Constituent     1.44    2.26     0.81     0.91
+```
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

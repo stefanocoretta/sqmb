@@ -27,7 +27,7 @@ See below for details.
 
 **Statistical modelling**
 
-- F2 requires you to find a data table and fit a model with one continuous predictor and one categorical variable. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
+- F2 requires you to find a data table and fit a model with one continuous outcome and one categorical predictor. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
 
 - The GitHub Classroom invitation link for this assessment can be found on Learn.
 

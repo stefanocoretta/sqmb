@@ -646,6 +646,151 @@ round(plogis(1.36), 2); round(plogis(1.36+1.42), 2)
 
 ---
 
+layout: false
+layout: true
+
+## The empirical rule
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- What are credible intervals?
+
+- What is the relation between credible intervals and so-called quantiles?
+
+- How can we obtain credible intervals with any posterior distribution?
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Empirical rule**
+]
+
+
+???
+
+Aka the 68–95–99.7 rule
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-0-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/empirical-rule-5-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+???
+
+As a general rule, `\(\pm2\sigma\)` covers 95% of the Gaussian distribution, which means we are 95% confident that the value lies within that range.
+
+---
+
+layout: false
+layout: true
+
+## Quantiles
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Quantiles** are cut points that divide a continuous probability distribution into intervals with equal probability.
+
+- Common quantiles:
+
+  - Quartiles (4 intervals).
+  
+  - Percentiles or centiles (100 intervals).
+]
+
+---
+
+&lt;img src="index_files/figure-html/quartiles-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/quart-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/quart-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/quart-3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/centiles-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/cent-96-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/cent-95-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/cent-80-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/cent-60-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Credible intervals
+
+---
+
+
+```r
+acc_bm_2_draws
+```
+
+```
+## # A tibble: 12,000 × 2
+##    Relation_type  value
+##    &lt;fct&gt;          &lt;dbl&gt;
+##  1 Unrelated      0.773
+##  2 NonConstituent 1.16 
+##  3 Constituent    2.18 
+##  4 Unrelated      1.22 
+##  5 NonConstituent 1.32 
+##  6 Constituent    1.92 
+##  7 Unrelated      0.881
+##  8 NonConstituent 1.46 
+##  9 Constituent    1.55 
+## 10 Unrelated      0.845
+## # … with 11,990 more rows
+```
+
+---
+
+**95% CrI**
+
 
 ```r
 library(posterior)
@@ -654,7 +799,7 @@ acc_bm_2_draws %&gt;%
   group_by(Relation_type) %&gt;%
   summarise(
     q95_lo = quantile2(value, probs = 0.025),
-    q95_hi = quantile2(value, probs = 0.95),
+    q95_hi = quantile2(value, probs = 0.975),
     p_q95_lo = round(plogis(q95_lo), 2),
     p_q95_hi = round(plogis(q95_hi), 2)
   )
@@ -664,11 +809,100 @@ acc_bm_2_draws %&gt;%
 ## # A tibble: 3 × 5
 ##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
 ##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 Unrelated       0.705   1.31     0.67     0.79
-## 2 NonConstituent  0.853   1.51     0.7      0.82
-## 3 Constituent     1.44    2.26     0.81     0.91
+## 1 Unrelated       0.705   1.36     0.67     0.8 
+## 2 NonConstituent  0.853   1.57     0.7      0.83
+## 3 Constituent     1.44    2.35     0.81     0.91
 ```
 
+- `prob = 0.025` is the 2.5 centile.
+- `prob = 0.975` is the 97.5 centile.
+- `0.975 - 0.025 = 0.95`, i.e. 95% CrI!
+
+---
+
+**80% CrI**
+
+
+```r
+library(posterior)
+
+acc_bm_2_draws %&gt;%
+  group_by(Relation_type) %&gt;%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.1),
+    q95_hi = quantile2(value, probs = 0.9),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+```
+## # A tibble: 3 × 5
+##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
+##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Unrelated       0.803   1.24     0.69     0.78
+## 2 NonConstituent  0.973   1.44     0.73     0.81
+## 3 Constituent     1.59    2.18     0.83     0.9
+```
+
+- `prob = 0.1` is the 10th centile.
+- `prob = 0.9` is the 90th centile.
+- `0.9 - 0.1 = 0.8`, i.e. 80% CrI!
+
+---
+
+**60% CrI**
+
+
+```r
+library(posterior)
+
+acc_bm_2_draws %&gt;%
+  group_by(Relation_type) %&gt;%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.2),
+    q95_hi = quantile2(value, probs = 0.8),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+```
+## # A tibble: 3 × 5
+##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
+##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Unrelated       0.873   1.16     0.71     0.76
+## 2 NonConstituent  1.05    1.36     0.74     0.8 
+## 3 Constituent     1.68    2.07     0.84     0.89
+```
+
+- `prob = 0.2` is the 10th centile.
+- `prob = 0.8` is the 80th centile.
+- `0.8 - 0.3 = 0.6`, i.e. 60% CrI!
+
+---
+
+layout: false
+
+## Summary
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Binary outcomes** with `brm()`
+
+  - Use the `bernoulli()` distribution family.
+  - Coefficients are in log-odds.
+
+- Probabilities and log-odds
+
+  - Probabilities are transformed in log-odds using the logit function.
+  - 50% probability = 0 log-odds.
+
+- **Credible intervals**
+
+  - Empirical rule.
+  - Quantiles, quartiles and (per)centiles.
+  - Credible intervals.
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

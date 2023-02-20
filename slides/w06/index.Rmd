@@ -615,9 +615,332 @@ acc_bm_2_draws %>%
 layout: false
 layout: true
 
+## The empirical rule
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- What are credible intervals?
+
+- What is the relation between credible intervals and so-called quantiles?
+
+- How can we obtain credible intervals with any posterior distribution?
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Empirical rule**
+]
+
+
+???
+
+Aka the 68–95–99.7 rule
+
+---
+
+```{r empirical-rule-0, echo=FALSE}
+x <- seq(-4, 4, by = 0.01)
+y = dnorm(x, 0, 1)
+
+ger_1 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  # scale_x_continuous(breaks = c(-4:4), labels = c("", expression(paste(-3, sigma)), expression(paste(-2, sigma)), expression(paste(-1, sigma)), expression(paste(mu)), expression(paste(+1, sigma)), expression(paste(+2, sigma)), expression(paste(+3, sigma)), "")) +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank()
+  ) +
+  labs(
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  )
+ger_1
+```
+
+---
+
+```{r empirical-rule-1, echo=FALSE}
+x <- seq(-4, 4, by = 0.01)
+y = dnorm(x, 0, 1)
+
+ger_1 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  scale_x_continuous(breaks = c(-4:4), labels = c("", expression(paste(-3, sigma)), expression(paste(-2, sigma)), expression(paste(-1, sigma)), expression(paste(mu)), expression(paste(+1, sigma)), expression(paste(+2, sigma)), expression(paste(+3, sigma)), "")) +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank()
+  ) +
+  labs(
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  )
+ger_1
+```
+
+---
+
+```{r empirical-rule-2, echo=FALSE}
+ger_1 +
+  geom_ribbon(aes(x = ifelse(x >= -1 & x <= 1, x, NA), ymin = 0, ymax = y), alpha = 0.7, fill = "#8970FF") +
+  annotate(
+    "segment",
+    x = -1, xend = 1, y = 0.45, yend = 0.45,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.45, label = "68%") +
+  geom_line(size = 2, colour = "#FFA70B")
+```
+
+---
+
+```{r empirical-rule-3, echo=FALSE}
+ger_1 +
+  geom_ribbon(aes(x = ifelse(x >= -2 & x <= 2, x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF") +
+annotate(
+    "segment",
+    x = -2, xend = 2, y = 0.5, yend = 0.5,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.50, label = "95%") +
+  geom_line(size = 2, colour = "#FFA70B")
+```
+
+
+---
+
+```{r empirical-rule-4, echo=FALSE}
+ger_1 +
+  geom_ribbon(aes(x = x, ymin = 0, ymax = y), alpha = 0.3, fill = "#8970FF") +
+  annotate(
+    "segment",
+    x = -3, xend = 3, y = 0.55, yend = 0.55,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.55, label = "99.7 ≈ 100%") +
+  geom_line(size = 2, colour = "#FFA70B")
+```
+
+---
+
+```{r empirical-rule-5, echo=FALSE}
+x <- seq(-4, 4, by = 0.01)
+y = dnorm(x, 0, 1)
+ggplot() +
+  aes(x, y) +
+  geom_ribbon(aes(x = x, ymin = 0, ymax = y), alpha = 0.3, fill = "#8970FF") +
+  geom_ribbon(aes(x = ifelse(x >= -2 & x <= 2, x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF") +
+  geom_ribbon(aes(x = ifelse(x >= -1 & x <= 1, x, NA), ymin = 0, ymax = y), alpha = 0.7, fill = "#8970FF") +
+  geom_line(size = 2, colour = "#FFA70B") +
+  annotate(
+    "segment",
+    x = -1, xend = 1, y = 0.45, yend = 0.45,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.45, label = "68%") +
+  annotate(
+    "segment",
+    x = -2, xend = 2, y = 0.5, yend = 0.5,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.50, label = "95%") +
+  annotate(
+    "segment",
+    x = -3, xend = 3, y = 0.55, yend = 0.55,
+    arrow = arrow(ends = "both", angle = 90, length = unit(.2, "cm")),
+    size = 1
+  ) +
+  annotate("label", x = 0, y = 0.55, label = "99.7 ≈ 100%") +
+  scale_x_continuous(breaks = c(-4:4), labels = c("", expression(paste(-3, sigma)), expression(paste(-2, sigma)), expression(paste(-1, sigma)), expression(paste(mu)), expression(paste(+1, sigma)), expression(paste(+2, sigma)), expression(paste(+3, sigma)), "")) +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  )
+```
+
+???
+
+As a general rule, $\pm2\sigma$ covers 95% of the Gaussian distribution, which means we are 95% confident that the value lies within that range.
+
+---
+
+layout: false
+layout: true
+
+## Quantiles
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Quantiles** are cut points that divide a continuous probability distribution into intervals with equal probability.
+
+- Common quantiles:
+
+  - Quartiles (4 intervals).
+  
+  - Percentiles or centiles (100 intervals).
+]
+
+---
+
+```{r quartiles, echo=FALSE}
+x <- seq(-4, 4, by = 0.01)
+y = dnorm(x, 0, 1)
+
+quant_1 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  geom_vline(xintercept = qnorm(c(0.25, 0.5, 0.75)), linetype = "dashed") +
+  annotate("label", x = qnorm(c(0.25, 0.5, 0.75)), y = 0.5, label = c("1st quartile", "2nd quartile", "3rd quartile")) +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  )
+quant_1
+```
+
+---
+
+```{r quart-1, echo=FALSE}
+quant_1 +
+  geom_ribbon(aes(x = ifelse(x < qnorm(0.25), x, NA), ymin = 0, ymax = y), alpha = 0.7, fill = "#8970FF") +
+  geom_ribbon(aes(x = ifelse(x > qnorm(0.25), x, NA), ymin = 0, ymax = y), alpha = 0.2, fill = "#8970FF") +
+  annotate("label", x = -1.25, y = 0.05, label = "25%") +
+  annotate("label", x = 1.25, y = 0.05, label = "75%")
+```
+
+---
+
+```{r quart-2, echo=FALSE}
+quant_1 +
+  geom_ribbon(aes(x = ifelse(x < qnorm(0.5), x, NA), ymin = 0, ymax = y), alpha = 0.7, fill = "#8970FF") +
+  geom_ribbon(aes(x = ifelse(x > qnorm(0.5), x, NA), ymin = 0, ymax = y), alpha = 0.2, fill = "#8970FF") +
+  annotate("label", x = -1.25, y = 0.05, label = "50%") +
+  annotate("label", x = 1.25, y = 0.05, label = "50%")
+```
+
+---
+
+```{r quart-3, echo=FALSE}
+quant_1 +
+  geom_ribbon(aes(x = ifelse(x < qnorm(0.75), x, NA), ymin = 0, ymax = y), alpha = 0.7, fill = "#8970FF") +
+  geom_ribbon(aes(x = ifelse(x > qnorm(0.75), x, NA), ymin = 0, ymax = y), alpha = 0.2, fill = "#8970FF") +
+  annotate("label", x = -1.25, y = 0.05, label = "75%") +
+  annotate("label", x = 1.25, y = 0.05, label = "25%")
+```
+
+---
+
+```{r centiles, echo=FALSE}
+x <- seq(-4, 4, by = 0.01)
+y = dnorm(x, 0, 1)
+
+quant_1 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  geom_vline(xintercept = qnorm(c(0.02, 0.5, 0.98)), linetype = "dashed") +
+  annotate("label", x = qnorm(c(0.02, 0.5, 0.98)), y = 0.5, label = c("2n centile", "50th centile", "98th centile")) +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  )
+quant_1
+```
+
+---
+
+```{r cent-96}
+quant_1 +
+  geom_ribbon(aes(x = ifelse(x >= qnorm(0.02) & x <= qnorm(0.98), x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF") +
+  annotate("label", x = 0, y = 0.05, label = "96%")
+```
+
+---
+
+```{r cent-95}
+quant_2 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  geom_vline(xintercept = qnorm(c(0.025, 0.975)), linetype = "dashed") +
+  annotate("label", x = qnorm(c(0.025, 0.975)), y = 0.5, label = c("2.5 centile", "97.5 centile")) +
+  annotate("label", x = 0, y = 0.05, label = "95%") +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  ) +
+  geom_ribbon(aes(x = ifelse(x >= qnorm(0.025) & x <= qnorm(0.975), x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF")
+quant_2
+```
+
+---
+
+```{r cent-80}
+quant_3 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  geom_vline(xintercept = qnorm(c(0.1, 0.9)), linetype = "dashed") +
+  annotate("label", x = qnorm(c(0.1, 0.9)), y = 0.5, label = c("10th centile", "90th centile")) +
+  annotate("label", x = 0, y = 0.05, label = "80%") +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  ) +
+  geom_ribbon(aes(x = ifelse(x >= qnorm(0.1) & x <= qnorm(0.9), x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF")
+quant_3
+```
+
+---
+
+```{r cent-60}
+quant_4 <- ggplot() +
+  aes(x, y) +
+  geom_line(size = 2, colour = "#FFA70B") +
+  geom_vline(xintercept = qnorm(c(0.2, 0.8)), linetype = "dashed") +
+  annotate("label", x = qnorm(c(0.2, 0.8)), y = 0.5, label = c("20th centile", "80th centile")) +
+  annotate("label", x = 0, y = 0.05, label = "80%") +
+  ylim(0, 0.6) +
+  labs(
+    x = element_blank(), y = element_blank(),
+    title = "The Standard Gaussian distribution",
+    subtitle = expression(paste(mu, "=", 0, ", ", sigma, "=", 1))
+  ) +
+  geom_ribbon(aes(x = ifelse(x >= qnorm(0.2) & x <= qnorm(0.8), x, NA), ymin = 0, ymax = y), alpha = 0.4, fill = "#8970FF")
+quant_4
+```
+
+---
+
+layout: false
+layout: true
+
 ## Credible intervals
 
 ---
+
+```{r acc-bm-2-draws-2, echo=TRUE}
+acc_bm_2_draws
+```
+
+---
+
+**95% CrI**
 
 ```{r acc-bm-2-quant, echo=TRUE}
 library(posterior)
@@ -626,9 +949,78 @@ acc_bm_2_draws %>%
   group_by(Relation_type) %>%
   summarise(
     q95_lo = quantile2(value, probs = 0.025),
-    q95_hi = quantile2(value, probs = 0.95),
+    q95_hi = quantile2(value, probs = 0.975),
     p_q95_lo = round(plogis(q95_lo), 2),
     p_q95_hi = round(plogis(q95_hi), 2)
   )
 ```
 
+- `prob = 0.025` is the 2.5 centile.
+- `prob = 0.975` is the 97.5 centile.
+- `0.975 - 0.025 = 0.95`, i.e. 95% CrI!
+
+---
+
+**80% CrI**
+
+```{r acc-bm-2-quant-1, echo=TRUE}
+library(posterior)
+
+acc_bm_2_draws %>%
+  group_by(Relation_type) %>%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.1),
+    q95_hi = quantile2(value, probs = 0.9),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+- `prob = 0.1` is the 10th centile.
+- `prob = 0.9` is the 90th centile.
+- `0.9 - 0.1 = 0.8`, i.e. 80% CrI!
+
+---
+
+**60% CrI**
+
+```{r acc-bm-2-quant-2, echo=TRUE}
+library(posterior)
+
+acc_bm_2_draws %>%
+  group_by(Relation_type) %>%
+  summarise(
+    q95_lo = quantile2(value, probs = 0.2),
+    q95_hi = quantile2(value, probs = 0.8),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+- `prob = 0.2` is the 10th centile.
+- `prob = 0.8` is the 80th centile.
+- `0.8 - 0.3 = 0.6`, i.e. 60% CrI!
+
+---
+
+layout: false
+
+## Summary
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Binary outcomes** with `brm()`
+
+  - Use the `bernoulli()` distribution family.
+  - Coefficients are in log-odds.
+
+- Probabilities and log-odds
+
+  - Probabilities are transformed in log-odds using the logit function.
+  - 50% probability = 0 log-odds.
+
+- **Credible intervals**
+
+  - Empirical rule.
+  - Quantiles, quartiles and (per)centiles.
+  - Credible intervals.
+]

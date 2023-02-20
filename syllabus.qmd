@@ -257,7 +257,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 ### Week 5: Categorical predictors
 
-::: {.callout-warning collapse="false"}
+::: {.callout-warning collapse="true"}
 #### Formative assessment 1
 
 -   **DUE on Thursday 16 February at NOON**.
@@ -269,7 +269,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 -   The GitHub Classroom invitation link can be found on Learn.
 :::
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -287,7 +287,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 -   Reporting of model specification and results.
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 -   [Lecture slides](slides/w05/).
@@ -308,7 +308,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 ### Flexible Learning Week
 
-::: {.callout-note collapse="true"}
+::: {.callout-note collapse="false"}
 #### Homework
 
 There is no homework as such, so take the time to revise the materials and/or catch up with the previous weeks' materials.
@@ -328,7 +328,7 @@ There will be no classes.
 -   The GitHub Classroom invitation link for this assessment can be found on Learn.
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -344,6 +344,15 @@ There will be no classes.
 -   Pivot data from long to wide and vice versa with tidyr.
 -   Fit, interpret and plot linear models with binary outcome variables, using the Bernoulli distribution family.
 -   Convert between log-odds, odds and probabilities.
+:::
+
+::: {.callout-tip collapse="false"}
+#### Materials
+
+-   [Lecture slides](slides/w06/).
+<!-- -   [Workshop tutorial](tutorials/tutorial-w05.qmd). -->
+<!-- -   Workshop files (right-click and download): -->
+<!--     -   [senses_valence.csv](data/senses_valence.csv) -->
 :::
 
 ### Week 7: Interactions between predictors

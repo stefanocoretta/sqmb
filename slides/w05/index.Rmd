@@ -717,7 +717,7 @@ pp_check(hnr_bm, nsamples = 50)
 layout: false
 class: center middle reverse
 
-# MID-TERM COURSE EVALUATION
+## MID-TERM COURSE EVALUATION
 
 ---
 
@@ -1054,6 +1054,8 @@ When [stop = t], the probability distribution of the difference between $\mu_{\t
 ]
 
 ---
+
+layout: false
 
 ## Summary
 

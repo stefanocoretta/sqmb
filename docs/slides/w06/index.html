@@ -44,9 +44,21 @@ class: center, middle, inverse, title-slide
 ## Summary from last week
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-...
+- **Comparing groups** with `brm()`
 
-- `outcome ~ predictor`
+  - `outcome ~ predictor`.
+  - Categorical predictor with 2 and 3 levels.
+
+- **Treatment coding** of categorical predictors.
+
+  - N-1 **dummy variables**, where N is number of levels in the predictor.
+  - Level ordering is *alphabetical* but you can specify your own.
+  - **NOTE**: you don't have to apply treatment coding yourself! It's done under the hood by R.
+
+- **Remember**
+
+  - The **Intercept** `\(\beta_0\)` is the mean of the reference level.
+  - The other `\(\beta\)`'s are the **difference** of the other levels relative to the reference level.
 ]
 
 ---
@@ -452,10 +464,10 @@ acc_bm_2 &lt;- brm(
 
 ```
 ## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999
 ```
 
 &lt;br&gt;
@@ -490,10 +502,10 @@ We can be 95% confident that the log-odds of getting a "correct" response when t
 
 ```
 ## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999
 ```
 
 &lt;br&gt;
@@ -528,10 +540,10 @@ We can be 95% confident that when the relation type is non-constituent there is 
 
 ```
 ## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999
 ```
 
 &lt;br&gt;
@@ -561,10 +573,10 @@ On average, the probability of getting a "correct" response when relation type i
 
 ```
 ## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999
 ```
 
 &lt;br&gt;
@@ -605,10 +617,10 @@ round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
 
 ```
 ## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                       1.02      0.17     0.71     1.36 1.00     2777
+## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948
+## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999
 ```
 
 &lt;br&gt;

@@ -350,9 +350,9 @@ There will be no classes.
 #### Materials
 
 -   [Lecture slides](slides/w06/).
-<!-- -   [Workshop tutorial](tutorials/tutorial-w05.qmd). -->
-<!-- -   Workshop files (right-click and download): -->
-<!--     -   [senses_valence.csv](data/senses_valence.csv) -->
+-   [Workshop tutorial](tutorials/tutorial-w06.qmd).
+-   Workshop files (right-click and download):
+    -   [takete_maluma.txt](data/takete_maluma.txt).
 :::
 
 ### Week 7: Interactions between predictors

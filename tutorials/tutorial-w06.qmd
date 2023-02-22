@@ -12,6 +12,7 @@ execute:
 
 library(tidyverse)
 theme_set(theme_light())
+library(posterior)
 
 library(brms)
 library(broom.mixed)
@@ -374,6 +375,76 @@ resp_bm_draws_l %>%
 
 We can be quite confident that different stimuli result in different probabilities of choosing "takete" and that it is very much more probable that participants choose "takete" when the stimulus is in fact of the "takete" type!
 
-### Credible intervals
+## Credible intervals
 
-...
+In the lecture, we learnt about the empirical rule, quantiles and credible intervals.
+
+Now let's look in more details how to obtain credible intervals (CrIs) for any probability distribution.
+
+For sake of illustration, let's calculate CrIs of different levels (60%, 80%, 90%), for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).
+
+The following code uses the `quantile2()` function from the [posterior](https://mc-stan.org/posterior/) package.
+
+The posterior package should already be installed, but if not make sure you install it (to know if a package is installed, go to the Packages tab in the bottom-right panel of RStudio and use the search box).
+
+Then you also need to **attach the package**. Add the code for attaching packages in the `setup` chunk and make sure you run the chunk to attach the package!
+
+We also need the draws from the model `resp_bm1` in the longer format. We have already obtained those above, in `resp_bm_draws_l`.
+
+```{r}
+#| label: 60-cri
+
+resp_bm_draws_l %>%
+  group_by(Stimulus) %>%
+  summarise(
+    # Calculate the lower and upper bounds of a 60% CrI
+    q95_lo = round(quantile2(logodds, probs = 0.2), 2),
+    q95_hi = round(quantile2(logodds, probs = 0.8), 2),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+```
+
+We have already seen `group_by()` and `summarise()` before, so I leave understanding this part to you.
+
+The new piece of code is `quantile2(logodds, probs = 0.2)` and `quantile2(logodds, probs = 0.8)`:
+
+-   The `quantile2()` function gives you the percentile based on the specified probability (the `probs` argument). So `probs = 0.2` returns the 20th percentile and `probs = 0.8` returns the 80th percentile.
+-   The `round()` function is used to round numbers to the nearest integer or decimal:
+    -   The second argument of `round()` is the number of digits you want to round to, here `2`.
+-   Finally, we convert log-odds to probabilities with the `plogis()` function.
+
+The output of the code gives us the 80% CrI of the probability of obtaining a "takete" response when the stimulus is "maluma" and "takete" respectively, both in log-odds and probabilities.
+
+Based on the output we can say the following:
+
+> We can be 60% confident that the probability of a "takete" response is between 28% and 33% (-0.94 to -0.69 in log-odds) with the "maluma" stimuli and it is between 70% and 75% with the "takete" stimuli.
+
+Nice!
+
+Now I leave to you calculating the 80% and 90% CrIs. Can you tell which values to use with the `probs` argument for an 80% and 90% interval?
+
+## Summary
+
+::: {.callout-note appearance="minimal"}
+**Read and process data**
+
+-   Use `read_tsv() for tab separated files.`
+
+-   `case_when()` is a more flexible version of `ifelse()` that allows you to specify multiple values based on multiple conditions.
+
+-   The pivot functions allow you to reshape the data. `pivot_longer()` makes the data table longer by moving the names of specified columns into a column of its own and by moving the values to a column of its own. Check out `pivot_wider()` for the opposite procedure.
+
+**Modelling**
+
+-   We can model binary outcomes with `brm(family = bernoulli)`.
+
+-   To make your analysis reproducible set a seed using the `seed` argument and save the model to a file using the `file` argument.
+
+-   You can transform log-odds back to probabilities using the `plogis()` function.
+
+**Credible intervals**
+
+-   Calculate the lower and upper bounds of CrIs using the `quantile2()` function from the [posterior](https://github.com/stan-dev/posterior) package.
+:::

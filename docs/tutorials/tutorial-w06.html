@@ -188,8 +188,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#posterior-probability-distributions" id="toc-posterior-probability-distributions" class="nav-link" data-scroll-target="#posterior-probability-distributions">Posterior probability distributions</a></li>
   <li><a href="#conditional-posterior-probability-distributions" id="toc-conditional-posterior-probability-distributions" class="nav-link" data-scroll-target="#conditional-posterior-probability-distributions">Conditional posterior probability distributions</a></li>
-  <li><a href="#credible-intervals" id="toc-credible-intervals" class="nav-link" data-scroll-target="#credible-intervals">Credible intervals</a></li>
   </ul></li>
+  <li><a href="#credible-intervals" id="toc-credible-intervals" class="nav-link" data-scroll-target="#credible-intervals">Credible intervals</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -213,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-hash="tutorial-w06_cache/html/pkgs_8d4b2d1d4491a20524c5a875181ea878">
+<div class="cell" data-hash="tutorial-w06_cache/html/pkgs_69a4a75cf8323a4b2c5b7eff7fa8bacf">
 
 </div>
 <section id="takete-and-maluma" class="level2">
@@ -478,12 +479,83 @@ Takete       0.93
 </div>
 <p>We can be quite confident that different stimuli result in different probabilities of choosing “takete” and that it is very much more probable that participants choose “takete” when the stimulus is in fact of the “takete” type!</p>
 </section>
-<section id="credible-intervals" class="level3">
-<h3 class="anchored" data-anchor-id="credible-intervals">Credible intervals</h3>
-<p>…</p>
-
-
 </section>
+<section id="credible-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="credible-intervals">Credible intervals</h2>
+<p>In the lecture, we learnt about the empirical rule, quantiles and credible intervals.</p>
+<p>Now let’s look in more details how to obtain credible intervals (CrIs) for any probability distribution.</p>
+<p>For sake of illustration, let’s calculate CrIs of different levels (60%, 80%, 90%), for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).</p>
+<p>The following code uses the <code>quantile2()</code> function from the <a href="https://mc-stan.org/posterior/">posterior</a> package.</p>
+<p>The posterior package should already be installed, but if not make sure you install it (to know if a package is installed, go to the Packages tab in the bottom-right panel of RStudio and use the search box).</p>
+<p>Then you also need to <strong>attach the package</strong>. Add the code for attaching packages in the <code>setup</code> chunk and make sure you run the chunk to attach the package!</p>
+<p>We also need the draws from the model <code>resp_bm1</code> in the longer format. We have already obtained those above, in <code>resp_bm_draws_l</code>.</p>
+<div class="cell" data-hash="tutorial-w06_cache/html/60-cri_15c36c4705d25d3d0d83ec6e4f3bc26b">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stimulus) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the lower and upper bounds of a 60% CrI</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_lo =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.2</span>), <span class="dv">2</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_hi =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.8</span>), <span class="dv">2</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform into probabilities</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q95_lo =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q95_lo), <span class="dv">2</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q95_hi =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q95_hi), <span class="dv">2</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Stimulus"],"name":[1],"type":["chr"],"align":["left"]},{"label":["q95_lo"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["q95_hi"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["p_q95_lo"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p_q95_hi"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Maluma","2":"-0.94","3":"-0.69","4":"0.28","5":"0.33"},{"1":"Takete","2":"0.85","3":"1.09","4":"0.70","5":"0.75"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We have already seen <code>group_by()</code> and <code>summarise()</code> before, so I leave understanding this part to you.</p>
+<p>The new piece of code is <code>quantile2(logodds, probs = 0.2)</code> and <code>quantile2(logodds, probs = 0.8)</code>:</p>
+<ul>
+<li>The <code>quantile2()</code> function gives you the percentile based on the specified probability (the <code>probs</code> argument). So <code>probs = 0.2</code> returns the 20th percentile and <code>probs = 0.8</code> returns the 80th percentile.</li>
+<li>The <code>round()</code> function is used to round numbers to the nearest integer or decimal:
+<ul>
+<li>The second argument of <code>round()</code> is the number of digits you want to round to, here <code>2</code>.</li>
+</ul></li>
+<li>Finally, we convert log-odds to probabilities with the <code>plogis()</code> function.</li>
+</ul>
+<p>The output of the code gives us the 80% CrI of the probability of obtaining a “takete” response when the stimulus is “maluma” and “takete” respectively, both in log-odds and probabilities.</p>
+<p>Based on the output we can say the following:</p>
+<blockquote class="blockquote">
+<p>We can be 60% confident that the probability of a “takete” response is between 28% and 33% (-0.94 to -0.69 in log-odds) with the “maluma” stimuli and it is between 70% and 75% with the “takete” stimuli.</p>
+</blockquote>
+<p>Nice!</p>
+<p>Now I leave to you calculating the 80% and 90% CrIs. Can you tell which values to use with the <code>probs</code> argument for an 80% and 90% interval?</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Read and process data</strong></p>
+<ul>
+<li><p>Use <code>read_tsv() for tab separated files.</code></p></li>
+<li><p><code>case_when()</code> is a more flexible version of <code>ifelse()</code> that allows you to specify multiple values based on multiple conditions.</p></li>
+<li><p>The pivot functions allow you to reshape the data. <code>pivot_longer()</code> makes the data table longer by moving the names of specified columns into a column of its own and by moving the values to a column of its own. Check out <code>pivot_wider()</code> for the opposite procedure.</p></li>
+</ul>
+<p><strong>Modelling</strong></p>
+<ul>
+<li><p>We can model binary outcomes with <code>brm(family = bernoulli)</code>.</p></li>
+<li><p>To make your analysis reproducible set a seed using the <code>seed</code> argument and save the model to a file using the <code>file</code> argument.</p></li>
+<li><p>You can transform log-odds back to probabilities using the <code>plogis()</code> function.</p></li>
+</ul>
+<p><strong>Credible intervals</strong></p>
+<ul>
+<li>Calculate the lower and upper bounds of CrIs using the <code>quantile2()</code> function from the <a href="https://github.com/stan-dev/posterior">posterior</a> package.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

@@ -192,6 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#ordering-levels-of-a-categorical-predictor" id="toc-ordering-levels-of-a-categorical-predictor" class="nav-link" data-scroll-target="#ordering-levels-of-a-categorical-predictor">Ordering levels of a categorical predictor</a></li>
   <li><a href="#model-rts-by-relation-type" id="toc-model-rts-by-relation-type" class="nav-link" data-scroll-target="#model-rts-by-relation-type">Model RTs by relation type</a></li>
   </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -283,8 +284,8 @@ dbl (1): Val
 \text{val} \sim Gaussian(\mu, \sigma)
 \]</span></p>
 <p>Now, we want to estimate <span class="math inline">\(\mu\)</span> so that we take into consideration whether the modality is “smell” or “taste”. In other words, we want to model valence as a function of modality, in R code <code>Val ~ Modality</code>.</p>
-<p><code>Modality</code> is a categorical variable (a <code>chr</code> character column in <code>sense_valence</code>) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since <code>Modality</code> has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it’s called <code>modality_taste</code>). <!-- EP: Saying "we need this variable" and "let's call it X" is confusing, because students might think that they have to create this variable, even though we've just said that R does all of this behind the scenes. --></p>
-<p>This is what the coding looks like:</p>
+<p><code>Modality</code> is a categorical variable (a <code>chr</code> character column in <code>sense_valence</code>) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since <code>Modality</code> has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it’s called <code>modality_taste</code>).</p>
+<p>This is what the coding would look like:</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -304,7 +305,10 @@ dbl (1): Val
 </tbody>
 </table>
 <p>(R assigns the reference level, i.e., 0, to “smell”, because “s” comes before “t” in the alphabet.)</p>
-<p>Now we allow <span class="math inline">\(\mu\)</span> to vary depending on modality. (You might recognise the form of this equation from school, where you probably saw the formula for a line: <span class="math inline">\(y = b + m \cdot x\)</span>, where <span class="math inline">\(b\)</span> is the y-intercept, and <span class="math inline">\(m\)</span> is the slope. Exact same thing here! That’s why it’s called “linear” regression).</p>
+<p>Now we allow <span class="math inline">\(\mu\)</span> to vary depending on modality.</p>
+<!-- EP: (You might recognise the form of this equation from school, where you probably saw the formula for a line: $y = b + m \cdot x$, where $b$ is the y-intercept, and $m$ is the slope. Exact same thing here! That's why it's called "linear" regression).
+SC: we have not yet mentioned it's called linear model! But we will when we talk about continuous predictors so I save the text here for the time being.
+-->
 <p><span class="math display">\[
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 \]</span></p>
@@ -319,8 +323,6 @@ dbl (1): Val
 \mu_{mod = smell} &amp;= \beta_0 \\
 \end{aligned}
 \]</span></p>
-
-<!-- EP: You originally had written here \mu_{mod = taste} = \beta_0, but based on the prose and the table, I think it should be \mu_{mod = smell}. I've made this change in the next point as well so that everything is consistent. -->
 <ul>
 <li><span class="math inline">\(\beta_1\)</span> is the <strong>difference in mean valence</strong> <span class="math inline">\(\mu\)</span> between the mean valence when [modality = smell] and the mean valence when [modality = taste]. That’s because <span class="math inline">\(modality_{Taste}\)</span> takes on the value 1 when [modality = taste], and multiplying <span class="math inline">\(\beta_1\)</span> by 1 leaves it unchanged in the equation.</li>
 </ul>
@@ -342,7 +344,6 @@ dbl (1): Val
 \end{aligned}
 \]</span></p>
 <p>So, <span class="math inline">\(\beta_1\)</span> really is the difference between the means of these two levels of <code>Modality</code>.</p>
-<!-- EP: ^ This expression with subtraction is the order you had originally—it's worth double-checking my math to make sure I didn't accidentally switch things up!-->
 <p>Now we can define the probability distributions of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
 <p><span class="math display">\[
 \beta_0 \sim Gaussian(\mu_0, \sigma_0)
@@ -424,8 +425,8 @@ ModalityTaste     0.34      0.08     0.18     0.50 1.00     3866     2984</code>
 \]</span></p>
 <p>This means that:</p>
 <ul>
-<li><p>The probability distribution of the mean valence when [modality = smell] is a Gaussian distribution with mean = 5.47 and SD = 0.06. <!-- EP: This is correct/consistent with above. --></p></li>
-<li><p>The probability distribution of the difference between the mean valence of [modality = taste] and that of [modality = smell] is a Gaussian distribution with mean = 0.34 and SD = 0.08. <!-- EP: So is this. --></p></li>
+<li><p>The probability distribution of the mean valence when [modality = smell] is a Gaussian distribution with mean = 5.47 and SD = 0.06.</p></li>
+<li><p>The probability distribution of the difference between the mean valence of [modality = taste] and that of [modality = smell] is a Gaussian distribution with mean = 0.34 and SD = 0.08.</p></li>
 </ul>
 <p>Now look at the <strong>Credible Intervals</strong> (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:</p>
 <ul>
@@ -752,9 +753,42 @@ Log-normal distribution
 <p>Check the model summary. What can you say based on the estimates and the CrIs?</p>
 <p>Plot the <em>posterior probability distributions</em> of <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> and the <em>conditional probability distributions</em> of mean log-RTs for each relation type.</p>
 <p>A hint for the conditional probability distributions: to plot these you need to <em>sum</em> the posterior draws of the beta coefficients depending on the level of relation type. Use the formula of <span class="math inline">\(\mu\)</span> to guide you: the process is the same as with the emotional valence data above, but now there are 3 levels instead of two.</p>
-
-
 </section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<div class="callout-note callout callout-style-simple no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Treatment coding</strong></p>
+<ul>
+<li>Categorical predictors need to be coded as numbers.</li>
+<li>N-1 <strong>dummy variables</strong>, where N is number of levels in the predictor.</li>
+<li>Level ordering is <em>alphabetical</em> but you can specify your own.</li>
+<li><strong>NOTE</strong>: you don’t have to apply treatment coding yourself! It’s done under the hood by R.</li>
+</ul>
+<p><strong>Interpreting coefficients</strong></p>
+<ul>
+<li>The <strong>Intercept</strong> <span class="math inline">\(\beta_0\)</span> is the mean of the reference level.</li>
+<li>The other <span class="math inline">\(\beta\)</span>’s are the <strong>difference</strong> of the other levels relative to the reference level.</li>
+</ul>
+<p><strong>Conditional posterior probability distributions</strong></p>
+<ul>
+<li>To calculate the conditional posterior probability distributions (conditional probabilities for short) you need to extract the <strong>draws</strong> of the model with <code>as_draws_df()</code>.</li>
+</ul>
+<p><strong>Log-normal distribution</strong></p>
+<ul>
+<li><p>Continuous variables that are Gaussian when transformed to logs follow the <strong>log-normal</strong> distribution.</p></li>
+<li><p>You can fit a Gaussian model to log-transformed values if the variable is log-normal.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
 </section>
 
 

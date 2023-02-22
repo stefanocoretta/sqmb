@@ -95,9 +95,9 @@ $$
 
 Now, we want to estimate $\mu$ so that we take into consideration whether the modality is "smell" or "taste". In other words, we want to model valence as a function of modality, in R code `Val ~ Modality`.
 
-`Modality` is a categorical variable (a `chr` character column in `sense_valence`) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since `Modality` has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it's called `modality_taste`). <!-- EP: Saying "we need this variable" and "let's call it X" is confusing, because students might think that they have to create this variable, even though we've just said that R does all of this behind the scenes. -->
+`Modality` is a categorical variable (a `chr` character column in `sense_valence`) so it is coded using the default treatment coding system (this is done under the hood by R for you!). Since `Modality` has 2 levels, R will create for us a N-1 = 1 dummy variable (for illustration, we can imagine that it's called `modality_taste`).
 
-This is what the coding looks like:
+This is what the coding would look like:
 
 |                  | modality_taste |
 |------------------|----------------|
@@ -106,8 +106,13 @@ This is what the coding looks like:
 
 (R assigns the reference level, i.e., 0, to "smell", because "s" comes before "t" in the alphabet.)
 
-Now we allow $\mu$ to vary depending on modality. (You might recognise the form of this equation from school, where you probably saw the formula for a line: $y = b + m \cdot x$, where $b$ is the y-intercept, and $m$ is the slope. Exact same thing here! That's why it's called "linear" regression).
+Now we allow $\mu$ to vary depending on modality.
 
+```{=html}
+<!-- EP: (You might recognise the form of this equation from school, where you probably saw the formula for a line: $y = b + m \cdot x$, where $b$ is the y-intercept, and $m$ is the slope. Exact same thing here! That's why it's called "linear" regression).
+SC: we have not yet mentioned it's called linear model! But we will when we talk about continuous predictors so I save the text here for the time being.
+-->
+```
 $$
 \mu = \beta_0 + \beta_1 \cdot modality_{Taste}
 $$
@@ -123,8 +128,6 @@ $$
 \mu_{mod = smell} &= \beta_0 \\
 \end{aligned}
 $$
-
-<!-- EP: You originally had written here \mu_{mod = taste} = \beta_0, but based on the prose and the table, I think it should be \mu_{mod = smell}. I've made this change in the next point as well so that everything is consistent. -->
 
 -   $\beta_1$ is the **difference in mean valence** $\mu$ between the mean valence when \[modality = smell\] and the mean valence when \[modality = taste\]. That's because $modality_{Taste}$ takes on the value 1 when \[modality = taste\], and multiplying $\beta_1$ by 1 leaves it unchanged in the equation.
 
@@ -147,8 +150,6 @@ $$
 $$
 
 So, $\beta_1$ really is the difference between the means of these two levels of `Modality`.
-
-<!-- EP: ^ This expression with subtraction is the order you had originally—it's worth double-checking my math to make sure I didn't accidentally switch things up!-->
 
 Now we can define the probability distributions of $\beta_0$ and $\beta_1$.
 
@@ -233,9 +234,9 @@ $$
 
 This means that:
 
--   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06. <!-- EP: This is correct/consistent with above. -->
+-   The probability distribution of the mean valence when \[modality = smell\] is a Gaussian distribution with mean = 5.47 and SD = 0.06.
 
--   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08. <!-- EP: So is this. -->
+-   The probability distribution of the difference between the mean valence of \[modality = taste\] and that of \[modality = smell\] is a Gaussian distribution with mean = 0.34 and SD = 0.08.
 
 Now look at the **Credible Intervals** (CrIs, or CI in the model summary) of the coefficients. Based on their CrIs, we can say that:
 
@@ -573,3 +574,29 @@ Check the model summary. What can you say based on the estimates and the CrIs?
 Plot the *posterior probability distributions* of $\beta_0$, $\beta_1$ and $\beta_2$ and the *conditional probability distributions* of mean log-RTs for each relation type.
 
 A hint for the conditional probability distributions: to plot these you need to *sum* the posterior draws of the beta coefficients depending on the level of relation type. Use the formula of $\mu$ to guide you: the process is the same as with the emotional valence data above, but now there are 3 levels instead of two.
+
+## Summary
+
+::: {.callout-note appearance="minimal"}
+**Treatment coding**
+
+-   Categorical predictors need to be coded as numbers.
+-   N-1 **dummy variables**, where N is number of levels in the predictor.
+-   Level ordering is *alphabetical* but you can specify your own.
+-   **NOTE**: you don't have to apply treatment coding yourself! It's done under the hood by R.
+
+**Interpreting coefficients**
+
+-   The **Intercept** $\beta_0$ is the mean of the reference level.
+-   The other $\beta$'s are the **difference** of the other levels relative to the reference level.
+
+**Conditional posterior probability distributions**
+
+-   To calculate the conditional posterior probability distributions (conditional probabilities for short) you need to extract the **draws** of the model with `as_draws_df()`.
+
+**Log-normal distribution**
+
+-   Continuous variables that are Gaussian when transformed to logs follow the **log-normal** distribution.
+
+-   You can fit a Gaussian model to log-transformed values if the variable is log-normal.
+:::

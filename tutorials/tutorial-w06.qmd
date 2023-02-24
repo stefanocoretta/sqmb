@@ -191,7 +191,7 @@ summary(resp_bm)
 
 ### Random MCMC
 
-If you compare the output of your model and the output shown here, hou might notice that the values for the estimates and error are different.
+If you compare the output of your model and the output shown here, you might notice that the values for the estimates and error are different.
 
 This is because of the random component of the MCMC algorithm: every time you re-run a Bayesian model, the results will be slightly different.
 

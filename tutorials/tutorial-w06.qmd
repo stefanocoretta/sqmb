@@ -30,7 +30,7 @@ Create a new `.Rmd` file first, save it in `code/` and name it `tutorial-w06` (t
 
 I leave to you creating title headings in your file as you please. Remember to to add `knitr::opts_knit$set(root.dir = here::here())` in the `setup` chunk and to attach the tidyverse.
 
-Go ahead and read the data. Since this file is a `.txt` file, you will have to use the `read_tsv()` function from readr, rather than the `read_csv()` function. Assign the data table to a variable called `motion`.
+Go ahead and read the data. Since this file is a `.txt` file, you will have to use the `read_tsv()` function, rather than the `read_csv()` function. (`read_tsv()` is in the package readr, which comes with the tidyverse, so you don't need to attach any extra packages for this.) Assign the data table to a variable called `motion`.
 
 ```{r}
 #| label: read-data-ex
@@ -50,7 +50,7 @@ motion <- read_tsv("data/takete_maluma.txt")
 
 The data has the following columns:
 
--   `Tal_Mal_Stim`: the stimulus (`Maluma` vs `Takete`).
+-   `Tak_Mal_Stim`: the stimulus (`Maluma` vs `Takete`).
 
 -   `Answer`: accuracy (`CORRECT` vs `WRONG`).
 
@@ -74,7 +74,9 @@ Alas, this piece of information is not coded in a column in the data, but we can
 
 Now, go ahead and create a new column called `Response` using the `mutate()` and the `case_when()` function.
 
-We have not encountered this function yet, so check out [its documentation](https://dplyr.tidyverse.org/reference/case_when.html) to learn how it works. You will also need to use the AND operator `&`: this allows you to put two statements together, like `Tak_Mal_Stim == "Takete" & Answer == "CORRECT"` for "if stimulus is Takete AND answer is CORRECT".
+We have not encountered this function yet, so here's a challenge for you: check out [its documentation](https://dplyr.tidyverse.org/reference/case_when.html) to learn how it works. You will also need to use the AND operator `&`: this allows you to put two statements together, like `Tak_Mal_Stim == "Takete" & Answer == "CORRECT"` for "if stimulus is Takete AND answer is CORRECT".
+
+(If you are following the documentation but `case_when()` is still giving you mysterious errors, make sure that your version of dplyr is the most current one. To do this, run `packageVersion("dplyr")` in the console. You want the output to be `1.1.0`. If it's not, you'll need to update tidyverse by re-installing it.)
 
 ```{r}
 #| label: resp-ex
@@ -102,9 +104,9 @@ motion <- motion %>%
 
 ```
 
-The column `Tal_Mal_Stim` has quite a long and redundant name. Let's change it to something shorter: `Stimulus`.
+The column `Tak_Mal_Stim` has quite a long and redundant name. Let's change it to something shorter: `Stimulus`.
 
-You can do so with the `rename()` function from dplyr.
+You can do so with the `rename()` function from dplyr. The new name goes on the left of the equals sign `=`, and the current name goes on the right.
 
 ```{r}
 #| label: rename
@@ -124,18 +126,18 @@ motion %>%
   select(Stimulus, Answer, Response)
 ```
 
-Plot the response by stimulus to get a descriptive picture of what the data looks like.
+Before moving on, here's another challenge: Plot the response by stimulus to get a descriptive picture of what the data looks like. In other words, make a plot that tells us something about the responses given for each kind of stimulus. (To help you along, identify what kind of data this is, and think about what kind of visualisation is appropriate for this data type.)
 
 Now we can use `Response` as our outcome variable!
 
 ## Model `Response`
 
-We want to model `Response` as a function of `Tal_Mal_Stim`. Since `Response` is binary, we have:
+We want to model `Response` as a function of `Stimulus`. Since `Response` is binary, we have:
 
 $$
 \begin{align}
 \text{Resp} & \sim Bernoulli(p) \\
-logit(p) & = \beta_0 + \beta_1 \cdot stim_{takete} \\
+logit(p) & = \beta_0 + \beta_1 \cdot \text{Stim} \\
 \beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
 \beta_1 & \sim Gaussian(\mu_1, \sigma_1)
 \end{align}
@@ -145,7 +147,7 @@ Go through the formulae above and try to understand what is going on with each.
 
 Now, it's time to model the data with `brm()` (you need to attach the brms package):
 
--   Add the formula.
+-   Add the formula (referring to lecture materials if needed).
 
 -   Specify the family and data.
 
@@ -189,7 +191,7 @@ summary(resp_bm)
 
 ### Random MCMC
 
-You might notice that the values for the estimates and error are different than what you got.
+If you compare the output of your model and the output shown here, hou might notice that the values for the estimates and error are different.
 
 This is because of the random component of the MCMC algorithm: every time you re-run a Bayesian model, the results will be slightly different.
 
@@ -209,27 +211,29 @@ Which coefficients from the formulae above do `Intercept` and `StimulusTakete` c
 
 Let's go through the `Intercept` together. I will leave working out the interpretation of `StimulusTakete` to you.
 
-Barring small differences in the results due to the random component of the MCMC, the estimate and error for the `Intercept` are -0.81 and 0.15. Do you remember from the lecture which unit are these estimates in?
+Barring small differences in the results due to the random component of the MCMC, the estimate and error for the `Intercept` are --0.81 and 0.15. Before moving on, test your recall: Do you remember from the lecture which unit are these estimates in?
 
-They are in **log-odds**. This is because of the $logit(p)$ part in the formula above: to model $p$ we had to use the **logit** (mathematical) function, which output log-odds.
+They are in **log-odds**. This is because of the $logit(p)$ part in the formula above: to model $p$ we had to use the **logit** (mathematical) function, which outputs log-odds.
 
-So now we need to convert log-odds back into probabilities and we can do that with the `plogis()` R function.
+So now, so that we can more easily interpret and report our results, we need to convert log-odds back into probabilities. We can do that with the `plogis()` R function.
 
-As an exercise, convert the estimate of the `Intercept` to probabilities. What probability does -0.81 log-odds correspond to?
+As an exercise, convert the estimate of the `Intercept` to a probability. What probability does --0.81 log-odds correspond to? Again, do this before moving on.
 
-Since the `Intercept` is $\mu_0$ from the formula above, you can say that the mean probability of $\beta_0$ is the probability that corresponds to -0.81 log-odds (which is approximately 0.3 or 30% probability).
+Since the `Intercept` is $\mu_0$ from the formula above, you can say that the mean probability of $\beta_0$ is the probability that corresponds to --0.81 log-odds (which you should have found is approximately 0.3 or 30% probability).
 
-$\beta_0$ is the probability of choosing "takete" when the stimulus is "maluma" (it should be clear why, but if not think about the order of the levels in `Response` and `Stimulus`).
+$\beta_0$ is the probability of choosing "takete" when the stimulus is "maluma". (Why? To understand this, think about the order of the levels in `Response` and `Stimulus`, and what that means for how they are coded.)
 
-Based on the model and data, there is 30% probability of choosing "takete" when the stimulus is "maluma", at 95% confidence.
+Based on the model and data, there is 30% probability of choosing the response "takete" when the stimulus is "maluma", at 95% confidence.
 
 ### `StimulusTakete`
 
-Now, what about `StimulusTakete`?
+Now, what about `StimulusTakete`? Work through this for yourself, using what you've learned so far.
 
 Which coefficient in the formula above does it correspond to? How do we interpret the posterior probability of this coefficient?
 
-What happens to the log-odds of choosing "takete" when the stimulus is "maluma"?
+How does this coefficient relate to the intercept, i.e., the log-odds of choosing "takete" when the stimulus is "maluma"?
+
+If you're feeling particularly adventurous, before you move on to the next section, compute the probability of choosing the response "takete" when the stimulus is "takete".
 
 ## Plotting
 
@@ -261,11 +265,13 @@ resp_bm_draws %>%
 
 ```
 
-And plot the density of `b_StimulusTakete`.
+And separately, plot the density of `b_StimulusTakete`.
 
 ### Conditional posterior probability distributions
 
 Now, let's plot the conditional (posterior) probability distributions of the log-odds when the stimulus is "maluma" and when it is "takete".
+
+There are a few data-manipulation steps involved before we can get our data into a format that ggplot can handle. First up, we'll use our draws to compute the conditional posterior probability distributions for each level of `Stimulus`.
 
 Do you remember how to do this? Here's a hint:
 
@@ -273,7 +279,9 @@ Do you remember how to do this? Here's a hint:
 
 -   $logit(p_{stim = takete}) = \beta_0 + \beta_1$
 
-Mutate the data, so that you have two new columns: one called `Maluma` and one called `Takete`, with the conditional log-odds of getting a "takete" response when the stimulus is "maluma" and "takete" respectively.
+Identify which parts of `resp_bm_draws` correspond to $\beta_0$ and $\beta_1$.
+
+Now, mutate the data following the equations above, so that you have two new columns: one called `Maluma` and one called `Takete`, with the conditional log-odds of getting a "takete" response when the stimulus is "maluma" and "takete" respectively.
 
 ```{r}
 #| label: cond-ex
@@ -299,9 +307,9 @@ resp_bm_draws <- resp_bm_draws %>%
 
 ```
 
-Now we can plot the conditional posterior distributions, but first let's mutate the data so that it's easier to plot!
+Now we've got the data we need for plotting the conditional posterior distributions, but it's not quite in the right format yet. So let's reformat the data so that it's easier to plot!
 
-Now, you have two columns, `Maluma` and `Takete`, each containing log-odds values. Something like:
+At this point, you should have two columns, `Maluma` and `Takete`, each containing log-odds values. Something like this (not necessarily containing these values exactly):
 
     Maluma     Takete
     -0.59      0.83
@@ -319,9 +327,9 @@ But plotting would be easier if we could have instead something like:
 
 so that you could use `logodds` as the *x*-axis and `Stimulus` as fill.
 
-We can achieve that by using the so called [pivot functions](https://tidyr.tidyverse.org/articles/pivot.html): they are very powerful functions, but we will only look at their simple use here.
+We can achieve that by using the so-called [pivot functions](https://tidyr.tidyverse.org/articles/pivot.html): they are very powerful functions, but we will only look at their simple use here.
 
-More specifically, we need the `pivot_longer()` function: this is used in cases where you have columns named after some groups and instead you want the group names to be in a column of its own while the values are in another column.
+More specifically, we need the `pivot_longer()` function: this is used in cases where you have columns named after some groups (e.g., our `Maluma` and `Takete` columns here), and instead you want the group names to be in a column of their own (e.g., one called `Stimulus`) while the values are in another column (e.g., one called `logodds`).
 
 Here's how it works (never mind the warning):
 
@@ -329,19 +337,21 @@ Here's how it works (never mind the warning):
 #| label: pivot
 
 resp_bm_draws_l <- resp_bm_draws %>%
-  # let's select the columns from .chain to Takete
+  # Let's select the columns from .chain to Takete
   select(.chain:Takete) %>%
   # Now let's pivot the Maluma and Takete columns
   pivot_longer(
     cols = Maluma:Takete,
     # Name of the column to store the original column names in
     names_to = "Stimulus",
-    # name of the column to store the original values in
+    # Name of the column to store the original values in
     values_to = "logodds"
   )
 
 resp_bm_draws_l
 ```
+
+This looks more like what we want!
 
 Now we can easily plot the conditional probability distributions of the response "takete" when the stimulus is "maluma" and "takete".
 
@@ -355,9 +365,11 @@ resp_bm_draws_l %>%
 
 ```
 
-Nice, but what we really want to know is the **probability** of choosing "takete", rather than just the log-odds.
+Now, this is well and good, but often it's easier to think about our results in terms of probabilities, rather than log-odds.
+So what do we do if we want to plot the **probability** of choosing "takete"?
+Before looking ahead, try to guess for yourself what the solution will be.
 
-Super easy! We convert log-odds into probabilities with the `plogis()` function, like so:
+It's as we've seen before! We convert log-odds into probabilities with the `plogis()` function, like so:
 
 ```{r}
 #| label: cond-plot-2
@@ -373,15 +385,18 @@ resp_bm_draws_l %>%
   )
 ```
 
-We can be quite confident that different stimuli result in different probabilities of choosing "takete" and that it is very much more probable that participants choose "takete" when the stimulus is in fact of the "takete" type!
+The distributions themselves look pretty similar, but have a look at the numbers on the x axis.
+We're back in probability space, hurrah!
+
+The take-away message from this plot: We can be quite confident that different stimuli result in different probabilities of choosing "takete", and that it is very much more probable that participants choose "takete" when the stimulus is in fact of the "takete" type!
 
 ## Credible intervals
 
 In the lecture, we learnt about the empirical rule, quantiles and credible intervals.
 
-Now let's look in more details how to obtain credible intervals (CrIs) for any probability distribution.
+Now let's look in more detail at how to obtain credible intervals (CrIs) for any probability distribution.
 
-For sake of illustration, let's calculate CrIs of different levels (60%, 80%, 90%), for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).
+For sake of illustration, let's calculate CrIs of different levels (60%, 80%, 90%) for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).
 
 The following code uses the `quantile2()` function from the [posterior](https://mc-stan.org/posterior/) package.
 
@@ -389,7 +404,7 @@ The posterior package should already be installed, but if not make sure you inst
 
 Then you also need to **attach the package**. Add the code for attaching packages in the `setup` chunk and make sure you run the chunk to attach the package!
 
-We also need the draws from the model `resp_bm1` in the longer format. We have already obtained those above, in `resp_bm_draws_l`.
+For this function, we'll again need to use the longer-format version of the draws we obtained from our model. This data is in `resp_bm_draws_l`.
 
 ```{r}
 #| label: 60-cri
@@ -398,11 +413,11 @@ resp_bm_draws_l %>%
   group_by(Stimulus) %>%
   summarise(
     # Calculate the lower and upper bounds of a 60% CrI
-    q95_lo = round(quantile2(logodds, probs = 0.2), 2),
-    q95_hi = round(quantile2(logodds, probs = 0.8), 2),
+    q60_lo = round(quantile2(logodds, probs = 0.2), 2),
+    q60_hi = round(quantile2(logodds, probs = 0.8), 2),
     # Transform into probabilities
-    p_q95_lo = round(plogis(q95_lo), 2),
-    p_q95_hi = round(plogis(q95_hi), 2)
+    p_q60_lo = round(plogis(q60_lo), 2),
+    p_q60_hi = round(plogis(q60_hi), 2)
   )
 ```
 
@@ -415,11 +430,11 @@ The new piece of code is `quantile2(logodds, probs = 0.2)` and `quantile2(logodd
     -   The second argument of `round()` is the number of digits you want to round to, here `2`.
 -   Finally, we convert log-odds to probabilities with the `plogis()` function.
 
-The output of the code gives us the 80% CrI of the probability of obtaining a "takete" response when the stimulus is "maluma" and "takete" respectively, both in log-odds and probabilities.
+The output of the code gives us the 60% CrI of the probability of obtaining a "takete" response when the stimulus is "maluma" and "takete" respectively, both in log-odds and probabilities.
 
 Based on the output we can say the following:
 
-> We can be 60% confident that the probability of a "takete" response is between 28% and 33% (-0.94 to -0.69 in log-odds) with the "maluma" stimuli and it is between 70% and 75% with the "takete" stimuli.
+> We can be 60% confident that the probability of a "takete" response is between 28% and 33% (–0.94 to –0.69 in log-odds) with the "maluma" stimuli, and it is between 70% and 75% with the "takete" stimuli.
 
 Nice!
 
@@ -430,7 +445,7 @@ Now I leave to you calculating the 80% and 90% CrIs. Can you tell which values t
 ::: {.callout-note appearance="minimal"}
 **Read and process data**
 
--   Use `read_tsv() for tab separated files.`
+-   Use `read_tsv()` for tab separated files.
 
 -   `case_when()` is a more flexible version of `ifelse()` that allows you to specify multiple values based on multiple conditions.
 
@@ -438,9 +453,9 @@ Now I leave to you calculating the 80% and 90% CrIs. Can you tell which values t
 
 **Modelling**
 
--   We can model binary outcomes with `brm(family = bernoulli)`.
+-   We can model binary outcomes with `brm(family = bernoulli())`.
 
--   To make your analysis reproducible set a seed using the `seed` argument and save the model to a file using the `file` argument.
+-   To make your analysis reproducible, set a seed using the `seed` argument and save the model to a file using the `file` argument.
 
 -   You can transform log-odds back to probabilities using the `plogis()` function.
 

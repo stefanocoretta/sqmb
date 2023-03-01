@@ -325,7 +325,7 @@ There will be no classes.
 
 -   F2 requires you to find a data table and fit a model with one continuous outcome and one categorical predictor. You can preview the instructions here: <https://github.com/uoelel/sqmb-f2>.
 
--   The GitHub Classroom invitation link for this assessment can be found on Learn.
+-   From the .Rmd file, you will render a PDF and submit it over Turnitin. You can find the link to Turnitin on Learn under Assessment \> Formative Assessment F2.
 :::
 
 ### Week 7: Binary outcomes

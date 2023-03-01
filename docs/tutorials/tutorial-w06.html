@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.313">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -226,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="read-and-process-the-data">Read and process the data</h2>
 <p>Create a new <code>.Rmd</code> file first, save it in <code>code/</code> and name it <code>tutorial-w06</code> (the extension <code>.Rmd</code> is added automatically!).</p>
 <p>I leave to you creating title headings in your file as you please. Remember to to add <code>knitr::opts_knit$set(root.dir = here::here())</code> in the <code>setup</code> chunk and to attach the tidyverse.</p>
-<p>Go ahead and read the data. Since this file is a <code>.txt</code> file, you will have to use the <code>read_tsv()</code> function from readr, rather than the <code>read_csv()</code> function. Assign the data table to a variable called <code>motion</code>.</p>
+<p>Go ahead and read the data. Since this file is a <code>.txt</code> file, you will have to use the <code>read_tsv()</code> function, rather than the <code>read_csv()</code> function. (<code>read_tsv()</code> is in the package readr, which comes with the tidyverse, so you don’t need to attach any extra packages for this.) Assign the data table to a variable called <code>motion</code>.</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/read-data-ex_f1fd52a08dc536ff253df6cf2e61f80b">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -235,7 +235,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>The data has the following columns:</p>
 <ul>
-<li><p><code>Tal_Mal_Stim</code>: the stimulus (<code>Maluma</code> vs <code>Takete</code>).</p></li>
+<li><p><code>Tak_Mal_Stim</code>: the stimulus (<code>Maluma</code> vs <code>Takete</code>).</p></li>
 <li><p><code>Answer</code>: accuracy (<code>CORRECT</code> vs <code>WRONG</code>).</p></li>
 <li><p><code>Corr_1_Wrong_0</code>: same as <code>Answer</code> but coded as <code>1</code> and <code>0</code> respectively.</p></li>
 <li><p><code>Rater</code>: study design info.</p></li>
@@ -250,7 +250,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>When the stimulus is <code>Maluma</code> and the answer is <code>WRONG</code> then the participant’s response was <code>Takete</code>.</p></li>
 </ul>
 <p>Now, go ahead and create a new column called <code>Response</code> using the <code>mutate()</code> and the <code>case_when()</code> function.</p>
-<p>We have not encountered this function yet, so check out <a href="https://dplyr.tidyverse.org/reference/case_when.html">its documentation</a> to learn how it works. You will also need to use the AND operator <code>&amp;</code>: this allows you to put two statements together, like <code>Tak_Mal_Stim == "Takete" &amp; Answer == "CORRECT"</code> for “if stimulus is Takete AND answer is CORRECT”.</p>
+<p>We have not encountered this function yet, so here’s a challenge for you: check out <a href="https://dplyr.tidyverse.org/reference/case_when.html">its documentation</a> to learn how it works. You will also need to use the AND operator <code>&amp;</code>: this allows you to put two statements together, like <code>Tak_Mal_Stim == "Takete" &amp; Answer == "CORRECT"</code> for “if stimulus is Takete AND answer is CORRECT”.</p>
+<p>(If you are following the documentation but <code>case_when()</code> is still giving you mysterious errors, make sure that your version of dplyr is the most current one. To do this, run <code>packageVersion("dplyr")</code> in the console. You want the output to be <code>1.1.0</code>. If it’s not, you’ll need to update tidyverse by re-installing it.)</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/resp-ex_b61dc147b667873df237f100df850100">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> motion <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -260,8 +261,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-hash="tutorial-w06_cache/html/resp_91b8c1c46ee3f5513e6612ab55fe9215">
 
 </div>
-<p>The column <code>Tal_Mal_Stim</code> has quite a long and redundant name. Let’s change it to something shorter: <code>Stimulus</code>.</p>
-<p>You can do so with the <code>rename()</code> function from dplyr.</p>
+<p>The column <code>Tak_Mal_Stim</code> has quite a long and redundant name. Let’s change it to something shorter: <code>Stimulus</code>.</p>
+<p>You can do so with the <code>rename()</code> function from dplyr. The new name goes on the left of the equals sign <code>=</code>, and the current name goes on the right.</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/rename_ef1ad8aec211b56c83dc3f3aaf9e19c9">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> motion <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Stimulus =</span> Tak_Mal_Stim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -280,16 +281,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p>Plot the response by stimulus to get a descriptive picture of what the data looks like.</p>
+<p>Before moving on, here’s another challenge: Plot the response by stimulus to get a descriptive picture of what the data looks like. In other words, make a plot that tells us something about the responses given for each kind of stimulus. (To help you along, identify what kind of data this is, and think about what kind of visualisation is appropriate for this data type.)</p>
 <p>Now we can use <code>Response</code> as our outcome variable!</p>
 </section>
 <section id="model-response" class="level2">
 <h2 class="anchored" data-anchor-id="model-response">Model <code>Response</code></h2>
-<p>We want to model <code>Response</code> as a function of <code>Tal_Mal_Stim</code>. Since <code>Response</code> is binary, we have:</p>
+<p>We want to model <code>Response</code> as a function of <code>Stimulus</code>. Since <code>Response</code> is binary, we have:</p>
 <p><span class="math display">\[
 \begin{align}
 \text{Resp} &amp; \sim Bernoulli(p) \\
-logit(p) &amp; = \beta_0 + \beta_1 \cdot stim_{takete} \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot \text{Stim} \\
 \beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
 \beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1)
 \end{align}
@@ -297,7 +298,7 @@ logit(p) &amp; = \beta_0 + \beta_1 \cdot stim_{takete} \\
 <p>Go through the formulae above and try to understand what is going on with each.</p>
 <p>Now, it’s time to model the data with <code>brm()</code> (you need to attach the brms package):</p>
 <ul>
-<li><p>Add the formula.</p></li>
+<li><p>Add the formula (referring to lecture materials if needed).</p></li>
 <li><p>Specify the family and data.</p></li>
 <li><p>Add <code>backend = "cmdstanr"</code>.</p></li>
 <li><p>Remember to save the model to a file using the <code>file</code> argument.</p></li>
@@ -333,7 +334,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 <section id="random-mcmc" class="level3">
 <h3 class="anchored" data-anchor-id="random-mcmc">Random MCMC</h3>
-<p>You might notice that the values for the estimates and error are different than what you got.</p>
+<p>If you compare the output of your model and the output shown here, you might notice that the values for the estimates and error are different.</p>
 <p>This is because of the random component of the MCMC algorithm: every time you re-run a Bayesian model, the results will be slightly different.</p>
 <p>One way to make your results <strong>reproducible</strong> (i.e.&nbsp;they return exactly the same values every time), is to set a <strong>seed</strong>, i.e.&nbsp;a number that is used for (pseudo-)random generation of numbers (which is used in the MCMC algorithm).</p>
 <p>The quickest way to set a seed is to use the <code>seed</code> argument of the <code>brm()</code> function. You can set to any number. Note that by saving the model output to a file with the <code>file</code> argument you are also ensuring reproducibility, as long as you don’t delete the file.</p>
@@ -347,19 +348,20 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <section id="intercept" class="level3">
 <h3 class="anchored" data-anchor-id="intercept"><code>Intercept</code></h3>
 <p>Let’s go through the <code>Intercept</code> together. I will leave working out the interpretation of <code>StimulusTakete</code> to you.</p>
-<p>Barring small differences in the results due to the random component of the MCMC, the estimate and error for the <code>Intercept</code> are -0.81 and 0.15. Do you remember from the lecture which unit are these estimates in?</p>
-<p>They are in <strong>log-odds</strong>. This is because of the <span class="math inline">\(logit(p)\)</span> part in the formula above: to model <span class="math inline">\(p\)</span> we had to use the <strong>logit</strong> (mathematical) function, which output log-odds.</p>
-<p>So now we need to convert log-odds back into probabilities and we can do that with the <code>plogis()</code> R function.</p>
-<p>As an exercise, convert the estimate of the <code>Intercept</code> to probabilities. What probability does -0.81 log-odds correspond to?</p>
-<p>Since the <code>Intercept</code> is <span class="math inline">\(\mu_0\)</span> from the formula above, you can say that the mean probability of <span class="math inline">\(\beta_0\)</span> is the probability that corresponds to -0.81 log-odds (which is approximately 0.3 or 30% probability).</p>
-<p><span class="math inline">\(\beta_0\)</span> is the probability of choosing “takete” when the stimulus is “maluma” (it should be clear why, but if not think about the order of the levels in <code>Response</code> and <code>Stimulus</code>).</p>
-<p>Based on the model and data, there is 30% probability of choosing “takete” when the stimulus is “maluma”, at 95% confidence.</p>
+<p>Barring small differences in the results due to the random component of the MCMC, the estimate and error for the <code>Intercept</code> are –0.81 and 0.15. Before moving on, test your recall: Do you remember from the lecture which unit are these estimates in?</p>
+<p>They are in <strong>log-odds</strong>. This is because of the <span class="math inline">\(logit(p)\)</span> part in the formula above: to model <span class="math inline">\(p\)</span> we had to use the <strong>logit</strong> (mathematical) function, which outputs log-odds.</p>
+<p>So now, so that we can more easily interpret and report our results, we need to convert log-odds back into probabilities. We can do that with the <code>plogis()</code> R function.</p>
+<p>As an exercise, convert the estimate of the <code>Intercept</code> to a probability. What probability does –0.81 log-odds correspond to? Again, do this before moving on.</p>
+<p>Since the <code>Intercept</code> is <span class="math inline">\(\mu_0\)</span> from the formula above, you can say that the mean probability of <span class="math inline">\(\beta_0\)</span> is the probability that corresponds to –0.81 log-odds (which you should have found is approximately 0.3 or 30% probability).</p>
+<p><span class="math inline">\(\beta_0\)</span> is the probability of choosing “takete” when the stimulus is “maluma”. (Why? To understand this, think about the order of the levels in <code>Response</code> and <code>Stimulus</code>, and what that means for how they are coded.)</p>
+<p>Based on the model and data, there is 30% probability of choosing the response “takete” when the stimulus is “maluma”, at 95% confidence.</p>
 </section>
 <section id="stimulustakete" class="level3">
 <h3 class="anchored" data-anchor-id="stimulustakete"><code>StimulusTakete</code></h3>
-<p>Now, what about <code>StimulusTakete</code>?</p>
+<p>Now, what about <code>StimulusTakete</code>? Work through this for yourself, using what you’ve learned so far.</p>
 <p>Which coefficient in the formula above does it correspond to? How do we interpret the posterior probability of this coefficient?</p>
-<p>What happens to the log-odds of choosing “takete” when the stimulus is “maluma”?</p>
+<p>How does this coefficient relate to the intercept, i.e., the log-odds of choosing “takete” when the stimulus is “maluma”?</p>
+<p>If you’re feeling particularly adventurous, before you move on to the next section, compute the probability of choosing the response “takete” when the stimulus is “takete”.</p>
 </section>
 </section>
 <section id="plotting" class="level2">
@@ -388,17 +390,19 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...) <span class="sc">+</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>And plot the density of <code>b_StimulusTakete</code>.</p>
+<p>And separately, plot the density of <code>b_StimulusTakete</code>.</p>
 </section>
 <section id="conditional-posterior-probability-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="conditional-posterior-probability-distributions">Conditional posterior probability distributions</h3>
 <p>Now, let’s plot the conditional (posterior) probability distributions of the log-odds when the stimulus is “maluma” and when it is “takete”.</p>
+<p>There are a few data-manipulation steps involved before we can get our data into a format that ggplot can handle. First up, we’ll use our draws to compute the conditional posterior probability distributions for each level of <code>Stimulus</code>.</p>
 <p>Do you remember how to do this? Here’s a hint:</p>
 <ul>
 <li><p><span class="math inline">\(logit(p_{stim = maluma}) = \beta_0\)</span></p></li>
 <li><p><span class="math inline">\(logit(p_{stim = takete}) = \beta_0 + \beta_1\)</span></p></li>
 </ul>
-<p>Mutate the data, so that you have two new columns: one called <code>Maluma</code> and one called <code>Takete</code>, with the conditional log-odds of getting a “takete” response when the stimulus is “maluma” and “takete” respectively.</p>
+<p>Identify which parts of <code>resp_bm_draws</code> correspond to <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
+<p>Now, mutate the data following the equations above, so that you have two new columns: one called <code>Maluma</code> and one called <code>Takete</code>, with the conditional log-odds of getting a “takete” response when the stimulus is “maluma” and “takete” respectively.</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/cond-ex_0bc668909b151805a1cea9c740efcc28">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws <span class="ot">&lt;-</span> resp_bm_draws <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -409,8 +413,8 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <div class="cell" data-hash="tutorial-w06_cache/html/cond_a1ef10cb3643381df2b25f0690359b45">
 
 </div>
-<p>Now we can plot the conditional posterior distributions, but first let’s mutate the data so that it’s easier to plot!</p>
-<p>Now, you have two columns, <code>Maluma</code> and <code>Takete</code>, each containing log-odds values. Something like:</p>
+<p>Now we’ve got the data we need for plotting the conditional posterior distributions, but it’s not quite in the right format yet. So let’s reformat the data so that it’s easier to plot!</p>
+<p>At this point, you should have two columns, <code>Maluma</code> and <code>Takete</code>, each containing log-odds values. Something like this (not necessarily containing these values exactly):</p>
 <pre><code>Maluma     Takete
 -0.59      0.83
 -0.53      0.93
@@ -423,19 +427,19 @@ Takete       0.83
 Takete       0.93
 ...</code></pre>
 <p>so that you could use <code>logodds</code> as the <em>x</em>-axis and <code>Stimulus</code> as fill.</p>
-<p>We can achieve that by using the so called <a href="https://tidyr.tidyverse.org/articles/pivot.html">pivot functions</a>: they are very powerful functions, but we will only look at their simple use here.</p>
-<p>More specifically, we need the <code>pivot_longer()</code> function: this is used in cases where you have columns named after some groups and instead you want the group names to be in a column of its own while the values are in another column.</p>
+<p>We can achieve that by using the so-called <a href="https://tidyr.tidyverse.org/articles/pivot.html">pivot functions</a>: they are very powerful functions, but we will only look at their simple use here.</p>
+<p>More specifically, we need the <code>pivot_longer()</code> function: this is used in cases where you have columns named after some groups (e.g., our <code>Maluma</code> and <code>Takete</code> columns here), and instead you want the group names to be in a column of their own (e.g., one called <code>Stimulus</code>) while the values are in another column (e.g., one called <code>logodds</code>).</p>
 <p>Here’s how it works (never mind the warning):</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/pivot_97b3c8a4a716a35635236e590653e1ec">
+<div class="cell" data-hash="tutorial-w06_cache/html/pivot_99f6028b12f19812529857d20e089b41">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="ot">&lt;-</span> resp_bm_draws <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># let's select the columns from .chain to Takete</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Let's select the columns from .chain to Takete</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.chain<span class="sc">:</span>Takete) <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Now let's pivot the Maluma and Takete columns</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> Maluma<span class="sc">:</span>Takete,</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Name of the column to store the original column names in</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Stimulus"</span>,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># name of the column to store the original values in</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Name of the column to store the original values in</span></span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"logodds"</span></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -451,6 +455,7 @@ Takete       0.93
 </div>
 </div>
 </div>
+<p>This looks more like what we want!</p>
 <p>Now we can easily plot the conditional probability distributions of the response “takete” when the stimulus is “maluma” and “takete”.</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/cond-plot_2aa71f3a2a97673e8a4463842e740df8">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
@@ -461,8 +466,8 @@ Takete       0.93
 <p><img src="tutorial-w06_files/figure-html/cond-plot-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Nice, but what we really want to know is the <strong>probability</strong> of choosing “takete”, rather than just the log-odds.</p>
-<p>Super easy! We convert log-odds into probabilities with the <code>plogis()</code> function, like so:</p>
+<p>Now, this is well and good, but often it’s easier to think about our results in terms of probabilities, rather than log-odds. So what do we do if we want to plot the <strong>probability</strong> of choosing “takete”? Before looking ahead, try to guess for yourself what the solution will be.</p>
+<p>It’s as we’ve seen before! We convert log-odds into probabilities with the <code>plogis()</code> function, like so:</p>
 <div class="cell" data-hash="tutorial-w06_cache/html/cond-plot-2_58ac5de04584830e94400e9d4d08538e">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -477,34 +482,35 @@ Takete       0.93
 <p><img src="tutorial-w06_files/figure-html/cond-plot-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>We can be quite confident that different stimuli result in different probabilities of choosing “takete” and that it is very much more probable that participants choose “takete” when the stimulus is in fact of the “takete” type!</p>
+<p>The distributions themselves look pretty similar, but have a look at the numbers on the x axis. We’re back in probability space, hurrah!</p>
+<p>The take-away message from this plot: We can be quite confident that different stimuli result in different probabilities of choosing “takete”, and that it is very much more probable that participants choose “takete” when the stimulus is in fact of the “takete” type!</p>
 </section>
 </section>
 <section id="credible-intervals" class="level2">
 <h2 class="anchored" data-anchor-id="credible-intervals">Credible intervals</h2>
 <p>In the lecture, we learnt about the empirical rule, quantiles and credible intervals.</p>
-<p>Now let’s look in more details how to obtain credible intervals (CrIs) for any probability distribution.</p>
-<p>For sake of illustration, let’s calculate CrIs of different levels (60%, 80%, 90%), for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).</p>
+<p>Now let’s look in more detail at how to obtain credible intervals (CrIs) for any probability distribution.</p>
+<p>For sake of illustration, let’s calculate CrIs of different levels (60%, 80%, 90%) for the conditional (posterior) probabilities of the model above. (Note that you can calculate CrIs also for the (non-conditional) posterior probability distributions).</p>
 <p>The following code uses the <code>quantile2()</code> function from the <a href="https://mc-stan.org/posterior/">posterior</a> package.</p>
 <p>The posterior package should already be installed, but if not make sure you install it (to know if a package is installed, go to the Packages tab in the bottom-right panel of RStudio and use the search box).</p>
 <p>Then you also need to <strong>attach the package</strong>. Add the code for attaching packages in the <code>setup</code> chunk and make sure you run the chunk to attach the package!</p>
-<p>We also need the draws from the model <code>resp_bm1</code> in the longer format. We have already obtained those above, in <code>resp_bm_draws_l</code>.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/60-cri_15c36c4705d25d3d0d83ec6e4f3bc26b">
+<p>For this function, we’ll again need to use the longer-format version of the draws we obtained from our model. This data is in <code>resp_bm_draws_l</code>.</p>
+<div class="cell" data-hash="tutorial-w06_cache/html/60-cri_7b9bd25645599be56977fa8d1b3c7d85">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stimulus) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the lower and upper bounds of a 60% CrI</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_lo =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.2</span>), <span class="dv">2</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">q95_hi =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.8</span>), <span class="dv">2</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">q60_lo =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.2</span>), <span class="dv">2</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">q60_hi =</span> <span class="fu">round</span>(<span class="fu">quantile2</span>(logodds, <span class="at">probs =</span> <span class="fl">0.8</span>), <span class="dv">2</span>),</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform into probabilities</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q95_lo =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q95_lo), <span class="dv">2</span>),</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q95_hi =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q95_hi), <span class="dv">2</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q60_lo =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q60_lo), <span class="dv">2</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_q60_hi =</span> <span class="fu">round</span>(<span class="fu">plogis</span>(q60_hi), <span class="dv">2</span>)</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["Stimulus"],"name":[1],"type":["chr"],"align":["left"]},{"label":["q95_lo"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["q95_hi"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["p_q95_lo"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p_q95_hi"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Maluma","2":"-0.94","3":"-0.69","4":"0.28","5":"0.33"},{"1":"Takete","2":"0.85","3":"1.09","4":"0.70","5":"0.75"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Stimulus"],"name":[1],"type":["chr"],"align":["left"]},{"label":["q60_lo"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["q60_hi"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["p_q60_lo"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p_q60_hi"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Maluma","2":"-0.94","3":"-0.69","4":"0.28","5":"0.33"},{"1":"Takete","2":"0.85","3":"1.09","4":"0.70","5":"0.75"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -519,10 +525,10 @@ Takete       0.93
 </ul></li>
 <li>Finally, we convert log-odds to probabilities with the <code>plogis()</code> function.</li>
 </ul>
-<p>The output of the code gives us the 80% CrI of the probability of obtaining a “takete” response when the stimulus is “maluma” and “takete” respectively, both in log-odds and probabilities.</p>
+<p>The output of the code gives us the 60% CrI of the probability of obtaining a “takete” response when the stimulus is “maluma” and “takete” respectively, both in log-odds and probabilities.</p>
 <p>Based on the output we can say the following:</p>
 <blockquote class="blockquote">
-<p>We can be 60% confident that the probability of a “takete” response is between 28% and 33% (-0.94 to -0.69 in log-odds) with the “maluma” stimuli and it is between 70% and 75% with the “takete” stimuli.</p>
+<p>We can be 60% confident that the probability of a “takete” response is between 28% and 33% (–0.94 to –0.69 in log-odds) with the “maluma” stimuli, and it is between 70% and 75% with the “takete” stimuli.</p>
 </blockquote>
 <p>Nice!</p>
 <p>Now I leave to you calculating the 80% and 90% CrIs. Can you tell which values to use with the <code>probs</code> argument for an 80% and 90% interval?</p>
@@ -537,14 +543,14 @@ Takete       0.93
 <div class="callout-body-container">
 <p><strong>Read and process data</strong></p>
 <ul>
-<li><p>Use <code>read_tsv() for tab separated files.</code></p></li>
+<li><p>Use <code>read_tsv()</code> for tab separated files.</p></li>
 <li><p><code>case_when()</code> is a more flexible version of <code>ifelse()</code> that allows you to specify multiple values based on multiple conditions.</p></li>
 <li><p>The pivot functions allow you to reshape the data. <code>pivot_longer()</code> makes the data table longer by moving the names of specified columns into a column of its own and by moving the values to a column of its own. Check out <code>pivot_wider()</code> for the opposite procedure.</p></li>
 </ul>
 <p><strong>Modelling</strong></p>
 <ul>
-<li><p>We can model binary outcomes with <code>brm(family = bernoulli)</code>.</p></li>
-<li><p>To make your analysis reproducible set a seed using the <code>seed</code> argument and save the model to a file using the <code>file</code> argument.</p></li>
+<li><p>We can model binary outcomes with <code>brm(family = bernoulli())</code>.</p></li>
+<li><p>To make your analysis reproducible, set a seed using the <code>seed</code> argument and save the model to a file using the <code>file</code> argument.</p></li>
 <li><p>You can transform log-odds back to probabilities using the <code>plogis()</code> function.</p></li>
 </ul>
 <p><strong>Credible intervals</strong></p>

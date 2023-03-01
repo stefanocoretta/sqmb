@@ -10,7 +10,7 @@ See below for details.
 
 ## Formative assessments
 
-::: {.callout-warning collapse="false" icon="false"}
+::: {.callout-warning collapse="true" icon="false"}
 ## Formative 1: Week 5 (**Thursday 16 February at NOON**)
 
 **Data summary and visualisation**
@@ -22,7 +22,7 @@ See below for details.
 - The GitHub Classroom invitation link can be found on Learn.
 :::
 
-::: {.callout-warning collapse="true" icon="false"}
+::: {.callout-warning collapse="false" icon="false"}
 ## Formative 2: Week 6 (**Thursday 2 March at NOON**)
 
 **Statistical modelling**

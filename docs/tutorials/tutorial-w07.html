@@ -214,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-hash="tutorial-w06_cache/html/pkgs_69a4a75cf8323a4b2c5b7eff7fa8bacf">
+<div class="cell" data-hash="tutorial-w07_cache/html/pkgs_ec92503ea48541d0089d69e2ae0b66a9">
 
 </div>
 <section id="takete-and-maluma" class="level2">
@@ -227,10 +227,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Create a new <code>.Rmd</code> file first, save it in <code>code/</code> and name it <code>tutorial-w06</code> (the extension <code>.Rmd</code> is added automatically!).</p>
 <p>I leave to you creating title headings in your file as you please. Remember to to add <code>knitr::opts_knit$set(root.dir = here::here())</code> in the <code>setup</code> chunk and to attach the tidyverse.</p>
 <p>Go ahead and read the data. Since this file is a <code>.txt</code> file, you will have to use the <code>read_tsv()</code> function, rather than the <code>read_csv()</code> function. (<code>read_tsv()</code> is in the package readr, which comes with the tidyverse, so you don’t need to attach any extra packages for this.) Assign the data table to a variable called <code>motion</code>.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/read-data-ex_f1fd52a08dc536ff253df6cf2e61f80b">
+<div class="cell" data-hash="tutorial-w07_cache/html/read-data-ex_502737be94d6cfb7cf9e18c14ebec2dc">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="tutorial-w06_cache/html/read-data_315d4ed2bcfeec9944b07624631e24d2">
+<div class="cell" data-hash="tutorial-w07_cache/html/read-data_df1a7cfaf88296a4367f6abc7bc569a5">
 
 </div>
 <p>The data has the following columns:</p>
@@ -252,23 +252,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Now, go ahead and create a new column called <code>Response</code> using the <code>mutate()</code> and the <code>case_when()</code> function.</p>
 <p>We have not encountered this function yet, so here’s a challenge for you: check out <a href="https://dplyr.tidyverse.org/reference/case_when.html">its documentation</a> to learn how it works. You will also need to use the AND operator <code>&amp;</code>: this allows you to put two statements together, like <code>Tak_Mal_Stim == "Takete" &amp; Answer == "CORRECT"</code> for “if stimulus is Takete AND answer is CORRECT”.</p>
 <p>(If you are following the documentation but <code>case_when()</code> is still giving you mysterious errors, make sure that your version of dplyr is the most current one. To do this, run <code>packageVersion("dplyr")</code> in the console. You want the output to be <code>1.1.0</code>. If it’s not, you’ll need to update tidyverse by re-installing it.)</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp-ex_b61dc147b667873df237f100df850100">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp-ex_9a6daf5bb1f8da72556babbe2de56d86">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> motion <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ...</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp_91b8c1c46ee3f5513e6612ab55fe9215">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp_6e29b507835a8f483b4b2484fcdcaebf">
 
 </div>
 <p>The column <code>Tak_Mal_Stim</code> has quite a long and redundant name. Let’s change it to something shorter: <code>Stimulus</code>.</p>
 <p>You can do so with the <code>rename()</code> function from dplyr. The new name goes on the left of the equals sign <code>=</code>, and the current name goes on the right.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/rename_ef1ad8aec211b56c83dc3f3aaf9e19c9">
+<div class="cell" data-hash="tutorial-w07_cache/html/rename_d7bf618d1e78f3fb0bb1860c95d66e31">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>motion <span class="ot">&lt;-</span> motion <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Stimulus =</span> Tak_Mal_Stim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If you have done things correctly, you should have a <code>Response</code> column that looks like this (only showing relevant columns).</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/show-resp_41631b6b1876835838d8759aa30f0f03">
+<div class="cell" data-hash="tutorial-w07_cache/html/show-resp_5bf0ee89779e04e6f9934979c9902eda">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>motion <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select() allows you to select specific columns</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Stimulus, Answer, Response)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -303,16 +303,16 @@ logit(p) &amp; = \beta_0 + \beta_1 \cdot \text{Stim} \\
 <li><p>Add <code>backend = "cmdstanr"</code>.</p></li>
 <li><p>Remember to save the model to a file using the <code>file</code> argument.</p></li>
 </ul>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp-bm-ex_70b3039fbf887f74941536c8c7f02734">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp-bm-ex_6282dd39c2a78494789232cfdfee3ebb">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resp_bm <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  ...</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp-bm_307fd12e93ec30369a4c59b3203baa41">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp-bm_6083419ab616c082b6863814176186fb">
 
 </div>
 <p>Run the model and then check the summary:</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp-bm-summ_0216337d503415daf23a7ef258da6379">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp-bm-summ_af9a86727a567349bf260bcb988e1463">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resp_bm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: bernoulli 
@@ -371,7 +371,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <section id="posterior-probability-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="posterior-probability-distributions">Posterior probability distributions</h3>
 <p>The first step is to obtain the draws with <code>as_draws_df()</code>.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/resp-bm-draws_b80c3895cec017cf36ff8ea567c62552">
+<div class="cell" data-hash="tutorial-w07_cache/html/resp-bm-draws_a03f0f8f2518ad73d697de7eb07bc388">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(resp_bm)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>resp_bm_draws</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -385,7 +385,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
 <p>Go ahead, plot the density of <code>b_Intercept</code> (use <code>geom_density()</code>).</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/int-dens-ex_106102851d88c3689950ae3989b47e45">
+<div class="cell" data-hash="tutorial-w07_cache/html/int-dens-ex_e2a27c5b51de8a36834332fd25ea6224">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...) <span class="sc">+</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -403,14 +403,14 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </ul>
 <p>Identify which parts of <code>resp_bm_draws</code> correspond to <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
 <p>Now, mutate the data following the equations above, so that you have two new columns: one called <code>Maluma</code> and one called <code>Takete</code>, with the conditional log-odds of getting a “takete” response when the stimulus is “maluma” and “takete” respectively.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/cond-ex_0bc668909b151805a1cea9c740efcc28">
+<div class="cell" data-hash="tutorial-w07_cache/html/cond-ex_567bde77086e0d10e2f9efb2b8e3156e">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws <span class="ot">&lt;-</span> resp_bm_draws <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Maluma =</span> ...,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Takete =</span> ...</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="tutorial-w06_cache/html/cond_a1ef10cb3643381df2b25f0690359b45">
+<div class="cell" data-hash="tutorial-w07_cache/html/cond_6a38aea44f344b1ebdaacc7740bea8bc">
 
 </div>
 <p>Now we’ve got the data we need for plotting the conditional posterior distributions, but it’s not quite in the right format yet. So let’s reformat the data so that it’s easier to plot!</p>
@@ -430,7 +430,7 @@ Takete       0.93
 <p>We can achieve that by using the so-called <a href="https://tidyr.tidyverse.org/articles/pivot.html">pivot functions</a>: they are very powerful functions, but we will only look at their simple use here.</p>
 <p>More specifically, we need the <code>pivot_longer()</code> function: this is used in cases where you have columns named after some groups (e.g., our <code>Maluma</code> and <code>Takete</code> columns here), and instead you want the group names to be in a column of their own (e.g., one called <code>Stimulus</code>) while the values are in another column (e.g., one called <code>logodds</code>).</p>
 <p>Here’s how it works (never mind the warning):</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/pivot_99f6028b12f19812529857d20e089b41">
+<div class="cell" data-hash="tutorial-w07_cache/html/pivot_9eb61bd2c4ea63f19718c6cb2e0e8c17">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="ot">&lt;-</span> resp_bm_draws <span class="sc">%&gt;%</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Let's select the columns from .chain to Takete</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.chain<span class="sc">:</span>Takete) <span class="sc">%&gt;%</span></span>
@@ -457,18 +457,18 @@ Takete       0.93
 </div>
 <p>This looks more like what we want!</p>
 <p>Now we can easily plot the conditional probability distributions of the response “takete” when the stimulus is “maluma” and “takete”.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/cond-plot_2aa71f3a2a97673e8a4463842e740df8">
+<div class="cell" data-hash="tutorial-w07_cache/html/cond-plot_ed44c297b71293033a64136101bb42a7">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(logodds, <span class="at">fill =</span> Stimulus)) <span class="sc">+</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="tutorial-w06_files/figure-html/cond-plot-1.png" class="img-fluid" width="672"></p>
+<p><img src="tutorial-w07_files/figure-html/cond-plot-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Now, this is well and good, but often it’s easier to think about our results in terms of probabilities, rather than log-odds. So what do we do if we want to plot the <strong>probability</strong> of choosing “takete”? Before looking ahead, try to guess for yourself what the solution will be.</p>
 <p>It’s as we’ve seen before! We convert log-odds into probabilities with the <code>plogis()</code> function, like so:</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/cond-plot-2_58ac5de04584830e94400e9d4d08538e">
+<div class="cell" data-hash="tutorial-w07_cache/html/cond-plot-2_d0c8728a074898757216a048a663bd16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">plogis</span>(logodds)</span>
@@ -479,7 +479,7 @@ Takete       0.93
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Probability of takete response"</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="tutorial-w06_files/figure-html/cond-plot-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="tutorial-w07_files/figure-html/cond-plot-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The distributions themselves look pretty similar, but have a look at the numbers on the x axis. We’re back in probability space, hurrah!</p>
@@ -495,7 +495,7 @@ Takete       0.93
 <p>The posterior package should already be installed, but if not make sure you install it (to know if a package is installed, go to the Packages tab in the bottom-right panel of RStudio and use the search box).</p>
 <p>Then you also need to <strong>attach the package</strong>. Add the code for attaching packages in the <code>setup</code> chunk and make sure you run the chunk to attach the package!</p>
 <p>For this function, we’ll again need to use the longer-format version of the draws we obtained from our model. This data is in <code>resp_bm_draws_l</code>.</p>
-<div class="cell" data-hash="tutorial-w06_cache/html/60-cri_7b9bd25645599be56977fa8d1b3c7d85">
+<div class="cell" data-hash="tutorial-w07_cache/html/60-cri_b48ca512fa95607607339ed851412bd2">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>resp_bm_draws_l <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stimulus) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>

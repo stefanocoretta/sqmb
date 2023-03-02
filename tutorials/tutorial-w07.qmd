@@ -1,5 +1,5 @@
 ---
-title: "SQM tutorial - Week 6"
+title: "SQM tutorial - Week 7"
 editor: visual
 execute: 
   cache: true
@@ -365,9 +365,7 @@ resp_bm_draws_l %>%
 
 ```
 
-Now, this is well and good, but often it's easier to think about our results in terms of probabilities, rather than log-odds.
-So what do we do if we want to plot the **probability** of choosing "takete"?
-Before looking ahead, try to guess for yourself what the solution will be.
+Now, this is well and good, but often it's easier to think about our results in terms of probabilities, rather than log-odds. So what do we do if we want to plot the **probability** of choosing "takete"? Before looking ahead, try to guess for yourself what the solution will be.
 
 It's as we've seen before! We convert log-odds into probabilities with the `plogis()` function, like so:
 
@@ -385,8 +383,7 @@ resp_bm_draws_l %>%
   )
 ```
 
-The distributions themselves look pretty similar, but have a look at the numbers on the x axis.
-We're back in probability space, hurrah!
+The distributions themselves look pretty similar, but have a look at the numbers on the x axis. We're back in probability space, hurrah!
 
 The take-away message from this plot: We can be quite confident that different stimuli result in different probabilities of choosing "takete", and that it is very much more probable that participants choose "takete" when the stimulus is in fact of the "takete" type!
 
@@ -434,7 +431,7 @@ The output of the code gives us the 60% CrI of the probability of obtaining a "t
 
 Based on the output we can say the following:
 
-> We can be 60% confident that the probability of a "takete" response is between 28% and 33% (–0.94 to –0.69 in log-odds) with the "maluma" stimuli, and it is between 70% and 75% with the "takete" stimuli.
+> We can be 60% confident that the probability of a "takete" response is between 28% and 33% (--0.94 to --0.69 in log-odds) with the "maluma" stimuli, and it is between 70% and 75% with the "takete" stimuli.
 
 Nice!
 

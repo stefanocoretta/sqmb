@@ -1,9 +1,9 @@
 ---
 title: "Statistics and Quantitative Methods (S2)"
-subtitle: "Week 6 - Binary outcomes"
-author: "Dr Stefano Coretta"
+subtitle: "Week 7 - Binary outcomes"
+author: "<strike>Dr Stefano Coretta</strike> Elizabeth Pankratz"
 institute: "University of Edinburgh"
-date: "2023/03/01"
+date: "2023/03/07"
 output:
   xaringan::moon_reader:
     lib_dir: libs

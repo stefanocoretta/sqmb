@@ -22,7 +22,7 @@ See below for details.
 - The GitHub Classroom invitation link can be found on Learn.
 :::
 
-::: {.callout-warning collapse="false" icon="false"}
+::: {.callout-warning collapse="true" icon="false"}
 ## Formative 2: Week 6 (**Thursday 2 March at NOON**)
 
 **Statistical modelling**
@@ -51,12 +51,13 @@ See below for details.
 
 ## Summative assessments
 
-::: {.callout-important collapse="true" icon="false"}
+::: {.callout-important collapse="false" icon="false"}
 ## Summative 1 - Thu 30 March
 
 **Due on Thursday 30 March at noon**
 
-The first summative contains a series of guided exercises. You can find the summative materials and exercises here: TBA.
+The first summative contains a series of guided exercises. 
+You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
 :::
 
 ::: {.callout-important collapse="true" icon="false"}
@@ -64,7 +65,9 @@ The first summative contains a series of guided exercises. You can find the summ
 
 **Due on Thursday 27 April at noon**
 
-The second summative will be in the form of a data analysis report. You will choose a data set from a list or you will find a data set yourself for this assessment (guidance will be provided and I will have to approve the data set you picked).
+The second summative will be in the form of a data analysis report. 
+We will provide a list of data sets paired with hypotheses.
+You will choose one data set/hypothesis pair and, with it, conduct the full workflow of a Bayesian data analysis.
 
 You can find the list of data sets here: TBA.
 :::

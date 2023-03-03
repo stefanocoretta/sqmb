@@ -308,7 +308,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 ### Flexible Learning Week
 
-::: {.callout-note collapse="false"}
+::: {.callout-note collapse="true"}
 #### Homework
 
 There is no homework as such, so take the time to revise the materials and/or catch up with the previous weeks' materials.
@@ -318,7 +318,7 @@ There will be no classes.
 
 ### Week 6: Lecture and tutorials cancelled
 
-::: {.callout-warning collapse="false"}
+::: {.callout-warning collapse="true"}
 #### Formative assessment 2
 
 -   **DUE on Thursday 2 March at NOON**.
@@ -379,7 +379,7 @@ There will be no classes.
 
 ### Week 9: Continuous predictors
 
-::: {.callout-warning collapse="false"}
+::: {.callout-warning collapse="true"}
 ## Formative assessment 3
 
 **Data analysis report**
@@ -400,13 +400,22 @@ There will be no classes.
 ::: {.callout-warning collapse="false"}
 #### Summative assessment 1
 
-Info to follow.
+**Due on Thursday 30 March at noon**
+
+The first summative contains a series of guided exercises. 
+You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
 :::
 
 ### Thursday 27 April
 
-::: {.callout-warning collapse="false"}
+::: {.callout-warning collapse="true"}
 #### Summative assessment 2
 
-Info to follow.
+**Due on Thursday 27 April at noon**
+
+The second summative will be in the form of a data analysis report. 
+We will provide a list of data sets paired with hypotheses.
+You will choose one data set/hypothesis pair and, with it, conduct the full workflow of a Bayesian data analysis.
+
+You can find the list of data sets here: TBA.
 :::

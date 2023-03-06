@@ -223,7 +223,7 @@ We don't know this probability, so we want to **use the data to estimate it.**
   
   - You flip the coin 10 times, you get 10 observations of binary outcomes (heads/tails), with probably about 50/50 frequency.
   
-  - If it's not a fair coin, you might get 9 heads and 1 tail ($p = 0.9$).
+  - If it's not a fair coin, you might get 9 heads and 1 tail  from, e.g., $p = 0.9$.
 ]
 
 
@@ -232,25 +232,29 @@ We don't know this probability, so we want to **use the data to estimate it.**
 ## What distribution do we use to model this process?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- Binary variables follow the **Bernoulli distribution**.
+We want to use a distribution that is:
 
-- The Bernoulli distribution has one parameter: $p$, the probability of "success".
-
-$$Bernoulli(p)$$
+  - based on the probability of some event $p$, and
+  - able to generate binary outcomes (0 and 1).
 ]
 
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-**Why is a Bernoulli distribution appropriate for binary data?**
+The best distribution for the job: the **Bernoulli distribution**.
 
-- The output of a Bernoulli distribution is a 0 or a 1.
+$$Bernoulli(p)$$
 
-  - It produces a 1 with probability $p$.
-  - It produces a 0 with probability $1 - p = q$.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- A Bernoulli distribution generates a 1 with probability $p$.
+- And a 0 with probability $1 - p = q$.
   
-- And we can **think of our binary outcomes in terms of 0s and 1s:**
+And we can **think of our binary outcomes in terms of 0s and 1s:**
 
   - 0 = incorrect (or heads, or English, or ...)
   - 1 = correct (or tails, or Spanish, or ...)

@@ -41,7 +41,20 @@ class: center, middle, inverse, title-slide
 
 
 
-## Summary from last week
+
+class: center middle reverse
+
+## Any questions about the new teaching situation?
+
+While you're thinking, please fill out the attendance form:
+
+`https://forms.office.com/e/XzxhFEBHv6`
+
+![:scale 30%](imgs/qr.png)
+
+---
+
+## Summary from last time
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 - **Comparing groups** with `brm()`
@@ -51,56 +64,147 @@ class: center, middle, inverse, title-slide
 
 - **Treatment coding** of categorical predictors.
 
-  - N-1 **dummy variables**, where N is number of levels in the predictor.
+  - N–1 **dummy variables**, where N is number of levels in the predictor.
   - Level ordering is *alphabetical* but you can specify your own.
-  - **NOTE**: you don't have to apply treatment coding yourself! It's done under the hood by R.
+  - **NOTE**: You don't have to apply treatment coding yourself! It's done under the hood by R. But you should **understand how it works**.
 
-- **Remember**
+- **Remember:**
 
   - The **Intercept** `\(\beta_0\)` is the mean of the reference level.
-  - The other `\(\beta\)`'s are the **difference** of the other levels relative to the reference level.
+  - The other `\(\beta\)`s are the **difference** of the other levels relative to the reference level.
 ]
 
 ---
 
-layout: true
+layout: false
 
-## Binary outcomes
+## Six learning objectives for this week
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What are **binary outcomes?**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we **visualise** them?
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** What **distribution** do binary outcomes follow?
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** The data is binary, but linear models require a **continuous outcome space.**
+How do we fit such a model using binary data?
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret** the estimates of such a model?
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(6)** What are **credible intervals**?
+]
 
 ---
 
+layout: false
+
+## What are binary outcomes?
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**Morphological processing**
+**The variable you're trying to predict has two levels**, e.g.: 
+
+  - yes / no
+  - grammatical / ungrammatical
+  - Spanish / English
+  - indirect object (*gave the girl the book*) / to-PP (*gave the book to the girl*)
+  - correct / incorrect
+
+Very common in linguistics!
+]
+
+???
+
+LO 1
+
+---
+
+## Today's running example: Morphological processing
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
 - English L1 and L2 participants (L2 participants are native speakers of Cantonese).
 
-- **Lexical decision task** (word vs non-word).
+- **Lexical decision task:** Is the string you see a word in English or not?
 
 - Each trial:
 
   - **Prime**: *prolong* (unrelated), *unkind* (constituent), *kindness* (non-constituent).
 
-  - **Target**: *unkindness* ([[un]-[kind]]-ness).
+  - **Target**: *unkindness* (*[un-kind]-ness*, not *un-[kind-ness]*).
 
-- Reaction times and accuracy.
+- Data gathered: Reaction times and accuracy.
 ]
 
 --
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-We will focus on accuracy (correct identification of real word) for L1 participants.
+We will focus on **accuracy** (correct identification of real word: **correct/incorrect**) for L1 participants.
 ]
 
 ---
 
+## Visualise as proportions
+
 &lt;img src="index_files/figure-html/shal-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
+???
+
+LO2
+
 ---
+
+## What process could have generated this data?
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+We assume that there is **some probability `\(p\)` of responding correctly.**
+
+We don't know this probability, so we want to **use the data to estimate it.**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**How can a probability generate binary outcomes?**
+
+  - Imagine a coin flip: `\(p = 0.5\)`.
+  
+  - You flip the coin 10 times, you get 10 observations of binary outcomes (heads/tails), with probably about 50/50 frequency.
+  
+  - If it's not a fair coin, you might get 9 heads and 1 tail ($p = 0.9$).
+]
+
+
+---
+
+## What distribution do we use to model this process?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 - Binary variables follow the **Bernoulli distribution**.
 
-- The Bernoulli distribution has one parameter: `\(p\)`.
+- The Bernoulli distribution has one parameter: `\(p\)`, the probability of "success".
 
 `$$Bernoulli(p)$$`
 ]
@@ -108,22 +212,36 @@ We will focus on accuracy (correct identification of real word) for L1 participa
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- Let's assume `\(B\)` is a binary variable, whose values are `\(a\)` or `\(b\)`.
 
-  - `\(p\)` is the probability that `\(B = b\)`.
+**Why is a Bernoulli distribution appropriate for binary data?**
 
-  - `\(q\)` is the probability that `\(B = a\)`, i.e. `\(1 - p\)`.
+- The output of a Bernoulli distribution is a 0 or a 1.
+
+  - It produces a 1 with probability `\(p\)`.
+  - It produces a 0 with probability `\(1 - p = q\)`.
+  
+- And we can **think of our binary outcomes in terms of 0s and 1s:**
+
+  - 0 = incorrect (or heads, or English, or ...)
+  - 1 = correct (or tails, or Spanish, or ...)
+
 ]
 
---
+???
 
-.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-**No rain vs rain**
-
-- Probability `\(p\)` that tomorrow rains is 0.7 (70% probability), probability `\(q\)` that tomorrow does not rain is `\(1 - 0.7 = 0.3\)` (30% probability).
-]
+LO3
 
 ---
+
+## Building up the model
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- Accuracy `\(\text{acc}\)` is a binary variable: incorrect vs. correct.
+
+- `\(p\)` is the probability of obtaining a "correct" response.
+
+]
 
 .f3[
 $$
@@ -134,23 +252,44 @@ p &amp;=\text{ ...}
 $$
 ]
 
-&lt;br&gt;
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**Our goal: estimate `\(p\)`.**
+
+But there's a problem...
+
+]
+
+---
+
+## Linear models can't cope with bounded data
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-- Accuracy `\(\text{acc}\)` is a binary variable: incorrect vs correct.
+- A line, in principle, goes on forever in a continuous space.
 
-- `\(p\)` is the probability of obtaining a "correct" response.
+- But probabilities are bounded between 0 and 1.
+
+- This means we can't fit a line to probabilities directly.
 
 ]
 
 --
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-Alas, we cannot model probabilities **directly**, because they are bounded between 0 and 1. We need to covert them to something else so that they are not bounded.
+
+The solution: **transform the probabilities into a continuous space**.
+
 ]
 
+
 ---
+
+## The transformation: `logit()`
 
 .f3[
 $$
@@ -171,24 +310,76 @@ $$
 
 ]
 
+???
+
+LO 4
+
+&lt;!-- .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[ --&gt;
+
+&lt;!-- - The **logistic** function converts log-odds to **probabilities**. --&gt;
+
+&lt;!-- - The logistic function is the *inverse* of the logit function. --&gt;
+
+&lt;!-- ] --&gt;
+
+---
+
+## What are log-odds?
+
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-- The **logistic** function converts log-odds to **probabilities**.
+First, **what are odds**?
 
-- The logistic function is the *inverse* of the logit function.
+$$
+\text{odds} = \frac{\text{probability of a thing happening}}{\text{probability of the thing not happening}} = \frac{p}{1-p}
+$$
+]
 
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+If the probability of rain tomorrow is `\(p = 0.7\)`, then the odds of rain tomorrow are:
+
+$$
+`\begin{aligned}
+\text{odds}_{rain} &amp;= \frac{p}{1-p} \\
+&amp;= \frac{0.7}{1-0.7} \\
+&amp;= \frac{0.7}{0.3} \\
+&amp;= 2.333...
+\end{aligned}`
+$$
+]
+
+???
+
+No longer bounded by 1, but are odds unbounded?
+
+---
+
+## Odds are still bounded (and also asymmetrical)
+
+.center[
+![:scale 60%](imgs/numberline_odds.png)
 ]
 
 ---
+## Applying the log function maps [0, 1] to (–∞, 0]
 
-layout: false
-layout: true
+&lt;img src="index_files/figure-html/logarithm-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
-## Probabilities and log-odds
 
 ---
+## Log-odds are continuous and unbounded
+
+.center[
+![:scale 60%](imgs/numberline_logodds.png)
+]
+
+---
+## Probabilities and log-odds
 
 &lt;img src="index_files/figure-html/p-log-odds-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
@@ -197,6 +388,8 @@ layout: true
 On logit vs logistic function: &lt;https://stats.stackexchange.com/a/120364&gt;.
 
 ---
+
+## From probabilities to log-odds
 
 Use `qlogis()` (logit function) to go from probabilities to log-odds.
 
@@ -227,7 +420,9 @@ qlogis(0.7)
 
 ---
 
-Use `plogis()` (logistic function) to go from log-odds to probabilities.
+## From log-odds to probabilities
+
+Use `plogis()` (logistic function, the inverse of the logit function) to go from log-odds to probabilities.
 
 
 ```r
@@ -256,12 +451,7 @@ plogis(1)
 
 ---
 
-layout: false
-layout: true
-
-## Binary outcomes
-
----
+## Back to the model
 
 .f3[
 $$
@@ -275,20 +465,33 @@ $$
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- The units of `\(Gaussian(\mu, \sigma)\)` are log-odds.
-
-- The estimates in the model summary will be in log-odds.
-]
-
---
-
-.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-But first let's order the levels in `Accuracy` as `"incorrect", "correct"`!
-
-- We do this because we want to estimate `\(p\)` so that it is the probability of getting a "correct" response.
+- Because we are dealing with the outcome variable in log-odds space, **all the parameters of the model are going to be estimated in log-odds space.**
+  - Here, this applies to `\(\mu\)` and `\(\sigma\)`.
+  
+- We'll need to remember this when interpreting the model's estimates.
 ]
 
 ---
+
+class: center middle reverse
+
+# But first, a few minutes' break 😮‍💨
+
+Then we'll fit the model to the lexical decision data!
+
+---
+## Set up the outcome variable
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- We need to define a "success" level for our outcome variable.
+
+- We'll set success = `"correct"`, so that we estimate `\(p\)` as the probability of responding correctly.
+
+- To make this happen, let's manually reorder the levels in `Accuracy` as `"incorrect"` (will be coded as 0), `"correct"` (will be coded as 1).
+]
+
+--
 
 
 ```r
@@ -304,11 +507,13 @@ levels(shallow$Accuracy)
 ## [1] "incorrect" "correct"
 ```
 
+---
+layout:false
+layout:true
 
+## Starting small: Intercept-only model
 
 ---
-
-Let's start small (intercept-only model).
 
 
 ```r
@@ -321,7 +526,7 @@ acc_bm &lt;- brm(
 )
 ```
 
----
+--
 
 
 ```r
@@ -344,6 +549,7 @@ summary(acc_bm)
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).
 ```
+
 
 ---
 
@@ -379,19 +585,23 @@ $$
 
 &lt;img src="index_files/figure-html/acc-int-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
-There is a 95% probability that the log-odds of the probability of getting a "correct" response are between 1.11 and 1.53.
+There is a 95% probability that the log-odds of getting a "correct" response are between 1.11 and 1.53.
 
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- There is a 95% probability that the log-odds of the probability of getting a "correct" response are between 1.11 and 1.53.
+- 'There is a 95% probability that the log-odds of getting a "correct" response are between 1.11 and 1.53.'
 
-- Or in probability terms, there is a 95% probability that the probability of getting a "correct" response is between 0.75 and 0.82.
+  - Uh, but what do these numbers actually mean...?
 ]
 
 --
 
-&lt;br&gt;
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+In easier-to-understand probability terms: 
+
+**There is a 95% probability that the probability of getting a "correct" response is between 0.75 and 0.82.**
+]
 
 
 ```r
@@ -411,13 +621,9 @@ round(plogis(1.53), 2)
 ```
 
 ---
+layout:false
 
-layout: false
-layout: true
-
-## Accuracy by relation type
-
----
+## Set up the predictor `Relation_type`
 
 
 ```r
@@ -433,8 +639,18 @@ levels(shallow$Relation_type)
 ## [1] "Unrelated"      "NonConstituent" "Constituent"
 ```
 
+&lt;br&gt;
+&lt;br&gt;
+
+|                            | NonConstituent | Constituent |
+|----------------------------|----------------|---------------|
+| Relation type = Unrelated       | 0              | 0             |
+| Relation type = NonConstituent  | 1              | 0             |
+| Relation type = Constituent     | 0              | 1             |
 
 ---
+
+## Modelling accuracy by relation type
 
 .f3[
 $$
@@ -461,6 +677,8 @@ acc_bm_2 &lt;- brm(
 
 ---
 
+## Modelling accuracy by relation type: Intercept
+
 
 ```
 ## Population-Level Effects: 
@@ -469,9 +687,6 @@ acc_bm_2 &lt;- brm(
 ## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
 ## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
 ```
-
-&lt;br&gt;
-&lt;br&gt;
 
 .pull-left[
 - **Intercept**: `\(\beta_0\)`.
@@ -495,7 +710,17 @@ $$
 
 --
 
-We can be 95% confident that the log-odds of getting a "correct" response when the relation type is unrelated is between 0.71 and 1.36, which corresponds to a probability between 0.67 and 0.8.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**When relation type is `Unrelated`:**
+- The mean log-odds of getting a correct response is 1.02 (corresponds to a **probability of 0.73.**)
+- 95% probability that the true mean is between 0.71 and 1.36 (corresponds to a **probability between 0.67 and 0.8**).
+]
+
+---
+layout: false
+layout: true
+
+## Modelling accuracy by relation type: `NonConstituent`
 
 ---
 
@@ -508,11 +733,8 @@ We can be 95% confident that the log-odds of getting a "correct" response when t
 ## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
 ```
 
-&lt;br&gt;
-&lt;br&gt;
-
 .pull-left[
-- **Intercept**: `\(\beta_0\)`.
+- **Effect of `\(relation_{ncons}\)`**: `\(\beta_1\)`.
 
 - **Estimate**: `\(\mu = 0.19\)` log-odds.
 
@@ -533,7 +755,12 @@ $$
 
 --
 
-We can be 95% confident that when the relation type is non-constituent there is a change in log-odds between -0.3 and +0.67.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**When the relation type is non-constituent**: 
+- The mean change in log-odds is 0.19.
+- There is a 95% probability that the true change in log-odds is between –0.3 and +0.67.
+- To figure out the **probability of answering correctly**, we'll put some of this math to use.
+]
 
 ---
 
@@ -546,28 +773,35 @@ We can be 95% confident that when the relation type is non-constituent there is 
 ## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
 ```
 
-&lt;br&gt;
-&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+logit(p) &amp;= \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons} \\
+&amp;= 1.02 + (0.19 \cdot 1) + (\beta_2 \cdot 0) \\
+&amp;= 1.02 + 0.19\\
+&amp;= 1.21\\
+p &amp;= logistic(1.21)\\
+ &amp;= 0.77\\
+\end{aligned}`
+$$
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**When the relation type is non-constituent**, the mean probability of responding correctly is 0.77.
+]
+
+--
 
 
 ```r
-round(plogis(1.02), 2)
-```
-
-```
-## [1] 0.73
-```
-
-```r
-round(plogis(1.02+0.19), 2)
+round(plogis(1.02 + 0.19), 2)
 ```
 
 ```
 ## [1] 0.77
 ```
 
-On average, the probability of getting a "correct" response when relation type is non-constituent is **4 percentage points higher** than the probability when relation type is unrelated.
-
 ---
 
 
@@ -583,11 +817,8 @@ On average, the probability of getting a "correct" response when relation type i
 
 
 ```r
-round(plogis(0.71), 2); round(plogis(0.71-0.3), 2)
-```
-
-```
-## [1] 0.67
+# Same strategy to figure out lower bound of 95% CrI:
+round(plogis(0.71 - 0.3), 2)
 ```
 
 ```
@@ -595,16 +826,19 @@ round(plogis(0.71), 2); round(plogis(0.71-0.3), 2)
 ```
 
 ```r
-round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
-```
-
-```
-## [1] 0.8
+# Upper bound of 95% CrI:
+round(plogis(1.36 + 0.67), 2)
 ```
 
 ```
 ## [1] 0.88
 ```
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+So: **When the relation type is non-constituent**, the mean probability of responding correctly is 0.77, and there is a 95% probability that the true probability of responding correctly is between 0.6 and 0.88.
+]
 
 ---
 
@@ -613,6 +847,12 @@ round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
 &lt;img src="index_files/figure-html/acc-bm-2-cond-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
+layout:false
+layout: true
+
+## Modelling accuracy by relation type: `Constituent`
+
+---
 
 
 ```
@@ -625,15 +865,19 @@ round(plogis(1.36), 2); round(plogis(1.36+0.67), 2)
 
 &lt;br&gt;
 
-There is a 95% probability that when the relation type is constituent there is an increase in log-odds between 0.3 and 1.42.
-
 
 ```r
-round(plogis(0.71), 2); round(plogis(0.71+0.3), 2)
+# Mean probability of success when relation type = constituent:
+round(plogis(1.02 + 0.86), 2)
 ```
 
 ```
-## [1] 0.67
+## [1] 0.87
+```
+
+```r
+# Lower bound of 95% interval:
+round(plogis(0.71 + 0.3), 2)
 ```
 
 ```
@@ -641,48 +885,53 @@ round(plogis(0.71), 2); round(plogis(0.71+0.3), 2)
 ```
 
 ```r
-round(plogis(1.36), 2); round(plogis(1.36+1.42), 2)
-```
-
-```
-## [1] 0.8
+# Upper bound of 95% interval:
+round(plogis(1.36 + 1.42), 2)
 ```
 
 ```
 ## [1] 0.94
 ```
 
+???
+
+When the relation type is constituent, the mean change in log-odds is 0.86, and there is a 95% probability that the true  change in log-odds is between 0.3 and 1.42.
+
 ---
 
 &lt;img src="index_files/figure-html/acc-bm-2-cond-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
+layout:false
+class: center middle reverse
 
-layout: false
-layout: true
+# Questions about what we just saw?
 
-## The empirical rule
+The models themselves?
 
----
+Moving between log-odds and probabilities?
 
-.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- What are credible intervals?
+Interpreting the models' estimates?
 
-- What is the relation between credible intervals and so-called quantiles?
-
-- How can we obtain credible intervals with any posterior distribution?
-]
-
---
-
-.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-**Empirical rule**
-]
-
+Anything else not sitting right?
 
 ???
 
-Aka the 68–95–99.7 rule
+LO 5
+
+---
+
+## How does a model estimate 95% CrIs?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**The empirical rule** (a.k.a., the 68–95–99.7 rule)
+]
+
+---
+layout:false
+layout:true
+
+## The empirical rule
 
 ---
 
@@ -711,14 +960,14 @@ Aka the 68–95–99.7 rule
 
 ???
 
-As a general rule, `\(\pm2\sigma\)` covers 95% of the Gaussian distribution, which means we are 95% confident that the value lies within that range.
+As a general rule, `\(\pm2\sigma\)` covers 95% of the Gaussian distribution, which means that there's a 95% probability that the value lies within that range.
 
 ---
 
 layout: false
 layout: true
 
-## Quantiles
+## Computing CrIs using quantiles
 
 ---
 
@@ -728,7 +977,7 @@ layout: true
 - Common quantiles:
 
   - Quartiles (4 intervals).
-  
+
   - Percentiles or centiles (100 intervals).
 ]
 
@@ -770,13 +1019,6 @@ layout: true
 
 ---
 
-layout: false
-layout: true
-
-## Credible intervals
-
----
-
 
 ```r
 acc_bm_2_draws
@@ -801,17 +1043,18 @@ acc_bm_2_draws
 
 ---
 
-**95% CrI**
+
 
 
 ```r
 library(posterior)
 
+# The 95% CrI
 acc_bm_2_draws %&gt;%
   group_by(Relation_type) %&gt;%
   summarise(
-    q95_lo = quantile2(value, probs = 0.025),
-    q95_hi = quantile2(value, probs = 0.975),
+    q95_lo = quantile2(value, probs = 0.025),  # the 2.5th centile
+    q95_hi = quantile2(value, probs = 0.975),  # the 97.5th centile
     p_q95_lo = round(plogis(q95_lo), 2),
     p_q95_hi = round(plogis(q95_hi), 2)
   )
@@ -826,95 +1069,82 @@ acc_bm_2_draws %&gt;%
 ## 3 Constituent     1.44    2.35     0.81     0.91
 ```
 
-- `prob = 0.025` is the 2.5 centile.
-- `prob = 0.975` is the 97.5 centile.
-- `0.975 - 0.025 = 0.95`, i.e. 95% CrI!
-
----
-
-**80% CrI**
-
-
-```r
-library(posterior)
-
-acc_bm_2_draws %&gt;%
-  group_by(Relation_type) %&gt;%
-  summarise(
-    q95_lo = quantile2(value, probs = 0.1),
-    q95_hi = quantile2(value, probs = 0.9),
-    p_q95_lo = round(plogis(q95_lo), 2),
-    p_q95_hi = round(plogis(q95_hi), 2)
-  )
-```
-
-```
-## # A tibble: 3 × 5
-##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
-##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 Unrelated       0.803   1.24     0.69     0.78
-## 2 NonConstituent  0.973   1.44     0.73     0.81
-## 3 Constituent     1.59    2.18     0.83     0.9
-```
-
-- `prob = 0.1` is the 10th centile.
-- `prob = 0.9` is the 90th centile.
-- `0.9 - 0.1 = 0.8`, i.e. 80% CrI!
-
----
-
-**60% CrI**
-
-
-```r
-library(posterior)
-
-acc_bm_2_draws %&gt;%
-  group_by(Relation_type) %&gt;%
-  summarise(
-    q95_lo = quantile2(value, probs = 0.2),
-    q95_hi = quantile2(value, probs = 0.8),
-    p_q95_lo = round(plogis(q95_lo), 2),
-    p_q95_hi = round(plogis(q95_hi), 2)
-  )
-```
-
-```
-## # A tibble: 3 × 5
-##   Relation_type  q95_lo q95_hi p_q95_lo p_q95_hi
-##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 Unrelated       0.873   1.16     0.71     0.76
-## 2 NonConstituent  1.05    1.36     0.74     0.8 
-## 3 Constituent     1.68    2.07     0.84     0.89
-```
-
-- `prob = 0.2` is the 10th centile.
-- `prob = 0.8` is the 80th centile.
-- `0.8 - 0.3 = 0.6`, i.e. 60% CrI!
-
----
-
-layout: false
-
-## Summary
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- **Binary outcomes** with `brm()`
+Why `0.025` and `0.975`?
 
-  - Use the `bernoulli()` distribution family.
-  - Coefficients are in log-odds.
-
-- Probabilities and log-odds
-
-  - Probabilities are transformed in log-odds using the logit function.
-  - 50% probability = 0 log-odds.
-
-- **Credible intervals**
-
-  - Empirical rule.
-  - Quantiles, quartiles and (per)centiles.
-  - Credible intervals.
+95% of the distribution is between the 2.5th centile and the 97.5th centile.
 ]
+
+---
+layout: false
+layout: true
+
+## Learning objectives revisited
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What are **binary outcomes?**
+
+- Outcomes with two discrete levels (e.g., yes/no, grammatical/ungrammatical, correct/incorrect).
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we **visualise** them?
+
+- As proportions.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** What **distribution** do binary outcomes follow?
+
+- A Bernoulli distribution with one parameter, `\(p\)`, the probability of success.
+- In brms: `family = bernoulli()`.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)**  How do we fit a model requiring a **continuous outcome space** using binary data?
+
+- We model the binary outcomes as being generated the probability of success `\(p\)`.
+- We transform this probability into log-odds, which is continuous.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret** the estimates of such a model?
+
+- The model's estimates are in log-odds space.
+- To interpret them, we convert back to probability space using `plogis()`.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(6)** What are **credible intervals**?
+
+- Credible intervals are the difference between two quantiles.
+- They are the area in which, with some probability, the true value lies.
+]
+
+---
+layout:false
+class: center middle reverse
+
+## We made it! 😊📈
+### For any latecomers: please fill out the attendance form.
+
+`https://forms.office.com/e/XzxhFEBHv6`
+
+![:scale 30%](imgs/qr.png)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

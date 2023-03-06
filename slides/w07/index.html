@@ -221,13 +221,13 @@ The best distribution for the job: the **Bernoulli distribution**.
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- A Bernoulli distribution generates a 1 with probability `\(p\)`.
-- And a 0 with probability `\(1 - p = q\)`.
+- A Bernoulli distribution generates a 1 ("success") with probability `\(p\)`.
+- And a 0 ("failure") with probability `\(1 - p = q\)`.
   
 And we can **think of our binary outcomes in terms of 0s and 1s:**
 
-  - 0 = incorrect (or heads, or English, or ...)
-  - 1 = correct (or tails, or Spanish, or ...)
+  - 0 = incorrect (or tails, or English, or ...)
+  - 1 = correct (or heads, or Spanish, or ...)
 
 ]
 
@@ -370,7 +370,7 @@ No longer bounded by 1, but are odds unbounded?
 ]
 
 ---
-## Applying the log function maps [0, 1] to (–∞, 0]
+## Applying the log function unsquishes [0, 1]
 
 &lt;img src="index_files/figure-html/logarithm-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
@@ -809,44 +809,6 @@ round(plogis(1.02 + 0.19), 2)
 ---
 
 
-```
-## Population-Level Effects: 
-##                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                       1.02      0.17     0.71     1.36 1.00     2777     2484
-## Relation_typeNonConstituent     0.19      0.25    -0.30     0.67 1.00     2948     2801
-## Relation_typeConstituent        0.86      0.29     0.30     1.42 1.00     2999     2789
-```
-
-&lt;br&gt;
-
-
-```r
-# Same strategy to figure out lower bound of 95% CrI:
-round(plogis(0.71 - 0.3), 2)
-```
-
-```
-## [1] 0.6
-```
-
-```r
-# Upper bound of 95% CrI:
-round(plogis(1.36 + 0.67), 2)
-```
-
-```
-## [1] 0.88
-```
-
---
-
-.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-So: **When the relation type is non-constituent**, the mean probability of responding correctly is 0.77, and there is a 95% probability that the true probability of responding correctly is between 0.6 and 0.88.
-]
-
----
-
-
 
 &lt;img src="index_files/figure-html/acc-bm-2-cond-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
@@ -868,6 +830,7 @@ layout: true
 ```
 
 &lt;br&gt;
+--
 
 
 ```r
@@ -877,24 +840,6 @@ round(plogis(1.02 + 0.86), 2)
 
 ```
 ## [1] 0.87
-```
-
-```r
-# Lower bound of 95% interval:
-round(plogis(0.71 + 0.3), 2)
-```
-
-```
-## [1] 0.73
-```
-
-```r
-# Upper bound of 95% interval:
-round(plogis(1.36 + 1.42), 2)
-```
-
-```
-## [1] 0.94
 ```
 
 ???
@@ -925,7 +870,7 @@ LO 5
 
 ---
 
-## How does a model estimate 95% CrIs?
+## How do we find the 95% CrIs?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **The empirical rule** (a.k.a., the 68–95–99.7 rule)
@@ -1073,13 +1018,6 @@ acc_bm_2_draws %&gt;%
 ## 3 Constituent     1.44    2.35     0.81     0.91
 ```
 
---
-
-.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-Why `0.025` and `0.975`?
-
-95% of the distribution is between the 2.5th centile and the 97.5th centile.
-]
 
 ---
 layout: false
@@ -1117,7 +1055,7 @@ layout: true
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)**  How do we fit a model requiring a **continuous outcome space** using binary data?
 
-- We model the binary outcomes as being generated the probability of success `\(p\)`.
+- We model the binary outcomes as being generated based on the probability of success `\(p\)`.
 - We transform this probability into log-odds, which is continuous.
 ]
 
@@ -1136,7 +1074,7 @@ layout: true
 **(6)** What are **credible intervals**?
 
 - Credible intervals are the difference between two quantiles.
-- They are the area in which, with some probability, the true value lies.
+- For Bayesian modelling, they are the region in which, with some probability (usually 95%), the true value lies.
 ]
 
 ---

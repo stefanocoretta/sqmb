@@ -223,7 +223,7 @@ We don't know this probability, so we want to **use the data to estimate it.**
   
   - You flip the coin 10 times, you get 10 observations of binary outcomes (heads/tails), with probably about 50/50 frequency.
   
-  - If it's not a fair coin, you might get 9 heads and 1 tail ($p = 0.9$).
+  - If it's not a fair coin, you might get 9 heads and 1 tail  from, e.g., $p = 0.9$.
 ]
 
 
@@ -232,28 +232,32 @@ We don't know this probability, so we want to **use the data to estimate it.**
 ## What distribution do we use to model this process?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- Binary variables follow the **Bernoulli distribution**.
+We want to use a distribution that is:
 
-- The Bernoulli distribution has one parameter: $p$, the probability of "success".
-
-$$Bernoulli(p)$$
+  - based on the probability of some event $p$, and
+  - able to generate binary outcomes (0 and 1).
 ]
 
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-**Why is a Bernoulli distribution appropriate for binary data?**
+The best distribution for the job: the **Bernoulli distribution**.
 
-- The output of a Bernoulli distribution is a 0 or a 1.
+$$Bernoulli(p)$$
 
-  - It produces a 1 with probability $p$.
-  - It produces a 0 with probability $1 - p = q$.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- A Bernoulli distribution generates a 1 ("success") with probability $p$.
+- And a 0 ("failure") with probability $1 - p = q$.
   
-- And we can **think of our binary outcomes in terms of 0s and 1s:**
+And we can **think of our binary outcomes in terms of 0s and 1s:**
 
-  - 0 = incorrect (or heads, or English, or ...)
-  - 1 = correct (or tails, or Spanish, or ...)
+  - 0 = incorrect (or tails, or English, or ...)
+  - 1 = correct (or heads, or Spanish, or ...)
 
 ]
 
@@ -396,7 +400,7 @@ No longer bounded by 1, but are odds unbounded?
 ]
 
 ---
-## Applying the log function maps [0, 1] to (–∞, 0]
+## Applying the log function unsquishes [0, 1]
 
 ```{r logarithm, warning=FALSE}
 ggplot() +
@@ -806,27 +810,6 @@ round(plogis(1.02 + 0.19), 2)
 
 ---
 
-```{r acc-bm-2-summ-4}
-cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
-```
-
-<br>
-
-```{r plog-2, echo=TRUE}
-# Same strategy to figure out lower bound of 95% CrI:
-round(plogis(0.71 - 0.3), 2)
-# Upper bound of 95% CrI:
-round(plogis(1.36 + 0.67), 2)
-```
-
---
-
-.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-So: **When the relation type is non-constituent**, the mean probability of responding correctly is 0.77, and there is a 95% probability that the true probability of responding correctly is between 0.6 and 0.88.
-]
-
----
-
 ```{r acc-bm-2-draws}
 acc_bm_2_draws <- as_draws_df(acc_bm_2) %>%
   mutate(
@@ -865,14 +848,11 @@ cat(capture.output(summary(acc_bm_2))[8:12], sep = "\n")
 ```
 
 <br>
+--
 
 ```{r plog-3, echo=TRUE}
 # Mean probability of success when relation type = constituent:
 round(plogis(1.02 + 0.86), 2)
-# Lower bound of 95% interval:
-round(plogis(0.71 + 0.3), 2)
-# Upper bound of 95% interval:
-round(plogis(1.36 + 1.42), 2)
 ```
 
 ???
@@ -911,7 +891,7 @@ LO 5
 
 ---
 
-## How does a model estimate 95% CrIs?
+## How do we find the 95% CrIs?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **The empirical rule** (a.k.a., the 68–95–99.7 rule)
@@ -1234,13 +1214,6 @@ acc_bm_2_draws %>%
   )
 ```
 
---
-
-.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-Why `0.025` and `0.975`?
-
-95% of the distribution is between the 2.5th centile and the 97.5th centile.
-]
 
 ---
 layout: false
@@ -1278,7 +1251,7 @@ layout: true
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)**  How do we fit a model requiring a **continuous outcome space** using binary data?
 
-- We model the binary outcomes as being generated the probability of success $p$.
+- We model the binary outcomes as being generated based on the probability of success $p$.
 - We transform this probability into log-odds, which is continuous.
 ]
 
@@ -1297,7 +1270,7 @@ layout: true
 **(6)** What are **credible intervals**?
 
 - Credible intervals are the difference between two quantiles.
-- They are the area in which, with some probability, the true value lies.
+- For Bayesian modelling, they are the region in which, with some probability (usually 95%), the true value lies.
 ]
 
 ---

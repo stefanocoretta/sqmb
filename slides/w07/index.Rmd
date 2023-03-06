@@ -774,8 +774,7 @@ $$
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 **When the relation type is non-constituent**: 
 - The mean change in log-odds is 0.19.
-- There is a 95% probability that the true change in log-odds is between –0.3 and +0.67.
-- To figure out the **probability of answering correctly**, we'll put some of this math to use.
+- To figure out the **conditional probability of answering correctly**, we'll put some of this math to use.
 ]
 
 ---
@@ -857,7 +856,7 @@ round(plogis(1.02 + 0.86), 2)
 
 ???
 
-When the relation type is constituent, the mean change in log-odds is 0.86, and there is a 95% probability that the true  change in log-odds is between 0.3 and 1.42.
+When the relation type is constituent, the mean change in log-odds is 0.86.
 
 ---
 

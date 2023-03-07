@@ -26,7 +26,7 @@ To download the file with the data right-click on the following link and downloa
 
 ## Read and process the data
 
-Create a new `.Rmd` file first, save it in `code/` and name it `tutorial-w06` (the extension `.Rmd` is added automatically!).
+Create a new `.Rmd` file first, save it in `code/` and name it `tutorial-w07` (the extension `.Rmd` is added automatically!).
 
 I leave to you creating title headings in your file as you please. Remember to to add `knitr::opts_knit$set(root.dir = here::here())` in the `setup` chunk and to attach the tidyverse.
 

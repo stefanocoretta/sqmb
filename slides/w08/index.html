@@ -195,7 +195,7 @@ layout:false
 
 ## Visualising `Relation_type` and `Branching`
 
-&lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-barplot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -234,6 +234,8 @@ layout:true
 
 &lt;br&gt;
 
+&lt;!-- my condolences to anyone trying to read this --&gt;
+
 | When: | Then coded as: |
 | --- | --- |
 | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; |  
@@ -254,10 +256,24 @@ layout:true
 ---
 layout: false
 
-## What will the betas mean now?
+## What will the `\(\beta\)`s mean now?
 
-- Show linear expression of mult model
-- Fill in vars with 0s and 1s, showing which betas are left over when the 0s cancel out terms
+| When: | Then coded as: |
+| --- | --- |
+| &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | 
+&lt;br&gt;
+
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch)$$`
+&lt;br&gt;
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_1 + \beta_2 &amp;\\
+\end{aligned}`
+$$
 
 ---
 
@@ -299,14 +315,22 @@ layout: false
 ---
 class: center middle reverse
 
-# Break
+# Time for a wee break!
+
+### If you haven't yet, please fill in today's attendance form:
+
+`https://forms.office.com/e/A0X816LnUp`
+
+![:scale 30%](imgs/qr.png)
 
 ---
 
-## Our model currently doesn't let effects differ between levels of other variables
+## How does the current model fall short?
+
+- The question we want to answer: "Is the effect of relation type different when `Branching == Left` than when `Branching == Right`?"
+- Our model currently doesn't let effects differ between levels of other variables
 
 - The solution: Interaction.
-- The question we want to answer: "Is the effect of relation type different when `Branching == Left` than when `Branching == Right`?"
 
 ---
 
@@ -324,13 +348,50 @@ class: center middle reverse
 
 ---
 
-## Treatment coding matrix + an interaction
+## Treatment coding matrix, now with more interaction
 
-- start with treatment coding matrix from earlier
-- create new var for interaction as product [be hand-wavey about why this works, but can recommend lit]
-- work through 0/1 algebra to show which ebtas are left
-- highlight the new thing: now in this one case, we have an extra coefficient, the interaction, that can modulate the existing effects that we estimate for the other two predictors
-  - contrast the math from prev non-interaction version and this one — the final line is different
+| When: | Then coded as: |
+| --- | --- |
+| &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;th&gt;Relation_type:Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0 \* 0 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0 \* 1 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1 \* 0 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1 \* 1 = 0&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;  |  
+
+&lt;br&gt;
+
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation:branch)$$`
+
+&lt;br&gt;
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &amp;&amp;= \beta_0 + \beta_1 + \beta_2 + \beta_3 &amp;\\
+\end{aligned}`
+$$
+
+---
+
+## What does the extra `\(\beta\)` give us?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When both variables are coded as 1 (non-baseline) in a model **with no interaction:**
+
+$$
+ \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) = \beta_0 + \beta_1 + \beta_2 \\
+$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+And in a model **with an interaction:**
+
+$$
+\beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) = \beta_0 + \beta_1 + \beta_2 + \beta_3 \\
+$$
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+`\(\beta_3\)` can **modulate** the other effects `\(\beta_1\)` and `\(\beta_2\)`.
+]
 
 ---
 
@@ -407,18 +468,6 @@ layout: true
 **(5)** How do we **interpret model estimates** of interactions? 
 - Carefully!
 ]
-
----
-
----
-layout:false
-class: center middle reverse
-
-### For any latecomers, please fill out the attendance form:
-
-`https://forms.office.com/e/A0X816LnUp`
-
-![:scale 30%](imgs/qr.png)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

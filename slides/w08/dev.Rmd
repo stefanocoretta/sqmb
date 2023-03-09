@@ -150,8 +150,6 @@ round(plogis(int_estim + reln_estim + branch_estim), 2)  # p acc(const, right)
 
 ### Conditional probabilities
 
-TODO: Get draws and plot cond probs density (and from this, get 95% CrIs).
-
 ```{r mult-draws}
 mult_draws <- as_draws_df(acc_mult_bm)
 
@@ -212,7 +210,7 @@ Does this feel right?
 
 ```{r}
 # Manual recreation
-shallow %>% 
+barplot_shallow <- shallow %>% 
   group_by(Relation_type, Branching) %>%
   summarise(correct = mean(ACC)) %>% 
   mutate(incorrect = 1 - correct) %>% 
@@ -223,15 +221,16 @@ shallow %>%
   geom_bar(stat = 'identity', aes(fill = Accuracy)) +
   facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
   labs(y = 'Proportion',
-       x = 'Relation type') +
-  # Add in the model's estimates as points + bars
+       x = 'Relation type')
+
+# Add in the model's estimates as points + error bars
+(barplot_shallow_mult <- barplot_shallow +
   geom_point(data = mult_cri, aes(y = p_mean), size=2) +
   geom_errorbar(data = mult_cri,
                 aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
                 width = 0,
                 size = 1) +
-  NULL
-  
+  NULL)
 ```
 
 The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
@@ -292,13 +291,19 @@ inter_estim   <- inter_coefs['Relation_typeConstituent:BranchingRight', 'Estimat
 GelmanHill2007 p. 93 interpretation (with both possible mappings of interacting vars to VAR1 and VAR2):
 
 > Moving from VAR1_BASELINE to VAR1_NON-BASELINE of VAR1, the value INTERACTION_COEF is added to the coefficient for VAR2.
-We have already seen that the coefficient for VAR2 is VAR2_COEF at the baseline level of VAR1, and so we can understand the interaction as saying that the importance of VAR2 as a predictor [*increases* if signs of VAR2_COEF and INTERACTION_COEF are the same/*decreases* if signs of VAR2_COEF and INTERACTION_COEF are different(?)] when we move from VAR1_BASELINE to VAR2_BASELINE.
+We have already seen that the coefficient for VAR2 is VAR2_COEF at the baseline level of VAR1, and so we can understand the interaction as saying that the importance of VAR2 as a predictor [*increases* if signs of VAR2_COEF and INTERACTION_COEF are the same/*decreases* if signs of VAR2_COEF and INTERACTION_COEF are different(?)] when we move from VAR1_BASELINE to VAR1_NON-BASELINE.
 
-```{r}
-# var1 <- 
-```
+<!-- VAR1 = Relation_type -->
+1) Moving from `Unrelated` to `Constituent`, the value `r round(inter_estim, 2)` is added to the coefficient for `Branching`.
+We have already seen that the coefficient for `Branching` is `r round(branch_estim2, 2)` at the baseline level of `Relation_type`, and so we can understand the interaction as saying that the effect of `Branching` gets smaller when we move from `Unrelated` relation types to `Constituent` relation types.
 
-TODO: Compare prose interpretation from sqmf w7.
+<!-- VAR1 = Branching -->
+2) Moving from `Left` to `Right`, the value `r round(inter_estim, 2)` is added to the coefficient for `Relation_type`.
+We have already seen that the coefficient for `Relation_type` is `r round(reln_estim2, 2)` at the baseline level of `Branching`, and so we can understand the interaction as saying that the effect of `Relation_type` gets smaller when we move from `Left` branching to `Right` branching structures.
+
+Interpretation (2) is the one that goes with the data that we'll see in the lecture (and it makes sense when looking at the plot, we can see it!).
+So that's the interpretation that we'll focus on for ease of storytelling for the lec.
+
 
 
 ### Cond probs
@@ -311,12 +316,74 @@ round(plogis(int_estim2 + branch_estim2), 2)               # p acc(unrel, right)
 round(plogis(int_estim2 + reln_estim2), 2)                 # p acc(const, left)
 round(plogis(int_estim2 + reln_estim2 + branch_estim2 + inter_estim), 2)  # p acc(const, right)
 ```
+```{r inter-draws}
+inter_draws <- as_draws_df(acc_inter_bm)
+
+# Compute conditional log-odds
+inter_draws_long <- inter_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent + `b_Relation_typeConstituent:BranchingRight`
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r inter-draws-dens}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of "correct" response',
+       subtitle = 'Model with no interaction',
+       fill = 'Relation type')
+```
 
 
 
+### 95% CrI in probability space
 
-TODO: Get draws and plot cond probs density (and from this, get 95% CrIs).
+```{r inter-cri}
+inter_cri <- inter_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+inter_cri
+```
 
-TODO: Overlay these estimates on the actual data.
 
-TODO: On same slide, show model predictions from the first model (no interaction) and compare to those from the second model (with interaction).
+
+### Compare back to data
+
+Overlay these estimates on the actual data.
+Does this feel right?
+
+```{r}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_inter <- barplot_shallow +
+  geom_point(data = inter_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = inter_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1) +
+  NULL)
+```
+

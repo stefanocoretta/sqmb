@@ -364,10 +364,12 @@ There will be no classes.
 
 **Questions**
 
--   How can we model the effects of multiple predictors?
--   How do we model interactions between two predictors?
--   How do we represent interactions using formulae?
--   What is a factorial design?
+- What is a factorial design?
+- How do we estimate and interpret the effects of multiple predictors?
+- How do we deal with situations when one predictor's effect is different, depending on the value of the other predictor?
+- How can such interactions between predictors be built into our models?
+- How do we interpret model estimates of interactions? 
+
 
 **Skills**
 
@@ -402,8 +404,7 @@ There will be no classes.
 
 **Due on Thursday 30 March at noon**
 
-The first summative contains a series of guided exercises. 
-You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
+The first summative contains a series of guided exercises. You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
 :::
 
 ### Thursday 27 April
@@ -413,9 +414,7 @@ You can find the summative materials and exercises here: <https://github.com/uoe
 
 **Due on Thursday 27 April at noon**
 
-The second summative will be in the form of a data analysis report. 
-We will provide a list of data sets paired with hypotheses.
-You will choose one data set/hypothesis pair and, with it, conduct the full workflow of a Bayesian data analysis.
+The second summative will be in the form of a data analysis report. We will provide a list of data sets paired with hypotheses. You will choose one data set/hypothesis pair and, with it, conduct the full workflow of a Bayesian data analysis.
 
 You can find the list of data sets here: TBA.
 :::

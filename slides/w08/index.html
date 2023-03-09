@@ -157,6 +157,7 @@ layout:false
 layout: true
 
 ## Running example: Morphological processing
+
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
@@ -195,7 +196,7 @@ layout:false
 
 ## Visualising `Relation_type` and `Branching`
 
-&lt;img src="index_files/figure-html/shallow-barplot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/barplot-shallow-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -204,7 +205,9 @@ layout:false
 
 &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
 
+.f3[
 `$$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$`
+]
 
 ---
 layout:false
@@ -232,13 +235,13 @@ layout:true
 
 ---
 
-&lt;br&gt;
-
 &lt;!-- my condolences to anyone trying to read this --&gt;
 
 | When: | Then coded as: |
 | --- | --- |
 | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; |  
+
+&lt;!-- Here's how those two ensted tables look in markdown --&gt;
 &lt;!-- | Relation_type 	| Branching 	| --&gt;
 &lt;!-- |---------------	|-----------	| --&gt;
 &lt;!-- | Unrelated     	| Left      	| --&gt;
@@ -252,6 +255,36 @@ layout:true
 &lt;!-- | 0             	| 1         	| --&gt;
 &lt;!-- | 1             	| 0         	| --&gt;
 &lt;!-- | 1             	| 1         	| --&gt;
+
+&lt;br&gt;
+
+Let's verify that this coding is what R will use:
+
+.pull-left[
+
+```r
+contrasts(shallow$Relation_type)
+```
+
+```
+##             Constituent
+## Unrelated             0
+## Constituent           1
+```
+]
+
+.pull-right[
+
+```r
+contrasts(shallow$Branching)
+```
+
+```
+##       Right
+## Left      0
+## Right     1
+```
+]
 
 ---
 layout: false
@@ -277,42 +310,239 @@ $$
 
 ---
 
-## Let's fit a model
+## The model we'll fit
 
-- show model fit code and fixef summary
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
 
 ---
+
+
+```r
+acc_mult_bm &lt;- brm(
+* Accuracy ~ Relation_type + Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_mult_bm'
+)
+```
+
+
+```r
+summary(acc_mult_bm)
+```
+
+```
+##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: Accuracy ~ Relation_type + Branching 
+##    Data: shallow (Number of observations: 692) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+layout:true
 
 ## Model estimates: `Intercept`
 
-- including plogis()
+---
+
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+--
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
 
 ---
 
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+---
+layout:false
+
 ## Model estimates: `Relation_type`
 
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.69, 0.25) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
 
 ---
 
 ## Model estimates: `Branching`
 
 
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.69, 0.25) \\
+\beta_2 &amp; \sim Gaussian(1.44, 0.27) \\
+\end{aligned}`
+$$
+]
+
+
 ---
 
-## Conditional posterior probabilities
+## Conditional posterior log-odds
 
-- density plot
-- TODO: overlay the dots and error bars so we know what we're looking at in the next plot
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_1 + \beta_2 &amp;\\
+\end{aligned}`
+$$
+
+&lt;br&gt;
+
+From the model: `\(\beta_0 = 1.08\)`, `\(\beta_1 = 0.69\)`, and `\(\beta_2 = 1.44\)`.
+
+&lt;br&gt;
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; 1.08 &amp;+ (0.69 \cdot 0) + (1.44 \cdot 0)  &amp;&amp;= 1.08  &amp;= 1.08 \text{ log-odds}\\
+\text{Unrelated, Right:}    &amp; &amp; 1.08 &amp;+ (0.69 \cdot 0) + (1.44 \cdot 1)  &amp;&amp;= 1.08 + 1.44 &amp;= 2.52 \text{ log-odds}\\
+\text{Constituent, Left:}   &amp; &amp; 1.08 &amp;+ (0.69 \cdot 1) + (1.44 \cdot 0)  &amp;&amp;= 1.08 + 0.69 &amp;= 1.77 \text{ log-odds}\\
+\text{Constituent, Right:}  &amp; &amp; 1.08 &amp;+ (0.69 \cdot 1) + (1.44 \cdot 1)  &amp;&amp;= 1.08 + 0.69 + 1.44 &amp;= 3.21 \text{ log-odds}\\
+\end{aligned}`
+$$
+
+???
+
+Ask: now, how move to probs?
 
 ---
+
+
+
+&lt;img src="index_files/figure-html/mult-draws-dens-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/mult-draws-dens2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+layout:true
 
 ## Do these estimates match the data?
 
-- Show shallow barplot again
-- Then overlay means + error bars of model estimate
-- no bueno: effects too big / too small
+---
+
+&lt;img src="index_files/figure-html/barplot-shallow2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
+
+&lt;img src="index_files/figure-html/barplot-shallow-mult-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+???
+
+The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
+And because that difference is small, it's also underestimating the larger difference in Branching = Left.
+
+If only there were some way to tell the model that the effect of relation type can be different between the two levels of branching.
+
+Oh wait...
+
+---
+layout:false
 class: center middle reverse
 
 # Time for a wee break!

@@ -142,6 +142,14 @@ branch_estim <- mult_coefs['BranchingRight', 'Estimate']
 ```
 
 ```{r}
+int_estim                              # p acc(unrel, left)
+int_estim + branch_estim               # p acc(unrel, right)
+int_estim + reln_estim                 # p acc(const, left)
+int_estim + reln_estim + branch_estim  # p acc(const, right)
+```
+
+
+```{r}
 round(plogis(int_estim), 2)                              # p acc(unrel, left)
 round(plogis(int_estim + branch_estim), 2)               # p acc(unrel, right)
 round(plogis(int_estim + reln_estim), 2)                 # p acc(const, left)
@@ -201,6 +209,36 @@ mult_cri <- mult_draws_long %>%
   )
 mult_cri
 ```
+
+#### Overlay CrIs on density plot
+
+```{r}
+mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples))) +
+  geom_density(alpha = 0.5, aes(fill = Relation_type)) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of "correct" response',
+       subtitle = 'Model with no interaction',
+       fill = 'Relation type') +
+  # ints + means
+  geom_point(data = mult_cri, aes(x = p_mean, 
+                                  y=c(32, 32, 33, 33), 
+                                  # colour=Relation_type,
+                                  ), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(x = p_mean, 
+                    y=c(32, 32, 33, 33), 
+                    xmax = p_q95_hi, 
+                    xmin = p_q95_lo, 
+                    # colour=Relation_type
+                    ),
+                width = 0,
+                size = 1)
+```
+
 
 
 ### Compare back to data

@@ -41,7 +41,7 @@ library(extraDistr)
 library(ggdist)
 library(glue)
 
-theme_update(text = element_text(size=16))
+theme_update(text = element_text(size=14))
 
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
 options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
@@ -177,6 +177,7 @@ layout:false
 layout: true
 
 ## Running example: Morphological processing
+
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
@@ -214,7 +215,7 @@ layout:false
 
 ## Visualising `Relation_type` and `Branching`
 
-```{r shallow-barplot}
+```{r barplot-shallow}
 # Manual recreation of proportions stacked bar chart (as basis for later)
 (barplot_shallow <- shallow %>% 
   group_by(Relation_type, Branching) %>%
@@ -237,7 +238,9 @@ layout:false
 
 <br> <br> <br> <br> <br> <br> <br>
 
+.f3[
 $$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$
+]
 
 ---
 layout:false
@@ -265,13 +268,13 @@ layout:true
 
 ---
 
-<br>
-
 <!-- my condolences to anyone trying to read this -->
 
 | When: | Then coded as: |
 | --- | --- |
 | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> </tr> <tr> <td>0</td> <td>1</td> </tr> <tr> <td>1</td> <td>0</td> </tr> <tr> <td>1</td> <td>1</td> </tr> </tbody> </table> |  
+
+<!-- Here's how those two ensted tables look in markdown -->
 <!-- | Relation_type 	| Branching 	| -->
 <!-- |---------------	|-----------	| -->
 <!-- | Unrelated     	| Left      	| -->
@@ -285,6 +288,22 @@ layout:true
 <!-- | 0             	| 1         	| -->
 <!-- | 1             	| 0         	| -->
 <!-- | 1             	| 1         	| -->
+
+<br>
+
+Let's verify that this coding is what R will use:
+
+.pull-left[
+```{r contr1, echo=TRUE}
+contrasts(shallow$Relation_type)
+```
+]
+
+.pull-right[
+```{r contr2, echo=TRUE}
+contrasts(shallow$Branching)
+```
+]
 
 ---
 layout: false
@@ -310,42 +329,253 @@ $$
 
 ---
 
-## Let's fit a model
+## The model we'll fit
 
-- show model fit code and fixef summary
+.f3[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
 
 ---
+
+```{r mult, echo=TRUE}
+acc_mult_bm <- brm(
+  Accuracy ~ Relation_type + Branching, #<<
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_mult_bm'
+)
+```
+
+```{r mult-summary-full, echo=TRUE}
+summary(acc_mult_bm)
+```
+
+---
+layout:true
 
 ## Model estimates: `Intercept`
 
-- including plogis()
+---
+
+```{r mult-summ-1a}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+--
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
 
 ---
 
+```{r mult-summ-1b}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+---
+layout:false
+
 ## Model estimates: `Relation_type`
 
+```{r mult-summ-2}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(0.69, 0.25) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
 
 ---
 
 ## Model estimates: `Branching`
 
+```{r mult-summ-3}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(0.69, 0.25) \\
+\beta_2 & \sim Gaussian(1.44, 0.27) \\
+\end{aligned}
+$$
+]
+
 
 ---
 
-## Conditional posterior probabilities
+## Conditional posterior log-odds
 
-- density plot
-- TODO: overlay the dots and error bars so we know what we're looking at in the next plot
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &&= \beta_0  &\\
+\text{Unrelated, Right:}    & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_1 + \beta_2 &\\
+\end{aligned}
+$$
+
+<br>
+
+From the model: $\beta_0 = 1.08$, $\beta_1 = 0.69$, and $\beta_2 = 1.44$.
+
+<br>
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     & & 1.08 &+ (0.69 \cdot 0) + (1.44 \cdot 0)  &&= 1.08  &= 1.08 \text{ log-odds}\\
+\text{Unrelated, Right:}    & & 1.08 &+ (0.69 \cdot 0) + (1.44 \cdot 1)  &&= 1.08 + 1.44 &= 2.52 \text{ log-odds}\\
+\text{Constituent, Left:}   & & 1.08 &+ (0.69 \cdot 1) + (1.44 \cdot 0)  &&= 1.08 + 0.69 &= 1.77 \text{ log-odds}\\
+\text{Constituent, Right:}  & & 1.08 &+ (0.69 \cdot 1) + (1.44 \cdot 1)  &&= 1.08 + 0.69 + 1.44 &= 3.21 \text{ log-odds}\\
+\end{aligned}
+$$
+
+???
+
+Ask: now, how move to probs?
 
 ---
+
+```{r mult-draws}
+mult_draws <- as_draws_df(acc_mult_bm)
+
+# Compute conditional log-odds
+mult_draws_long <- mult_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r mult-draws-dens, out.width = "80%"}
+(mult_draws_dens <- mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples))) +
+  geom_density(alpha = 0.5, aes(fill = Relation_type)) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability distributions\nof "correct" response',
+       # subtitle = 'Model with no interaction',
+       fill = 'Relation type'))
+```
+
+---
+
+```{r mult-draws-dens2, out.width = "80%"}
+mult_draws_dens +
+  # intervals + means
+  geom_point(data = mult_cri, aes(x = p_mean, 
+                                  y=c(32, 32, 33, 33), 
+                                  # colour=Relation_type,
+                                  ), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(x = p_mean, 
+                    y=c(32, 32, 33, 33), 
+                    xmax = p_q95_hi, 
+                    xmin = p_q95_lo, 
+                    # colour=Relation_type
+                    ),
+                width = 0,
+                size = 1)
+```
+
+
+---
+layout:true
 
 ## Do these estimates match the data?
 
-- Show shallow barplot again
-- Then overlay means + error bars of model estimate
-- no bueno: effects too big / too small
+---
+
+```{r barplot-shallow2}
+barplot_shallow
+```
 
 ---
+
+```{r barplot-shallow-mult}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_mult <- barplot_shallow +
+  geom_point(data = mult_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1))
+```
+
+
+???
+
+The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
+And because that difference is small, it's also underestimating the larger difference in Branching = Left.
+
+If only there were some way to tell the model that the effect of relation type can be different between the two levels of branching.
+
+Oh wait...
+
+---
+layout:false
 class: center middle reverse
 
 # Time for a wee break!

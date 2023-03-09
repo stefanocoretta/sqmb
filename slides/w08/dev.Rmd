@@ -281,6 +281,20 @@ Oh wait...
 
 # 2: Interactions
 
+## Shallow barplot with diff of diffs
+
+```{r shallow-diffs}
+shallow_endpts <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  pivot_wider(names_from = Relation_type, values_from = correct)
+
+barplot_shallow +
+  geom_segment(data = shallow_endpts, 
+               size = 2,
+               aes(y = Unrelated, yend = Constituent, x = 1.5, xend = 1.5))
+```
+
 
 ## Fit the model
 
@@ -383,7 +397,7 @@ inter_draws_long %>%
   labs(x = 'Probability',
        y = 'Probability density',
        title = 'Conditional posterior probability of "correct" response',
-       subtitle = 'Model with no interaction',
+       subtitle = 'Model with interaction',
        fill = 'Relation type')
 ```
 

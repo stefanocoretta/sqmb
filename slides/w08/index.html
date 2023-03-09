@@ -312,6 +312,9 @@ $$
 
 ## The model we'll fit
 
+&lt;br&gt;
+&lt;br&gt;
+
 .f3[
 $$
 `\begin{aligned}
@@ -557,28 +560,54 @@ class: center middle reverse
 
 ## How does the current model fall short?
 
-- The question we want to answer: "Is the effect of relation type different when `Branching == Left` than when `Branching == Right`?"
-- Our model currently doesn't let effects differ between levels of other variables
 
-- The solution: Interaction.
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+The question we want to answer: 
+- **"Is the effect of `Relation_type` different when `Branching == Left` compared to when `Branching == Right`?"**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Our current model doesn't let effects differ between levels of other variables.
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+The solution: Include an **interaction** between these two predictors.
+]
+
+---
+layout:true
+
+## In other words: we want a _difference of differences_
 
 ---
 
-## In other words: we want to get at a _difference of differences_
-
-- Show shallow barplot again, this time with vertical brackets between the two levels to illustrate diffs
+&lt;img src="index_files/figure-html/barplot-shallow3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## How?
+&lt;img src="index_files/figure-html/shallow-diffs-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
-- Create a new variable that represents the interaction
-- Give it its own beta
-- Estimate the beta to get a sense of the differences
+---
+layout: false
+
+## How do we make this happen?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Create a **new variable** that represents the interaction.
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Assign that variable **its own `\(\beta\)` coefficient.**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Estimate `\(\beta\)` as usual** to get a sense of the difference of differences between predictors in our model.
+]
+
 
 ---
 
-## Treatment coding matrix, now with more interaction
+## Treatment coding, feat. interaction
 
 | When: | Then coded as: |
 | --- | --- |
@@ -586,7 +615,7 @@ class: center middle reverse
 
 &lt;br&gt;
 
-`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation:branch)$$`
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)$$`
 
 &lt;br&gt;
 
@@ -620,56 +649,178 @@ $$
 ]
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-`\(\beta_3\)` can **modulate** the other effects `\(\beta_1\)` and `\(\beta_2\)`.
+`\(\beta_3\)` can **adjust** the effect of `\(\beta_1\)` or `\(\beta_2\)`.
 ]
 
 ---
 
-## Fitting a model with an interaction
+## The model we'll fit
 
-- add that one might also see the `*` syntax
+&lt;br&gt;
+&lt;br&gt;
 
-
----
-
-## Model estimates: `Intercept`
-
-- including plogis()
-
----
-
-## Model estimates: `Relation_type`
-
-
----
-
-## Model estimates: `Branching`
-
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\beta_3 &amp; \sim Gaussian(\mu_3, \sigma_3) \\
+\end{aligned}`
+$$
+]
 
 ---
 
-## Model estimates: `Relation_type:Branching`
+## How to specify a model with an interaction
+
+
+```r
+acc_inter_bm &lt;- brm(
+* Accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+A note on the syntax for specifying interactions in R:
+
+**`Relation_type + Branching + Relation_type:Branching`**
+
+is the same as
+
+**`Relation_type * Branching`**
+
+but more transparent about what's happening behind the scenes!
+]
 
 ---
 
-## Conditional posterior probabilities
+&lt;br&gt;
 
-- density plot
-- TODO: overlay the dots and error bars so we know what we're looking at in the next plot
+
+```r
+summary(acc_inter_bm)
+```
+
+```
+##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: Accuracy ~ Relation_type + Branching + Relation_type:Branching 
+##    Data: shallow (Number of observations: 692) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
 
 ---
 
-## Do these new estimates match the data?
+&lt;br&gt;
 
-- Show shallow barplot again
-- Then overlay means + error bars of model estimate
-- better!!!
+
+```
+## Population-Level Effects: 
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 &amp; \sim Gaussian(1.02, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.85, 0.29) \\
+\beta_2 &amp; \sim Gaussian(1.69, 0.36) \\
+\beta_3 &amp; \sim Gaussian(-0.63, 0.55) \\
+\end{aligned}`
+$$
+]
 
 ---
 
-## No interaction vs. with interaction
+## Conditional posterior log-odds
 
-- show both barplots with model estims side by side, look at difference
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &amp;&amp;= \beta_0 + \beta_1 + \beta_2 + \beta_3 &amp;\\
+\end{aligned}`
+$$
+
+&lt;br&gt;
+
+From the model: `\(\beta_0 = 1.02\)`, `\(\beta_1 = 0.85\)`, `\(\beta_2 = 1.69\)`, and `\(\beta_3 = -0.63\)`.
+
+&lt;br&gt;
+
+$$
+`\begin{aligned}
+\text{Unr., L:}     &amp;&amp; 1.02 &amp;+ (0.85 \cdot 0) + (1.69 \cdot 0) + (-0.63 \cdot 0) &amp;&amp;= 1.02  &amp;= 1.02 \text{ log-odds}\\
+\text{Unr., R:}    &amp;&amp; 1.02 &amp;+ (0.85 \cdot 0) + (1.69 \cdot 1) + (-0.63 \cdot 0) &amp;&amp;= 1.02 + 1.69 &amp;= 2.71 \text{ log-odds}\\
+\text{Con., L:}   &amp;&amp; 1.02 &amp;+ (0.85 \cdot 1) + (1.69 \cdot 0) + (-0.63 \cdot 0) &amp;&amp;= 1.02 + 0.85 &amp;= 1.87 \text{ log-odds}\\
+\text{Con., R:}  &amp;&amp; 1.02 &amp;+ (0.85 \cdot 1) + (1.69 \cdot 1) + (-0.63 \cdot 1) &amp;&amp;= 1.02 + 0.85 + 1.69 -0.63 &amp;= 2.93 \text{ log-odds}\\
+\end{aligned}`
+$$
+
+---
+
+
+
+&lt;img src="index_files/figure-html/inter-draws-dens-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Compare estimates with and without the interaction
+
+.pull-left[
+&lt;img src="index_files/figure-html/mult-draws-dens-L-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/inter-draws-dens-R-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## How well does the interaction model fit the data?
+
+
+
+&lt;img src="index_files/figure-html/barplot-shallow-inter-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.pull-left[
+&lt;img src="index_files/figure-html/mult-barplot-L-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/inter-barplot-R-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
 
 ---
@@ -678,25 +829,36 @@ layout: true
 
 ## Learning objectives revisited
 
+---
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
+- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we estimate and interpret the effects of **multiple predictors?**
+- A predictor's `\(\beta\)` is the effect of that predictor *when the other predictor's value is 0*.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+- We fit a model that contains an interaction term.
 ]
+
+---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)** How can such interactions between predictors be **built into our models?**
+- The interaction term is defined as the **product** of the two interacting predictors.
+- It gets its own `\(\beta\)` coefficient, which we estimate as usual.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
 - Carefully!
+- The interaction term's `\(\beta\)` tells us **how much one predictor's effect changes between levels of the other**.
+- More on interpretation coming up in the tutorial.
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -331,6 +331,9 @@ $$
 
 ## The model we'll fit
 
+<br>
+<br>
+
 .f3[
 $$
 \begin{aligned}
@@ -345,7 +348,7 @@ $$
 
 ---
 
-```{r mult, echo=TRUE}
+```{r mult-fit, echo=TRUE}
 acc_mult_bm <- brm(
   Accuracy ~ Relation_type + Branching, #<<
   family = bernoulli(),
@@ -590,28 +593,66 @@ class: center middle reverse
 
 ## How does the current model fall short?
 
-- The question we want to answer: "Is the effect of relation type different when `Branching == Left` than when `Branching == Right`?"
-- Our model currently doesn't let effects differ between levels of other variables
 
-- The solution: Interaction.
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+The question we want to answer: 
+- **"Is the effect of `Relation_type` different when `Branching == Left` compared to when `Branching == Right`?"**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Our current model doesn't let effects differ between levels of other variables.
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+The solution: Include an **interaction** between these two predictors.
+]
+
+---
+layout:true
+
+## In other words: we want a _difference of differences_
 
 ---
 
-## In other words: we want to get at a _difference of differences_
-
-- Show shallow barplot again, this time with vertical brackets between the two levels to illustrate diffs
-
----
-
-## How?
-
-- Create a new variable that represents the interaction
-- Give it its own beta
-- Estimate the beta to get a sense of the differences
+```{r barplot-shallow3}
+barplot_shallow
+```
 
 ---
 
-## Treatment coding matrix, now with more interaction
+```{r shallow-diffs}
+shallow_endpts <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  pivot_wider(names_from = Relation_type, values_from = correct)
+
+barplot_shallow +
+  geom_segment(data = shallow_endpts, 
+               size = 2,
+               aes(y = Unrelated, yend = Constituent, x = 1.5, xend = 1.5))
+```
+
+---
+layout: false
+
+## How do we make this happen?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Create a **new variable** that represents the interaction.
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Assign that variable **its own $\beta$ coefficient.**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Estimate $\beta$ as usual** to get a sense of the difference of differences between predictors in our model.
+]
+
+
+---
+
+## Treatment coding, feat. interaction
 
 | When: | Then coded as: |
 | --- | --- |
@@ -619,7 +660,7 @@ class: center middle reverse
 
 <br>
 
-$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation:branch)$$
+$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)$$
 
 <br>
 
@@ -653,56 +694,234 @@ $$
 ]
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-$\beta_3$ can **modulate** the other effects $\beta_1$ and $\beta_2$.
+$\beta_3$ can **adjust** the effect of $\beta_1$ or $\beta_2$.
 ]
 
 ---
 
-## Fitting a model with an interaction
+## The model we'll fit
 
-- add that one might also see the `*` syntax
+<br>
+<br>
 
-
----
-
-## Model estimates: `Intercept`
-
-- including plogis()
-
----
-
-## Model estimates: `Relation_type`
-
-
----
-
-## Model estimates: `Branching`
-
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\beta_3 & \sim Gaussian(\mu_3, \sigma_3) \\
+\end{aligned}
+$$
+]
 
 ---
 
-## Model estimates: `Relation_type:Branching`
+## How to specify a model with an interaction
+
+```{r inter-fit, echo = TRUE}
+acc_inter_bm <- brm(
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,  #<<
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+A note on the syntax for specifying interactions in R:
+
+**`Relation_type + Branching + Relation_type:Branching`**
+
+is the same as
+
+**`Relation_type * Branching`**
+
+but more transparent about what's happening behind the scenes!
+]
 
 ---
 
-## Conditional posterior probabilities
+<br>
 
-- density plot
-- TODO: overlay the dots and error bars so we know what we're looking at in the next plot
-
----
-
-## Do these new estimates match the data?
-
-- Show shallow barplot again
-- Then overlay means + error bars of model estimate
-- better!!!
+```{r inter-summary, echo = TRUE}
+summary(acc_inter_bm)
+```
 
 ---
 
-## No interaction vs. with interaction
+<br>
 
-- show both barplots with model estims side by side, look at difference
+```{r inter-summ-1}
+cat(capture.output(summary(acc_inter_bm))[8:13], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 & \sim Gaussian(1.02, 0.17) \\
+\beta_1 & \sim Gaussian(0.85, 0.29) \\
+\beta_2 & \sim Gaussian(1.69, 0.36) \\
+\beta_3 & \sim Gaussian(-0.63, 0.55) \\
+\end{aligned}
+$$
+]
+
+---
+
+## Conditional posterior log-odds
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0  &\\
+\text{Unrelated, Right:}    && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &&= \beta_0 + \beta_1 + \beta_2 + \beta_3 &\\
+\end{aligned}
+$$
+
+<br>
+
+From the model: $\beta_0 = 1.02$, $\beta_1 = 0.85$, $\beta_2 = 1.69$, and $\beta_3 = -0.63$.
+
+<br>
+
+$$
+\begin{aligned}
+\text{Unr., L:}     && 1.02 &+ (0.85 \cdot 0) + (1.69 \cdot 0) + (-0.63 \cdot 0) &&= 1.02  &= 1.02 \text{ log-odds}\\
+\text{Unr., R:}    && 1.02 &+ (0.85 \cdot 0) + (1.69 \cdot 1) + (-0.63 \cdot 0) &&= 1.02 + 1.69 &= 2.71 \text{ log-odds}\\
+\text{Con., L:}   && 1.02 &+ (0.85 \cdot 1) + (1.69 \cdot 0) + (-0.63 \cdot 0) &&= 1.02 + 0.85 &= 1.87 \text{ log-odds}\\
+\text{Con., R:}  && 1.02 &+ (0.85 \cdot 1) + (1.69 \cdot 1) + (-0.63 \cdot 1) &&= 1.02 + 0.85 + 1.69 -0.63 &= 2.93 \text{ log-odds}\\
+\end{aligned}
+$$
+
+---
+
+```{r inter-draws}
+inter_draws <- as_draws_df(acc_inter_bm)
+
+# Compute conditional log-odds
+inter_draws_long <- inter_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent + `b_Relation_typeConstituent:BranchingRight`
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r inter-draws-dens, out.width = "80%"}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability distributions\nof "correct" response',
+       # subtitle = 'Model with interaction',
+       fill = 'Relation type')
+```
+
+---
+
+## Compare estimates with and without the interaction
+
+.pull-left[
+```{r mult-draws-dens-L, fig.height=6, out.width="100%"}
+mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       # title = 'Conditional posterior probability distributions\nof "correct" response',
+       title = 'Without interaction',
+       fill = 'Relation type') +
+  theme(legend.position = 'bottom')
+
+```
+]
+
+.pull-right[
+```{r inter-draws-dens-R, fig.height=6, out.width="100%"}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       # title = 'Conditional posterior probability distributions\nof "correct" response',
+       title = 'With interaction',
+       fill = 'Relation type') +
+  theme(legend.position = 'bottom')
+
+
+```
+]
+
+---
+
+## How well does the interaction model fit the data?
+
+```{r inter-cri}
+inter_cri <- inter_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+```
+
+```{r barplot-shallow-inter}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_inter <- barplot_shallow +
+  geom_point(data = inter_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = inter_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1) +
+  NULL)
+```
+
+---
+
+.pull-left[
+```{r mult-barplot-L, fig.height=8, out.width="100%"}
+barplot_shallow_mult +
+  labs(title = 'Without interaction')
+```
+]
+
+.pull-right[
+```{r inter-barplot-R, fig.height=8, out.width="100%"}
+barplot_shallow_inter +
+  labs(title = 'With interaction')
+```
+]
 
 
 ---
@@ -711,23 +930,34 @@ layout: true
 
 ## Learning objectives revisited
 
+---
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
+- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we estimate and interpret the effects of **multiple predictors?**
+- A predictor's $\beta$ is the effect of that predictor *when the other predictor's value is 0*.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+- We fit a model that contains an interaction term.
 ]
+
+---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)** How can such interactions between predictors be **built into our models?**
+- The interaction term is defined as the **product** of the two interacting predictors.
+- It gets its own $\beta$ coefficient, which we estimate as usual.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
 - Carefully!
+- The interaction term's $\beta$ tells us **how much one predictor's effect changes between levels of the other**.
+- More on interpretation coming up in the tutorial.
 ]

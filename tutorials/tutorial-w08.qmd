@@ -1,0 +1,792 @@
+---
+title: "SQMB tutorial – Week 8"
+execute: 
+  cache: true
+---
+
+```{r}
+#| label: pkgs
+#| message: false
+#| echo: false
+
+library(tidyverse)
+theme_set(theme_light())
+library(posterior)
+
+library(brms)
+library(broom.mixed)
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+
+options(dplyr.summarise.inform = FALSE)
+
+my_seed <- 8878
+```
+
+
+This tutorial has two sections, and each one will guide you through a different example of interactions between two binary variables.
+The first section revisits the morphological processing data from the lecture.
+The second section focuses on a different data set, this time with a continuous outcome.
+This analysis will require you to adapt the code from earlier in the tutorial, as well as recall from earlier weeks how to fit and interpret a Gaussian model.
+
+
+As usual, though, **first things first:**
+
+1. Create a new `.Rmd` file, save it in `code/`, and name it `tutorial-w08`.
+
+2. Include `knitr::opts_knit$set(root.dir = here::here())` in the `setup` chunk. 
+
+3. Also in the `setup` chunk, include code to attach the libraries we'll use in this tutorial: `tidyverse`, `posterior`, `brms`, and `broom.mixed`.
+
+
+## Lexical decision accuracy
+
+
+### Read and process the data
+
+We've worked with the data from `shallow.csv` before, first way back in week 2 (ah, the good old days!).
+This means you might already have it in your `data/` folder, but if not, you can download it again from here: [shallow.csv](../data/shallow.csv).
+
+Use the usual `read_csv()` function to read in the dataset, and assign it to a variable called `shallow`.
+
+```{r}
+#| label: read-shallow-ex
+#| eval: false
+
+shallow <- ...
+```
+
+```{r}
+#| label: read-shallow
+#| echo: false
+#| message: false
+
+shallow <- read_csv("data/shallow.csv")
+```
+
+
+Run the following code to filter this data frame for only the data we need for this example.
+Try to understand the conditions that `filter()` is applying to the dataset.
+
+```{r}
+#| label: filter-shallow
+shallow <- shallow %>% 
+  filter(
+    Group == "L1",
+    Critical_Filler == "Critical",
+    RT > 0,
+    Relation_type != 'NonConstituent'
+  )
+```
+
+
+Next, we'll prepare our variables for analysis.
+
+The **outcome variable** that we want is:
+
+- `Accuracy`, with two levels: 
+  - `incorrect` (which we want coded as 0);
+  - `correct` (which we want coded as 1).
+
+Right now, `shallow` doesn't contain a column `Accuracy`.
+There is a column called `ACC` that contains 0s and 1s, though, so below, we'll use that to create the `Accuracy` column of our dreams.
+
+Also, the two **predictors** we want are:
+
+- `Relation_type`, with two levels: 
+  - `Unrelated` (which we want coded as 0);
+  - `Constituent` (which we want coded as 1).
+- `Branching`, with two levels:
+  - `Left` (which we want coded as 0); 
+  - `Right` (which we want coded as 1).
+
+Can you see how the code below will ensure that each level receives our desired coding of 0 or 1?
+
+```{r}
+#| label: var-setup-shallow
+
+shallow <- shallow %>% 
+  mutate(
+    # Create Accuracy column based on ACC
+    Accuracy      = ifelse(ACC == 1, 'correct', 'incorrect'), 
+    # Order factor levels
+    Accuracy      = factor(Accuracy, levels = c('incorrect', 'correct')),
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+
+### Visualise the data
+
+Create a bar plot that looks like this one, showing the proportion of correct/incorrect responses by `Relation_type`, faceting by `Branching`.
+
+```{r}
+#| label: barplot-shallow
+#| echo: false
+#| message: false
+
+shallow %>% 
+  ggplot(aes(x = Relation_type, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_grid(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type')
+```
+
+A couple hints:
+
+- To make `geom_bar()` display proportions instead of counts, you can write: `geom_bar(position = 'fill')`.)
+- To include the text "Branching" in the facet labels, give the function `facet_grid()` the following argument: `labeller = labeller(Branching = label_both)`. 
+
+
+Notice that this plot shows a _difference of differences_: The difference between `Relation_type == Unrelated` and `Relation_Type == Constituent` is bigger when `Branching == Left`, and smaller when `Branching == Right`.
+**It is this difference of differences that suggests that our model should probably include an interaction between these two variables.**
+
+Before we dive into the model, though, let's verify that our variables are indeed going to be coded the way we want.
+
+
+### Check in on our contrasts
+
+The `contrasts()` function takes as its argument a factor, and returns the coding that R will use to represent this factor in a model.
+
+#### `Accuracy`
+
+```{r}
+contrasts(shallow$Accuracy)
+```
+
+Which level of `Accuracy`, our outcome variable, corresponds to a "success" in Bernoulli terms?
+How do we know?
+What does this mean for the estimates that the model will produce?
+
+
+#### `Relation_Type`
+
+```{r}
+contrasts(shallow$Relation_type)
+```
+
+With treatment coding like this, the $\beta$ coefficient tells us the effect of moving from the baseline level to the non-baseline level.
+In this case, the baseline is `Unrelated`.
+This means that the $\beta$ coefficient will represent the estimated effect of moving from `Unrelated` to `Constituent`.
+
+In other words:
+
+- The $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
+- The $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
+- The $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and relation type.
+
+Based on this information and on the plot above, do you expect that the coefficient's posterior distribution will be largely positive, negative, or around zero?
+
+
+#### `Branching`
+
+```{r}
+contrasts(shallow$Branching)
+```
+
+Here, the baseline is `Left`, so $\beta$ will represent the estimated effect of moving from `Left` to `Right`.
+
+In other words:
+
+- The $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Branching == Right` than with `Branching == Left`.
+- The $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Branching == Right` than with `Branching == Left`.
+- The $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and branching.
+
+Again, based on this, what kind of expectations do you have about this coefficient's posterior distribution?
+
+Let's see if those expectations are borne out!
+
+
+### Fit the model
+
+From the lecture slides, here is the mathematical specification of the model we want to fit.
+
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\beta_3 & \sim Gaussian(\mu_3, \sigma_3) \\
+\end{aligned}
+$$
+
+Try to understand what each line is saying.
+
+Now, we'll use `brm()` to fit a model called `acc_inter_bm`.
+
+- The model formula should specify that we're predicting `Accuracy` as a function of `Relation_type`, `Branching`, and their interaction.
+- Specify the correct family for the model as well as the data we'll draw on.
+- Include `backend = "cmdstanr"`.
+- Finish off by saving the model file using `brm()`'s `file` argument.
+
+
+```{r}
+#| label: shallow-fit-ex
+#| eval: false
+acc_inter_bm <- brm(
+  ...
+)
+```
+
+
+```{r}
+#| label: shallow-fit
+#| echo: false
+#| message: false
+
+acc_inter_bm <- brm(
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+Run the model.
+
+The summary should look something like this (but don't worry if your numbers are slightly different from these! That'll happen due to the randomness inherent in the MCMC sampling process).
+
+```{r}
+#| label: shallow-summ
+summary(acc_inter_bm)
+```
+
+
+Do the coefficient estimates match the predictions you made above?
+If they don't, can you figure out why not?
+
+We're now going to create the conditional posterior probability distributions of the probability of answering correctly in each combination of `Relation_type` and `Branching`.
+We'll then talk about how to interpret and report the model's estimates based on these distributions.
+
+
+### Conditional posterior probability distributions
+
+Getting the conditional posterior probability distributions when so many predictors are at play is a bit of a process, but we'll approach it step by step.
+
+The first thing to do is to get the posterior draws from our model, using `as_draws_df()`.
+(Fun fact: these are the samples that `summary()` summarises when it shows us the model's estimates.)
+
+```{r}
+#| label: acc-draws
+acc_draws <- as_draws_df(acc_inter_bm)
+acc_draws
+```
+
+
+Each column that begins with `b_` represents a posterior probability distribution of one of our model's $\beta$ parameters.
+(Or, more accurately, each column contains a number of _samples_ from the posterior distribution.)
+Can you identify which column corresponds to which $\beta$?
+
+To know how to combine these columns in order to get the correct conditional posterior probability distributions, we have to reason about how the 0/1 treatment coding affects the presence or absence of the $\beta$s.
+
+The basic linear expression in this model is
+
+$$
+logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)
+$$
+
+Our goal is to figure out the conditional posterior probability distribution of $logit(p)$ (i.e., the log-odds of answering correctly) in each of our four combinations of levels.
+To do this, we substitute the appropriate 0s and 1s in for $relation$ and $branch$.
+
+Again, from the lecture:
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0  &\\
+\text{Unrelated, Right:}    && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &&= \beta_0 + \beta_1 + \beta_2 + \beta_3 &\\
+\end{aligned}
+$$
+
+Make sure you understand why each 0 and 1 appears where it does.
+
+Now in R, we'll use this working-out to tell us which columns to add together.
+The result will be a data frame where each column contains the conditional posterior probability distribution of $logit(p)$ for one of the four combination of levels.
+
+```{r}
+#| label: acc-cond-pstr
+#| warning: false
+
+acc_draws_cond <- acc_draws %>% 
+  mutate(
+    Unrelated_Left = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right = b_Intercept + b_BranchingRight + b_Relation_typeConstituent + `b_Relation_typeConstituent:BranchingRight`
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right)
+
+acc_draws_cond
+```
+
+(Note that, in `acc_draws`, the column name for the interaction has `:` in it, which can be confusing to R.
+To avoid problems, we wrap that column name in tick marks.)
+
+Now these conditional posterior probability distributions are almost ready to work with!
+There's just one more big data-manipulation step left before we can compute some summary statistics and create some pretty plots.
+
+That step is to transform this data frame into "long" format using `pivot_longer()`.
+The goal is to have a data frame with the following columns:
+
+- `predictors`, which contains what is currently in the column headers;
+- `sampled_logodds`, which contains all of the values that currently fill the four columns.
+
+```{r}
+#| label: acc-pivot
+
+acc_draws_cond_long <- acc_draws_cond %>% 
+  pivot_longer(
+    # The columns to pivot (here, it's all of them):
+    Unrelated_Left:Constituent_Right,
+    # Name the column that will contain the current headers:
+    names_to = 'predictors',
+    # Name the column that will contain the current values:
+    values_to = 'sampled_logodds'
+  )
+acc_draws_cond_long
+```
+
+Can you see how `acc_draws_cond_long` contains the same data as `acc_draws_cond`?
+
+Okay, just a couple tiny things left:
+
+- We're going to use a function from the tidyverse called `separate()` to split the `predictors` column up into two columns: one for `Relation_type`, and another for `Branching`. Have a look at [the documentation](https://tidyr.tidyverse.org/reference/separate.html) if you're curious.
+- This is a new data frame, so R will apply its defaults for factor ordering unless we again set the factor levels manually.
+
+```{r}
+#| label: acc-draws-long-sep
+acc_draws_cond_long <- acc_draws_cond_long %>% 
+  # Split `predictors` on '_' into one column per predictor.
+  separate(predictors, into = c('Relation_type', 'Branching')) %>% 
+  # Set factor levels.
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+acc_draws_cond_long
+```
+
+Nice!
+
+We are finally ready to summarise and plot these distributions.
+
+::: {.callout-note appearance="minimal"}
+**Note:** When computing the conditional posterior probability distributions, it is very important to do any addition/subtraction **in the space the model was fit in**.
+That is, figuring out the conditional probability distribution must be done **before** back-transforming into the original space.
+Otherwise, if you, say, back-transform each individual $\beta$ and then add them together, you risk ending up with incorrect or even impossible values on your original scale.
+:::
+
+#### Compute means and 95% CrIs
+
+We'll also use the long draws data to compute the summary statistics of the posteriors.
+We can do this using some now-familiar machinery: `group_by()`, `summarise()`, `mean()`, and `quantile2()`.
+
+
+```{r}
+#| label: acc-summ
+acc_cond_summ <- acc_draws_cond_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    mean_logodds = mean(sampled_logodds),
+    q95_lo = round(quantile2(sampled_logodds, probs = 0.025), 2),
+    q95_hi = round(quantile2(sampled_logodds, probs = 0.975), 2),
+    # Transform into probabilities
+    p_mean   = round(plogis(mean_logodds), 2),
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2)
+  )
+acc_cond_summ
+```
+
+I mentioned above that the posterior draws are what `summary()` uses to summarise the posterior distributions.
+So, a good sense check to make sure our computation is good is to compare `acc_cond_summ` with the actual model summary.
+In the model summary, the estimates for `Intercept` should match the summary measures here for the row in which `Relation_type == Unrelated` and `Branching == Left` (since those are the two baseline levels).
+
+Let's have a look:
+
+```{r}
+#| label: acc-summ-fixef
+cat(capture.output(summary(acc_inter_bm))[8:13], sep = "\n")
+```
+
+Yes!
+The intercept's `Estimate` matches the mean when `Relation_type == Unrelated` and `Branching == Left`, and the lower and upper bounds of the 95% CrI match as well.
+So now we can be reassured that we've computed something sensible and worth reporting.
+
+
+#### Plot multiple posterior densities
+
+Now we'll use the conditional posterior probability distributions to create a density plot.
+
+See if you understand how the following code creates the plot we see below.
+
+```{r}
+#| label: acc-dens-logodds
+acc_draws_cond_long %>% 
+  ggplot(aes(x = sampled_logodds, fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  labs(x = 'Log-odds',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of log-odds of "correct" response',
+       fill = 'Relation type')
+```
+
+
+How would you create the same plot, but instead of the x axis showing the data in log-odds, have the x axis showing the data back-transformed to probabilities?
+Something like this:
+
+```{r}
+#| label: acc-dens-prob
+#| echo: false
+#| message: false
+acc_draws_cond_long %>% 
+  ggplot(aes(x = plogis(sampled_logodds), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of probability of "correct" response',
+       fill = 'Relation type')
+```
+
+Give it a shot.
+Creating this kind of plot is really worth practicing, because these are exactly the kinds of plots you'll want to show in your reports and dissertations.
+
+That's it for our first model!
+Now we'll turn to the second part of the tutorial: a slightly more loosely guided walkthrough of how to put what you've learned into practice.
+
+
+## Vowel duration in Italian and Polish
+
+The data we'll use for the rest of this tutorial comes from Coretta, S., (2019) "An exploratory study of voicing-related differences in vowel duration as compensatory temporal adjustment in Italian and Polish", *Glossa: a journal of general linguistics* 4(1): 125. doi: <https://doi.org/10.5334/gjgl.869>.
+
+The dataset can be downloaded here: [dur-ita-pol.csv](../data/dur-ita-pol.csv).
+
+### Read in the data
+
+Save `dur-ita-pol.csv` in your `data/` folder, and read it in using read it in using `read_csv()`.
+
+```{r}
+#| label: read-dur-ex
+#| eval: false
+dur_ita_pol <- ...
+```
+
+```{r}
+#| label: read-dur
+#| echo: false
+#| message: false
+dur_ita_pol <- read_csv('data/dur-ita-pol.csv')
+```
+
+
+The data you see should look something like this (selecting only a handful of the many columns to view!).
+
+```{r}
+dur_ita_pol %>% 
+  select(speaker, word, vowel, v1_duration, c2_phonation, language)
+```
+
+The variables of interest for us are:
+
+- `v1_duration`: Vowel duration in milliseconds (ms).
+- `c2_phonation`: Whether the word's second consonant is voiced or voiceless.
+- `language`: The first language of the speaker (Italian or Polish).
+
+The model we'll build below will predict `v1_duration` as a function of `c2_phonation`, `language`, and their interaction.
+
+
+### Visualise (and process) the data
+
+This section will consider what kinds of transformations and level re-orderings, if any, we'll need to do to prepare the data for analysis.
+We'll begin with the outcome variable, `v1_duration`.
+
+
+#### Vowel duration
+
+Let's create a density plot to visualise how vowel duration is distributed.
+
+```{r}
+#| label: dur-voweldur
+dur_ita_pol %>% 
+  ggplot(aes(x = v1_duration)) +
+  geom_density(fill = 'grey', alpha = 0.5) +
+  geom_rug() +
+  labs(x = 'Vowel duration (ms)')
+```
+
+
+Some observations:
+
+- Vowel duration can only be positive.
+- The distribution is slightly right-skewed (that is, it has a longer tail going off to the right).
+
+These two things suggest that this variable, taken as-is, should perhaps not be modelled using a Gaussian distribution.
+Rather, **we'll want to transform it.**
+
+We want to make this variable
+
+- in principle able to be positive or negative, and 
+- look less asymmetrical, more Gaussian.
+
+Which transformation that we've encountered before do you think would improve the situation?
+
+Before moving on: 
+
+1. Apply the transformation you've chosen to the `v1_duration` variable.
+2. Make a new density plot to see whether your transformation has worked.
+
+*(For real! Pause here and work through it yourself first. The strongest learning comes by doing.)*
+
+
+```{r}
+#| label: dur-voweldur-log
+#| eval: false
+#| echo: false
+dur_ita_pol %>% 
+  ggplot(aes(x = log(v1_duration))) +
+  geom_density(fill = 'grey', alpha = 0.5) +
+  geom_rug() +
+  labs(x = 'Vowel duration (log(ms))')
+```
+
+
+The transformation that we'll use for the rest of this tutorial is the log transformation.
+(Is that the transformation you chose? 
+If not, how does your choice of transformation compare?)
+
+Here's one way to log-transform `v1_duration`.
+The result, `log_v1_dur`, is what we'll use as the outcome variable in our model below.
+
+```{r}
+#| label: dur-voweldur-log-mutate
+dur_ita_pol <- dur_ita_pol %>% 
+  mutate(
+    log_v1_dur = log(v1_duration)
+  )
+```
+
+
+OK, let's now have a look at how the categorical predictors stack up against vowel duration.
+
+
+####  Vowel duration by phonation
+
+The following code creates a violin plot with overlaid jittered points to illustrate vowel duration (ms) by `c2_phonation`.
+
+```{r}
+#| label: dur-phon-plot
+dur_ita_pol %>% 
+  ggplot(aes(x = c2_phonation, 
+             y = v1_duration, 
+             fill = c2_phonation,    # fills the violin plots
+             colour = c2_phonation)  # colours the points and violin outlines
+         ) +
+  geom_violin(alpha = 0.5, width = 0.5) +
+  geom_jitter(alpha = 0.5) +
+  theme(legend.position = 'none') +
+  labs(
+    y = 'Vowel duration (ms)',
+    x = 'Consonant phonation'
+  )
+```
+
+An optional activity, if you like playing around with plots:
+Change the y axis from the ms scale to the transformed log scale.
+(And be sure to also change the label of the y axis, since the units shown are no longer going to be milliseconds, but log(ms).)
+
+
+```{r}
+#| label: dur-phon-plot-log
+#| echo: false
+#| eval: false
+dur_ita_pol %>% 
+  ggplot(aes(x = c2_phonation, 
+             y = log_v1_dur, 
+             fill = c2_phonation,    # fills the violin plots
+             colour = c2_phonation)  # colours the points and violin outlines
+         ) +
+  geom_violin(alpha = 0.5, width = 0.5) +
+  geom_jitter(alpha = 0.5) +
+  theme(legend.position = 'none') +
+  labs(
+    y = 'Vowel duration (log(ms))',
+    x = 'Consonant phonation'
+  )
+```
+
+
+#### Vowel duration by language
+
+`language` is also a two-level variable, so you should be able to adapt the code shown above to create another violin plot with jittered points, this time showing how vowel duration (either on the ms or log(ms) scale) differs by language.
+What can you discover about how long the vowels are in Italian vs. Polish?
+
+```{r}
+#| label: dur-lg-plot
+#| echo: false
+#| eval: false
+dur_ita_pol %>% 
+  ggplot(aes(x = language, 
+             y = v1_duration, 
+             fill = language,    # fills the violin plots
+             colour = language)  # colours the points and violin outlines
+         ) +
+  geom_violin(alpha = 0.5, width = 0.5) +
+  geom_jitter(alpha = 0.5) +
+  theme(legend.position = 'none') +
+  labs(
+    y = 'Vowel duration (ms)',
+    x = 'Language'
+  )
+```
+
+```{r}
+#| label: dur-lg-plot-log
+#| echo: false
+#| eval: false
+dur_ita_pol %>% 
+  ggplot(aes(x = language, 
+             y = log_v1_dur, 
+             fill = language,    # fills the violin plots
+             colour = language)  # colours the points and violin outlines
+         ) +
+  geom_violin(alpha = 0.5, width = 0.5) +
+  geom_jitter(alpha = 0.5) +
+  theme(legend.position = 'none') +
+  labs(
+    y = 'Vowel duration (log(ms))',
+    x = 'Language'
+  )
+```
+
+
+#### Vowel duration by phonation and language
+
+One final plot before we turn to the contrast coding!
+We'll now visualise both `c2_phonation` and `language` together.
+Specifically, we'll fill/colour the geoms by `c2_phonation` and facet the plot by `language`.
+
+```{r}
+#| label: dur-lg-phon-plot
+dur_ita_pol %>% 
+  ggplot(aes(x = c2_phonation, 
+             y = v1_duration, 
+             fill = c2_phonation,
+             colour = c2_phonation)
+         ) +
+  geom_violin(alpha = 0.5, width = 0.5) +
+  geom_jitter(alpha = 0.5) +
+  facet_wrap(~ language) +
+  theme(legend.position = 'none') +
+  labs(
+    y = 'Vowel duration (ms)',
+    x = 'Consonant phonation'
+  )
+```
+
+
+(Again, if you would like, create a version of this plot with log(ms) on the y axis instead.)
+
+
+### Interpret the contrasts
+
+Use `contrasts()` to display the contrasts that R will use for `c2_phonation` and `language`.
+
+With respect to those contrasts, **try to answer the following questions:**
+
+1. Which level of each predictor corresponds to the **baseline level** (a.k.a., the reference level)? How do we know?
+2. Based on the plots above and on the coding of `c2_phonation`, do you think the model's estimate for the coefficient of `c2_phonation` will be **positive, negative, or near zero?**
+3. What about for `language`?
+4. What about for the interaction between `c2_phonation` and `language`?
+
+
+### Fit the model
+
+```{r}
+#| label: dur-fit-ex
+#| eval: false
+dur_bm <- brm(
+  ...
+)
+```
+
+- The model formula should specify that we're predicting log vowel duration as a function of `c2_phonation`, `language`, and their interaction.
+- Use the appropriate model family.
+- Tell the model which dataset to draw from.
+- Use cmdstanr as the backend.
+- Save the model to a file.
+
+```{r}
+#| label: dur-fit
+#| echo: false
+dur_bm <- brm(
+  log_v1_dur ~ c2_phonation * language,
+  family = gaussian(),
+  data   = dur_ita_pol,
+  backend = 'cmdstanr',
+  file = 'data/cache/dur_bm'
+)
+```
+
+
+Here's what your model summary should look like (more or less!).
+
+```{r}
+#| label: dur-fit-summ
+summary(dur_bm)
+```
+
+How does this line up with the predictions you made? 
+
+
+### Conditional posterior probability distributions
+
+These conditional posterior probability distributions are going to be over the log vowel duration, so the unit will be in log(ms).
+Similar to how we back-transformed the log-odds into probabilities above using `plogis()`, you'll want to back-transform the log(ms) into ms by using the inverse of the `log()` function, which is `exp()`.
+
+Reproduce the workflow we went through above.
+This will involve:
+
+1. Getting the posterior draws from the model using `as_draws_df()`.
+2. Work out which columns correspond to which $\beta$s.
+3. Add those columns together appropriately to cover all four combinations of the levels of `c2_phonation` and `language`.
+4. Transform the resulting data frame into "long" format using `pivot_longer()`.
+5. Separate the column headers into two columns, one of which corresponds to `c2_phonation` and the other, `language`.
+
+Your data frame should have three columns: `c2_phonation`, `language`, and whatever you've chosen to name the column that contains all the posterior samples (perhaps something like `"sampled_logms"`).
+
+Using this data, compute the mean and 95% CrIs of the conditional posterior probability distributions for every combination of `c2_phonation` and `language`, and generate density plots of the conditional posterior probability distributions.
+
+
+## Summary
+
+::: {.callout-note appearance="minimal"}
+
+**Modelling**
+
+- We use interactions to tell the model that the effect of one predictor can be different within levels of another predictor.
+
+- We can use our knowledge of treatment coding to predict the sign (i.e., positive or negative) of $\beta$ coefficients, even before the model is fit.
+
+
+**Data processing and visualisation**
+
+- `separate()` can split up a single column into multiple ones, as long as every value in that column contains a separator, e.g., `_`.
+
+- The same way that we back-transform log-odds into probabilities using `plogis()`, we back-transform log values into the original space using `exp()`.
+
+- All addition/subtraction to create conditional posterior probability distributions must be done on the scale in which the model was fit (e.g., log-odds or log), not the original space (e.g., probability or ms).
+
+- To create density plots of multiple distributions, give ggplot the data in "long" format and let the `fill` aesthetic separate the data into differently-coloured densities (this also automatically creates a legend for each colour).
+
+
+:::

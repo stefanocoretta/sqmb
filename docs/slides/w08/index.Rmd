@@ -1,0 +1,1083 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 8 - Multiple predictors and interactions"
+author: "Elizabeth Pankratz"
+institute: "University of Edinburgh"
+date: "2023/03/07"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+library(posterior)
+
+theme_update(text = element_text(size=14))
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+```
+
+```{r read-data}
+shallow <- read_csv("data/shallow.csv") %>%
+  filter(
+    Group == "L1",
+    Critical_Filler == "Critical",
+    RT > 0
+  ) %>%
+  mutate(
+    Accuracy = ifelse(ACC == 1, "correct", "incorrect")
+  )
+```
+
+
+class: center middle reverse
+
+# Please fill out today's attendance form:
+
+`https://forms.office.com/e/A0X816LnUp`
+
+![:scale 30%](imgs/qr.png)
+
+<!-- .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[ -->
+<!-- We will focus on **accuracy** (correct identification of real word: **correct/incorrect**) for L1 participants. ]-->
+
+---
+layout: false
+layout: true
+
+## Summary from last time
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What are **binary outcomes?**
+
+- Outcomes with two discrete levels (e.g., yes/no, grammatical/ungrammatical, correct/incorrect).
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we **visualise** them?
+
+- As proportions.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** What **distribution** do binary outcomes follow?
+
+- A Bernoulli distribution with one parameter, $p$, the probability of success.
+- In brms: `family = bernoulli()`.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)**  How do we fit a model requiring a **continuous outcome space** using binary data?
+
+- We model the binary outcomes as being generated based on the probability of success $p$.
+- We transform this probability into log-odds, which is continuous.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret** the estimates of such a model?
+
+- The model's estimates are in log-odds space.
+- To interpret them, we convert back to probability space using `plogis()`.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(6)** What are **credible intervals**?
+
+- Credible intervals are the difference between two quantiles.
+- For Bayesian modelling, they are the region in which, with some probability (usually 95%), the true value lies.
+]
+
+---
+layout:false
+
+## Five learning objectives for today
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What is a **factorial design?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we estimate and interpret the effects of **multiple predictors?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** How can such interactions between predictors be **built into our models?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret model estimates** of interactions? 
+]
+
+---
+
+## What is a factorial design?
+
+<br>
+
+.pull-left[
+.center[
+.pull-left[![:scale 80%](imgs/tree_a.pdf)]
+
+.pull-right[![:scale 80%](imgs/tree_b.pdf)]
+]
+]
+
+--
+
+.pull-right[
+<br>
+.center[
+.f4[
+|    	    | B = B1     	| B = B2     	|
+|-------- |--------	|--------	|
+| **A = A1** 	| A1, B1 	| A1, B2 	|
+| **A = A2** 	| A2, B1 	| A2, B2 	|
+]]]
+
+--
+
+<br><br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+How can we analyse **both predictors** at the same time?
+]
+
+---
+layout:false
+layout: true
+
+## Running example: Morphological processing
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Lexical decision task:** Is the string you see a word in English or not?
+
+- Outcome variable: **Accuracy** (incorrect/correct)
+
+- Predictors: 
+
+  - **Relation_type** (Unrelated/Constituent)
+  
+  - **Branching** (Left (*[unripe]-ness*) /Right (*un-[graceful]*))
+]
+
+<br>
+
+--
+
+|                                 	| Branching = Left  	| Branching = Right  	|
+|---------------------------------	|-------------------	|--------------------	|
+| **Relation_type = Unrelated**   	| Unrelated, Left   	| Unrelated, Right   	|
+| **Relation_type = Constituent** 	| Constituent, Left 	| Constituent, Right 	|
+
+---
+
+```{r setup-shallow, echo = TRUE}
+shallow <- shallow %>% 
+  filter(Relation_type != 'NonConstituent') %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right')),
+    Accuracy      = factor(Accuracy, levels = c('incorrect', 'correct'))
+  )
+```
+
+---
+layout:false
+
+## Visualising `Relation_type` and `Branching`
+
+```{r barplot-shallow}
+# Manual recreation of proportions stacked bar chart (as basis for later)
+(barplot_shallow <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  mutate(incorrect = 1 - correct) %>% 
+  pivot_longer(correct:incorrect, names_to = 'Accuracy', values_to = 'propn') %>% 
+  mutate(Accuracy = factor(Accuracy, levels = c('incorrect', 'correct'))) %>% 
+  # gg the plot
+  ggplot(aes(x = Relation_type, y = propn)) +
+  geom_bar(stat = 'identity', aes(fill = Accuracy)) +
+  facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type'))
+```
+
+
+---
+
+## We've seen multiple predictors before!
+
+<br> <br> <br> <br> <br> <br> <br>
+
+.f3[
+$$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$
+]
+
+---
+layout:false
+layout:true
+
+## Setting up `Relation_type` and `Branching`
+
+---
+
+<br>
+
+|                                 	| Branching = Left  	| Branching = Right  	|
+|---------------------------------	|-------------------	|--------------------	|
+| **Relation_type = Unrelated**   	| Unrelated, Left   	| Unrelated, Right   	|
+| **Relation_type = Constituent** 	| Constituent, Left 	| Constituent, Right 	|
+
+<br>
+--
+
+
+| Relation_type 	| Branching 	|
+|---------------	|-----------	|
+| Unrelated     	| Left      	|
+| Unrelated     	| Right     	|
+| Constituent   	| Left      	|
+| Constituent   	| Right     	|
+
+---
+
+<!-- my condolences to anyone trying to read this -->
+
+| When: | Then coded as: |
+| --- | --- |
+| <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> </tr> <tr> <td>0</td> <td>1</td> </tr> <tr> <td>1</td> <td>0</td> </tr> <tr> <td>1</td> <td>1</td> </tr> </tbody> </table> |  
+
+<!-- Here's how those two ensted tables look in markdown -->
+<!-- | Relation_type 	| Branching 	| -->
+<!-- |---------------	|-----------	| -->
+<!-- | Unrelated     	| Left      	| -->
+<!-- | Unrelated     	| Right     	| -->
+<!-- | Constituent   	| Left      	| -->
+<!-- | Constituent   	| Right     	| -->
+
+<!-- | Relation_type 	| Branching 	| -->
+<!-- |---------------	|-----------	| -->
+<!-- | 0             	| 0         	| -->
+<!-- | 0             	| 1         	| -->
+<!-- | 1             	| 0         	| -->
+<!-- | 1             	| 1         	| -->
+
+<br>
+--
+
+Let's verify that this coding is what R will use:
+
+.pull-left[
+```{r contr1, echo=TRUE}
+contrasts(shallow$Relation_type)
+```
+]
+
+.pull-right[
+```{r contr2, echo=TRUE}
+contrasts(shallow$Branching)
+```
+]
+
+---
+layout: false
+
+## What will the $\beta$s mean now?
+
+| When: | Then coded as: |
+| --- | --- |
+| <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> </tr> <tr> <td>0</td> <td>1</td> </tr> <tr> <td>1</td> <td>0</td> </tr> <tr> <td>1</td> <td>1</td> </tr> </tbody> </table> | 
+<br>
+
+$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch)$$
+<br>
+--
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &&= \beta_0  &\\
+\text{Unrelated, Right:}    & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_1 + \beta_2 &\\
+\end{aligned}
+$$
+
+---
+
+## The model we'll fit
+
+<br>
+<br>
+
+.f3[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+---
+
+```{r mult-fit, echo=TRUE}
+acc_mult_bm <- brm(
+  Accuracy ~ Relation_type + Branching, #<<
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_mult_bm'
+)
+```
+
+--
+
+```{r mult-summary-full, echo=TRUE}
+summary(acc_mult_bm)
+```
+
+---
+layout:true
+
+## Model estimates: `Intercept`
+
+---
+
+```{r mult-summ-1a}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+--
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+---
+
+```{r mult-summ-1b}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+---
+layout:false
+
+## Model estimates: `Relation_type`
+
+```{r mult-summ-2}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(0.69, 0.25) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}
+$$
+]
+
+---
+
+## Model estimates: `Branching`
+
+```{r mult-summ-3}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 & \sim Gaussian(1.08, 0.17) \\
+\beta_1 & \sim Gaussian(0.69, 0.25) \\
+\beta_2 & \sim Gaussian(1.44, 0.27) \\
+\end{aligned}
+$$
+]
+
+
+---
+
+## Conditional posterior probability of log-odds of "correct" response
+
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &&= \beta_0  &\\
+\text{Unrelated, Right:}    & & \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  & & \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &&= \beta_0 + \beta_1 + \beta_2 &\\
+\end{aligned}
+$$
+
+<br>
+--
+
+From the model: $\beta_0 = 1.08$, $\beta_1 = 0.69$, and $\beta_2 = 1.44$.
+
+<br>
+--
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     & & 1.08 &+ (0.69 \cdot 0) + (1.44 \cdot 0)  &&= 1.08  &= 1.08 \text{ log-odds}\\
+\text{Unrelated, Right:}    & & 1.08 &+ (0.69 \cdot 0) + (1.44 \cdot 1)  &&= 1.08 + 1.44 &= 2.52 \text{ log-odds}\\
+\text{Constituent, Left:}   & & 1.08 &+ (0.69 \cdot 1) + (1.44 \cdot 0)  &&= 1.08 + 0.69 &= 1.77 \text{ log-odds}\\
+\text{Constituent, Right:}  & & 1.08 &+ (0.69 \cdot 1) + (1.44 \cdot 1)  &&= 1.08 + 0.69 + 1.44 &= 3.21 \text{ log-odds}\\
+\end{aligned}
+$$
+
+???
+
+Ask: now, how move to probs?
+
+---
+
+```{r mult-draws}
+mult_draws <- as_draws_df(acc_mult_bm)
+
+# Compute conditional log-odds
+mult_draws_long <- mult_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+
+```{r mult-cri}
+mult_cri <- mult_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+```
+
+
+```{r mult-draws-dens, out.width = "80%"}
+(mult_draws_dens <- mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples))) +
+  geom_density(alpha = 0.5, aes(fill = Relation_type)) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability distributions\nof "correct" response',
+       # subtitle = 'Model with no interaction',
+       fill = 'Relation type'))
+```
+
+---
+
+```{r mult-draws-dens2, out.width = "80%"}
+mult_draws_dens +
+  # intervals + means
+  geom_point(data = mult_cri, aes(x = p_mean, 
+                                  y=c(32, 32, 33, 33), 
+                                  # colour=Relation_type,
+                                  ), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(x = p_mean, 
+                    y=c(32, 32, 33, 33), 
+                    xmax = p_q95_hi, 
+                    xmin = p_q95_lo, 
+                    # colour=Relation_type
+                    ),
+                width = 0,
+                size = 1)
+```
+
+
+---
+layout:true
+
+## Do these estimates match the data?
+
+---
+
+```{r barplot-shallow2}
+barplot_shallow
+```
+
+---
+
+```{r barplot-shallow-mult}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_mult <- barplot_shallow +
+  geom_point(data = mult_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1))
+```
+
+
+???
+
+The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
+And because that difference is small, it's also underestimating the larger difference in Branching = Left.
+
+If only there were some way to tell the model that the effect of relation type can be different between the two levels of branching.
+
+Oh wait...
+
+---
+layout:false
+class: center middle reverse
+
+# Time for a wee break!
+
+### If you haven't yet, please fill in today's attendance form:
+
+`https://forms.office.com/e/A0X816LnUp`
+
+![:scale 30%](imgs/qr.png)
+
+---
+
+## How does the current model fall short?
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+The question we want to answer: 
+- **"Is the effect of `Relation_type` different when `Branching == Left` compared to when `Branching == Right`?"**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Our current model doesn't let effects differ between levels of other variables.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+The solution: Include an **interaction** between these two predictors.
+]
+
+---
+layout:true
+
+## In other words: we want a _difference of differences_
+
+---
+
+```{r barplot-shallow3}
+barplot_shallow
+```
+
+---
+
+```{r shallow-diffs}
+shallow_endpts <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  pivot_wider(names_from = Relation_type, values_from = correct)
+
+barplot_shallow +
+  geom_segment(data = shallow_endpts, 
+               size = 2,
+               aes(y = Unrelated, yend = Constituent, x = 1.5, xend = 1.5))
+```
+
+---
+layout: false
+
+## How do we make this happen?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Create a **new variable** that represents the interaction.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Assign that variable **its own $\beta$ coefficient.**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Estimate $\beta$ as usual.
+
+- This estimate tells us **how much one predictor's effect changes between levels of the other**.
+]
+
+
+---
+
+## Treatment coding, feat. interaction
+
+| When: | Then coded as: |
+| --- | --- |
+| <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> <th>Relation_type:Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> <td>0 \* 0 = 0</td> </tr> <tr> <td>0</td> <td>1</td> <td>0 \* 1 = 0</td> </tr> <tr> <td>1</td> <td>0</td> <td>1 \* 0 = 0</td> </tr> <tr> <td>1</td> <td>1</td> <td>1 \* 1 = 0</td> </tr> </tbody> </table>  |  
+
+<br>
+--
+
+$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)$$
+
+<br>
+--
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0  &\\
+\text{Unrelated, Right:}    && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &&= \beta_0 + \beta_1 + \beta_2 + \beta_3 &\\
+\end{aligned}
+$$
+
+---
+
+## What does the extra $\beta$ give us?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When both variables are coded as 1 (non-baseline) in a model **with no interaction:**
+
+$$
+ \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) = \beta_0 + \beta_1 + \beta_2 \\
+$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+And in a model **with an interaction:**
+
+$$
+\beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) = \beta_0 + \beta_1 + \beta_2 + \beta_3 \\
+$$
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+$\beta_3$ can **adjust** the effect of $\beta_1$ or $\beta_2$.
+]
+
+---
+
+## The model we'll fit
+
+<br>
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 & \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 & \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 & \sim Gaussian(\mu_2, \sigma_2) \\
+\beta_3 & \sim Gaussian(\mu_3, \sigma_3) \\
+\end{aligned}
+$$
+]
+
+---
+
+## How to specify a model with an interaction
+
+```{r inter-fit, echo = TRUE}
+acc_inter_bm <- brm(
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,  #<<
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+A note on the syntax for specifying interactions in R:
+
+**`Relation_type + Branching + Relation_type:Branching`**
+
+is the same as
+
+**`Relation_type * Branching`**
+
+but more transparent about what's happening behind the scenes!
+]
+
+---
+
+<br>
+
+```{r inter-summary, echo = TRUE}
+summary(acc_inter_bm)
+```
+
+???
+
+$\beta_3$'s mean of -0.63 means that, when we move from Branching Left -> Right, the effect of Relation_type is smaller.
+
+Or equivalently (but not how we're looking at it here), it means that, when we move from Relation_type Unrelated -> Constituent, the effect of Branching is smaller.
+
+---
+
+<br>
+
+```{r inter-summ-1}
+cat(capture.output(summary(acc_inter_bm))[8:13], sep = "\n")
+```
+
+<br>
+
+.f4[
+$$
+\begin{aligned}
+\text{acc} & \sim Bernoulli(p) \\
+logit(p) & = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 & \sim Gaussian(1.02, 0.17) \\
+\beta_1 & \sim Gaussian(0.85, 0.29) \\
+\beta_2 & \sim Gaussian(1.69, 0.36) \\
+\beta_3 & \sim Gaussian(-0.63, 0.55) \\
+\end{aligned}
+$$
+]
+
+---
+layout: true
+
+## How to interpret $\beta_3$
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- $\beta_3$'s mean of $-0.63$ is a **_negative_ adjustment to the effect of `Relation_type`** when we move from `Branching == Left` (baseline) to `Branching == Right` (non-baseline).
+
+  - In other words, the model thinks the effect of `Relation_type` is _smaller_ in `Branching == Right` (non-baseline) than in `Branching == Left`.
+  
+  - The 95% CrI $[-1.72, 0.42]$ suggests a little uncertainty about the direction of the interaction.
+]
+
+--
+  
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Equivalently,** $\beta_3$ is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+
+  - In other words, the model thinks the effect of `Branching` is (probably) smaller in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated`.
+]
+
+---
+
+.pull-left[
+```{r barplot-symm1, out.width = "100%", fig.height=6}
+shallow %>% 
+  ggplot(aes(x = Relation_type, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type',
+       title = 'Smaller effect of Relation_type in Branching = Right')
+```
+]
+
+.pull-right[
+```{r barplot-symm2, out.width = "100%", fig.height=6}
+shallow %>% 
+  ggplot(aes(x = Branching, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Relation_type, labeller = labeller(Relation_type = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Branching',
+       title = "Smaller effect of Branching in Relation_type = Constituent")
+```
+]
+
+---
+layout:false
+
+## Conditional posterior probability of log-odds of "correct" response
+
+$$
+\begin{aligned}
+\text{Unrelated, Left:}     && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0  &\\
+\text{Unrelated, Right:}    && \beta_0 &+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_2 &\\
+\text{Constituent, Left:}   && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &&= \beta_0 + \beta_1 &\\
+\text{Constituent, Right:}  && \beta_0 &+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &&= \beta_0 + \beta_1 + \beta_2 + \beta_3 &\\
+\end{aligned}
+$$
+
+<br>
+--
+
+From the model: $\beta_0 = 1.02$, $\beta_1 = 0.85$, $\beta_2 = 1.69$, and $\beta_3 = -0.63$.
+
+<br>
+--
+
+$$
+\begin{aligned}
+\text{Unr., L:}     && 1.02 &+ (0.85 \cdot 0) + (1.69 \cdot 0) + (-0.63 \cdot 0) &&= 1.02  &= 1.02 \text{ log-odds}\\
+\text{Unr., R:}    && 1.02 &+ (0.85 \cdot 0) + (1.69 \cdot 1) + (-0.63 \cdot 0) &&= 1.02 + 1.69 &= 2.71 \text{ log-odds}\\
+\text{Con., L:}   && 1.02 &+ (0.85 \cdot 1) + (1.69 \cdot 0) + (-0.63 \cdot 0) &&= 1.02 + 0.85 &= 1.87 \text{ log-odds}\\
+\text{Con., R:}  && 1.02 &+ (0.85 \cdot 1) + (1.69 \cdot 1) + (-0.63 \cdot 1) &&= 1.02 + 0.85 + 1.69 -0.63 &= 2.93 \text{ log-odds}\\
+\end{aligned}
+$$
+
+---
+
+```{r inter-draws}
+inter_draws <- as_draws_df(acc_inter_bm)
+
+# Compute conditional log-odds
+inter_draws_long <- inter_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent + `b_Relation_typeConstituent:BranchingRight`
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r inter-draws-dens, out.width = "80%"}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability distributions\nof "correct" response',
+       # subtitle = 'Model with interaction',
+       fill = 'Relation type')
+```
+
+---
+
+## Compare estimates with and without the interaction
+
+.pull-left[
+```{r mult-draws-dens-L, fig.height=6, out.width="100%"}
+mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       # title = 'Conditional posterior probability distributions\nof "correct" response',
+       title = 'From a model without an interaction',
+       fill = 'Relation type') +
+  theme(legend.position = 'bottom')
+
+```
+]
+
+.pull-right[
+```{r inter-draws-dens-R, fig.height=6, out.width="100%"}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       # title = 'Conditional posterior probability distributions\nof "correct" response',
+       title = 'From a model with an interaction',
+       fill = 'Relation type') +
+  theme(legend.position = 'bottom')
+
+
+```
+]
+
+---
+
+## How well does the interaction model fit the data?
+
+```{r inter-cri}
+inter_cri <- inter_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+```
+
+```{r barplot-shallow-inter}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_inter <- barplot_shallow +
+  geom_point(data = inter_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = inter_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1) +
+  NULL)
+```
+
+---
+
+.pull-left[
+```{r mult-barplot-L, fig.height=8, out.width="100%"}
+barplot_shallow_mult +
+  labs(title = 'Without interaction')
+```
+]
+
+.pull-right[
+```{r inter-barplot-R, fig.height=8, out.width="100%"}
+barplot_shallow_inter +
+  labs(title = 'With interaction')
+```
+]
+
+
+---
+layout: false
+layout: true
+
+## Learning objectives revisited
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What is a **factorial design?**
+- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we estimate and interpret the effects of **multiple predictors?**
+- A predictor's $\beta$ is the effect of that predictor *when the other predictor's value is 0*.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+- We fit a model that contains an interaction term.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** How can such interactions between predictors be **built into our models?**
+- The interaction term is defined as the **product** of the two interacting predictors.
+- It gets its own $\beta$ coefficient, which we estimate as usual.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret model estimates** of interactions? 
+- The interaction term's $\beta$ tells us **how much one predictor's effect changes between levels of the other**.
+]

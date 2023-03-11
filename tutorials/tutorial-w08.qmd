@@ -25,7 +25,7 @@ my_seed <- 8878
 ```
 
 
-This tutorial has two sections, and each one will guide you through a different example of interactions between two binary variables.
+This tutorial has two sections, and each will guide you through one example of an interaction between two binary variables.
 The first section revisits the morphological processing data from the lecture.
 The second section focuses on a different data set, this time with a continuous outcome.
 This analysis will require you to adapt the code from earlier in the tutorial, as well as recall from earlier weeks how to fit and interpret a Gaussian model.
@@ -45,7 +45,7 @@ As usual, though, **first things first:**
 
 ### Read and process the data
 
-We've worked with the data from `shallow.csv` before, first way back in week 2 (ah, the good old days!).
+We've played with the data in `shallow.csv` before, way back in week 2 (ah, the good old days!).
 This means you might already have it in your `data/` folder, but if not, you can download it again from here: [shallow.csv](../data/shallow.csv).
 
 Use the usual `read_csv()` function to read in the dataset, and assign it to a variable called `shallow`.
@@ -67,7 +67,6 @@ shallow <- read_csv("data/shallow.csv")
 
 
 Run the following code to filter this data frame for only the data we need for this example.
-Try to understand the conditions that `filter()` is applying to the dataset.
 
 ```{r}
 #| label: filter-shallow
@@ -90,7 +89,7 @@ The **outcome variable** that we want is:
   - `correct` (which we want coded as 1).
 
 Right now, `shallow` doesn't contain a column `Accuracy`.
-There is a column called `ACC` that contains 0s and 1s, though, so below, we'll use that to create the `Accuracy` column of our dreams.
+There is a column called `ACC` that contains the same information, though, so below we'll use that to create the `Accuracy` column of our dreams.
 
 Also, the two **predictors** we want are:
 
@@ -120,7 +119,8 @@ shallow <- shallow %>%
 
 ### Visualise the data
 
-Create a bar plot that looks like this one, showing the proportion of correct/incorrect responses by `Relation_type`, faceting by `Branching`.
+Use `shallow` to create a bar plot that looks like this one. 
+Show the proportion of correct/incorrect responses by `Relation_type`, faceting by `Branching`.
 
 ```{r}
 #| label: barplot-shallow
@@ -137,11 +137,11 @@ shallow %>%
 
 A couple hints:
 
-- To make `geom_bar()` display proportions instead of counts, you can write: `geom_bar(position = 'fill')`.)
+- To make `geom_bar()` display proportions instead of counts, you can write `geom_bar(position = 'fill')`.
 - To include the text "Branching" in the facet labels, give the function `facet_grid()` the following argument: `labeller = labeller(Branching = label_both)`. 
 
 
-Notice that this plot shows a _difference of differences_: The difference between `Relation_type == Unrelated` and `Relation_Type == Constituent` is bigger when `Branching == Left`, and smaller when `Branching == Right`.
+Notice that this plot reveals a _difference of differences_: The difference between `Relation_type == Unrelated` and `Relation_Type == Constituent` is bigger when `Branching == Left`, and smaller when `Branching == Right`.
 **It is this difference of differences that suggests that our model should probably include an interaction between these two variables.**
 
 Before we dive into the model, though, let's verify that our variables are indeed going to be coded the way we want.
@@ -168,8 +168,8 @@ What does this mean for the estimates that the model will produce?
 contrasts(shallow$Relation_type)
 ```
 
-With treatment coding like this, the $\beta$ coefficient tells us the effect of moving from the baseline level to the non-baseline level.
-In this case, the baseline is `Unrelated`.
+Because we are using 0/1 treatment coding, the $\beta$ coefficient tells us the effect of moving from the baseline level to the non-baseline level.
+In this case, the baseline is `Unrelated`, coded as 0.
 This means that the $\beta$ coefficient will represent the estimated effect of moving from `Unrelated` to `Constituent`.
 
 In other words:
@@ -178,7 +178,7 @@ In other words:
 - The $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
 - The $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and relation type.
 
-Based on this information and on the plot above, do you expect that the coefficient's posterior distribution will be largely positive, negative, or around zero?
+Based on this information and on the bar plot above, do you expect that the coefficient's posterior distribution will be largely positive, negative, or around zero?
 
 
 #### `Branching`
@@ -261,8 +261,18 @@ summary(acc_inter_bm)
 Do the coefficient estimates match the predictions you made above?
 If they don't, can you figure out why not?
 
-We're now going to create the conditional posterior probability distributions of the probability of answering correctly in each combination of `Relation_type` and `Branching`.
-We'll then talk about how to interpret and report the model's estimates based on these distributions.
+### Interpreting the interaction
+
+**In general, for treatment-coded predictors, a positive interaction coefficient represents a positive adjustment to one variable's effect, when we move from (or in other words, when we compare) the other variable's baseline level to its non-baseline level.
+And a negative interaction coefficient represents a negative adjustment.**
+
+As we observed in the lecture, this interaction's mean estimate of $-0.63$ suggests that (equivalently):
+
+- there is a smaller effect of `Relation_type` in `Branching == Right` (non-baseline) when compared to `Branching == Left` (baseline); 
+- there is a smaller effect of `Branching` in `Relation_type == Constituent` (non-baseline) when compared to `Relation_type == Unrelated` (baseline).
+
+The 95% CrI of $[-1.72, 0.42]$ suggests that the model thinks that a negative interaction is most probable (there is more probability mass on the negative side of zero than the positive side).
+However, since positive values also come into question, this suggests that the model is slightly uncertain about the direction of the interaction (but it definitely thinks a negative interaction is more probable).
 
 
 ### Conditional posterior probability distributions
@@ -270,7 +280,7 @@ We'll then talk about how to interpret and report the model's estimates based on
 Getting the conditional posterior probability distributions when so many predictors are at play is a bit of a process, but we'll approach it step by step.
 
 The first thing to do is to get the posterior draws from our model, using `as_draws_df()`.
-(Fun fact: these are the samples that `summary()` summarises when it shows us the model's estimates.)
+(Fun fact: these are the very samples that `summary()` summarises when it shows us the model's estimates.)
 
 ```{r}
 #| label: acc-draws
@@ -326,8 +336,8 @@ acc_draws_cond <- acc_draws %>%
 acc_draws_cond
 ```
 
-(Note that, in `acc_draws`, the column name for the interaction has `:` in it, which can be confusing to R.
-To avoid problems, we wrap that column name in tick marks.)
+(Note that, in `acc_draws`, the column name that corresponds to the interaction's $\beta$ contains the symbol `:`, which can be confusing to R.
+To avoid problems, we can wrap that column name in tick marks.)
 
 Now these conditional posterior probability distributions are almost ready to work with!
 There's just one more big data-manipulation step left before we can compute some summary statistics and create some pretty plots.
@@ -378,14 +388,16 @@ Nice!
 We are finally ready to summarise and plot these distributions.
 
 ::: {.callout-note appearance="minimal"}
-**Note:** When computing the conditional posterior probability distributions, it is very important to do any addition/subtraction **in the space the model was fit in**.
-That is, figuring out the conditional probability distribution must be done **before** back-transforming into the original space.
-Otherwise, if you, say, back-transform each individual $\beta$ and then add them together, you risk ending up with incorrect or even impossible values on your original scale.
+**Note:** When computing the conditional posterior probability distributions when the model involves non-linear transformations like `log()` or `logit()`, it is very important to do any addition/subtraction **in the space the model was fit in**.
+That is, figuring out the conditional probability distribution must be done **before back-transforming** back into the original space.
+
+If you were to first back-transform each individual $\beta$ and then add them together, for example, this would give you incorrect estimates.
+Take care to avoid this!
 :::
 
 #### Compute means and 95% CrIs
 
-We'll also use the long draws data to compute the summary statistics of the posteriors.
+We'll also use `acc_draws_cond_long` to compute summary statistics of the posteriors.
 We can do this using some now-familiar machinery: `group_by()`, `summarise()`, `mean()`, and `quantile2()`.
 
 
@@ -406,9 +418,8 @@ acc_cond_summ <- acc_draws_cond_long %>%
 acc_cond_summ
 ```
 
-I mentioned above that the posterior draws are what `summary()` uses to summarise the posterior distributions.
-So, a good sense check to make sure our computation is good is to compare `acc_cond_summ` with the actual model summary.
-In the model summary, the estimates for `Intercept` should match the summary measures here for the row in which `Relation_type == Unrelated` and `Branching == Left` (since those are the two baseline levels).
+Because `summary()` also summarises with these posterior draws, a good sense check is to make sure `acc_cond_summ` matches the actual model summary.
+Specifically, in the model summary, the estimates for `Intercept` should match the summary measures here for the row in which `Relation_type == Unrelated` and `Branching == Left` (since those are the two baseline levels).
 
 Let's have a look:
 
@@ -419,12 +430,12 @@ cat(capture.output(summary(acc_inter_bm))[8:13], sep = "\n")
 
 Yes!
 The intercept's `Estimate` matches the mean when `Relation_type == Unrelated` and `Branching == Left`, and the lower and upper bounds of the 95% CrI match as well.
-So now we can be reassured that we've computed something sensible and worth reporting.
+So now we can be reassured that our computation is reasonable.
 
 
 #### Plot multiple posterior densities
 
-Now we'll use the conditional posterior probability distributions to create a density plot.
+Finally, we'll use the conditional posterior probability distributions to create a density plot.
 
 See if you understand how the following code creates the plot we see below.
 
@@ -461,19 +472,19 @@ acc_draws_cond_long %>%
 Give it a shot.
 Creating this kind of plot is really worth practicing, because these are exactly the kinds of plots you'll want to show in your reports and dissertations.
 
-That's it for our first model!
-Now we'll turn to the second part of the tutorial: a slightly more loosely guided walkthrough of how to put what you've learned into practice.
+OK, that's it for our first model!
+Now we'll turn to the second part of the tutorial: a more loosely-guided walkthrough of how to put what you've learned so far into practice.
 
 
 ## Vowel duration in Italian and Polish
 
-The data we'll use for the rest of this tutorial comes from Coretta, S., (2019) "An exploratory study of voicing-related differences in vowel duration as compensatory temporal adjustment in Italian and Polish", *Glossa: a journal of general linguistics* 4(1): 125. doi: <https://doi.org/10.5334/gjgl.869>.
+The data we'll use in this section comes from Coretta, S., (2019) "An exploratory study of voicing-related differences in vowel duration as compensatory temporal adjustment in Italian and Polish", *Glossa: a journal of general linguistics* 4(1): 125. doi: <https://doi.org/10.5334/gjgl.869>.
 
 The dataset can be downloaded here: [dur-ita-pol.csv](../data/dur-ita-pol.csv).
 
 ### Read in the data
 
-Save `dur-ita-pol.csv` in your `data/` folder, and read it in using read it in using `read_csv()`.
+Save `dur-ita-pol.csv` in your `data/` folder, and read it in using `read_csv()`.
 
 ```{r}
 #| label: read-dur-ex
@@ -748,6 +759,15 @@ summary(dur_bm)
 How does this line up with the predictions you made? 
 
 
+### Interpreting the interaction
+
+Here, the interaction coefficient's mean is estimated at 0.01 (95% CrI: –0.05, 0.07).
+This posterior distribution is basically centered on zero, with near-equal probability assigned to both negative and positive values.
+This means that the model isn't at all certain about the direction of the interaction's effect, or even whether there is one at all.
+
+(Keep in mind that null results like this are just part of doing research, and that a model that yields null results isn't an inherently bad or uninteresting model.)
+
+
 ### Conditional posterior probability distributions
 
 These conditional posterior probability distributions are going to be over the log vowel duration, so the unit will be in log(ms).
@@ -773,9 +793,11 @@ Using this data, compute the mean and 95% CrIs of the conditional posterior prob
 
 **Modelling**
 
-- We use interactions to tell the model that the effect of one predictor can be different within levels of another predictor.
+- A model that contains interactions is able to estimate a difference in the effect of one predictor between levels of another.
 
-- We can use our knowledge of treatment coding to predict the sign (i.e., positive or negative) of $\beta$ coefficients, even before the model is fit.
+- For treatment-coded variables A and B, a positive interaction coefficient represents a positive adjustment (i.e., an addition) to variable A's effect, when we compare variable B's baseline level to its non-baseline level. And a negative interaction coefficient represents a negative adjustment (i.e., a subtraction).
+
+- Null results don't mean that a model is not useful. 
 
 
 **Data processing and visualisation**
@@ -784,7 +806,7 @@ Using this data, compute the mean and 95% CrIs of the conditional posterior prob
 
 - The same way that we back-transform log-odds into probabilities using `plogis()`, we back-transform log values into the original space using `exp()`.
 
-- All addition/subtraction to create conditional posterior probability distributions must be done on the scale in which the model was fit (e.g., log-odds or log), not the original space (e.g., probability or ms).
+- Any operations that we use to create conditional posterior probability distributions must be done on the scale in which the model was fit (e.g., log-odds or log), not the scale of the original variable (e.g., probability or ms). Back-transformation into the original space should be the final step.
 
 - To create density plots of multiple distributions, give ggplot the data in "long" format and let the `fill` aesthetic separate the data into differently-coloured densities (this also automatically creates a legend for each colour).
 

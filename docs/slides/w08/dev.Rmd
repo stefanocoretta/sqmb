@@ -1,0 +1,441 @@
+---
+title: "Week 8 lecture dev"
+output: 
+  html_notebook:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+library(posterior)
+
+theme_update(text = element_text(size=16))
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+```
+
+```{r read-data}
+shallow <- read_csv("data/shallow.csv") %>%
+  filter(
+    Group == "L1",
+    Critical_Filler == "Critical",
+    RT > 0
+  ) %>%
+  mutate(
+    Accuracy = ifelse(ACC == 1, "correct", "incorrect")
+  )
+```
+
+The data we'll use is `shallow` again, and the two predictors we'll look at are `Relation_type` (same as last week, but we'll only take two levels of it for today), and `Branching` (two levels).
+
+
+# 1: Multiple predictors
+
+## Set up data and visualise
+
+Exclude `Relation_type == NonConstituent` and reorder factor levels.
+
+```{r setup-shallow}
+shallow <- shallow %>% 
+  filter(Relation_type != 'NonConstituent') %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right')),
+    Accuracy      = factor(Accuracy, levels = c('incorrect', 'correct'))
+  )
+```
+
+
+a la sqmf:
+
+```{r shallow-propns}
+shallow %>% 
+  ggplot(aes(x = Relation_type, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type')
+```
+
+Reversed grouping (a less obvious difference between differences, bc above ^ there just is none in one condition, so we'll stick with the above for the lecture):
+
+```{r}
+shallow %>% 
+  ggplot(aes(x = Branching, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Relation_type) +
+  labs(y = 'Proportion')
+```
+
+## Check coding
+
+Let's have a look at the coding that R assigns to each of these variables.
+
+```{r contr-reln}
+contrasts(shallow$Relation_type)
+```
+
+
+```{r contr-branch}
+contrasts(shallow$Branching)
+```
+
+The baseline/reference levels are `Relation_type == Unrelated`, and `Branching == Left`.
+
+
+## Fit the model
+
+```{r}
+acc_mult_bm <- brm(
+  Accuracy ~ Relation_type + Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_mult_bm'
+)
+```
+
+```{r}
+summary(acc_mult_bm)
+```
+
+Print only the population-level effects:
+
+```{r}
+cat(capture.output(summary(acc_mult_bm))[8:12], sep = "\n")
+```
+
+To get the estims as a df:
+
+```{r}
+(mult_coefs <- summary(acc_mult_bm)$fixed)
+```
+
+### Interpreting coefs
+
+Get indiv estims for each coef:
+
+```{r}
+int_estim    <- mult_coefs['Intercept', 'Estimate']
+reln_estim   <- mult_coefs['Relation_typeConstituent', 'Estimate']
+branch_estim <- mult_coefs['BranchingRight', 'Estimate']
+```
+
+```{r}
+int_estim                              # p acc(unrel, left)
+int_estim + branch_estim               # p acc(unrel, right)
+int_estim + reln_estim                 # p acc(const, left)
+int_estim + reln_estim + branch_estim  # p acc(const, right)
+```
+
+
+```{r}
+round(plogis(int_estim), 2)                              # p acc(unrel, left)
+round(plogis(int_estim + branch_estim), 2)               # p acc(unrel, right)
+round(plogis(int_estim + reln_estim), 2)                 # p acc(const, left)
+round(plogis(int_estim + reln_estim + branch_estim), 2)  # p acc(const, right)
+```
+
+### Conditional probabilities
+
+```{r mult-draws}
+mult_draws <- as_draws_df(acc_mult_bm)
+
+# Compute conditional log-odds
+mult_draws_long <- mult_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r mult-draws-dens}
+mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of "correct" response',
+       subtitle = 'Model with no interaction',
+       fill = 'Relation type')
+```
+
+
+### 95% CrI in probability space
+
+```{r mult-cri}
+mult_cri <- mult_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+mult_cri
+```
+
+#### Overlay CrIs on density plot
+
+```{r}
+mult_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples))) +
+  geom_density(alpha = 0.5, aes(fill = Relation_type)) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of "correct" response',
+       subtitle = 'Model with no interaction',
+       fill = 'Relation type') +
+  # ints + means
+  geom_point(data = mult_cri, aes(x = p_mean, 
+                                  y=c(32, 32, 33, 33), 
+                                  # colour=Relation_type,
+                                  ), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(x = p_mean, 
+                    y=c(32, 32, 33, 33), 
+                    xmax = p_q95_hi, 
+                    xmin = p_q95_lo, 
+                    # colour=Relation_type
+                    ),
+                width = 0,
+                size = 1)
+```
+
+
+
+### Compare back to data
+
+Overlay these estimates on the actual data.
+Does this feel right?
+
+```{r}
+# Manual recreation
+barplot_shallow <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  mutate(incorrect = 1 - correct) %>% 
+  pivot_longer(correct:incorrect, names_to = 'Accuracy', values_to = 'propn') %>% 
+  mutate(Accuracy = factor(Accuracy, levels = c('incorrect', 'correct'))) %>% 
+  # gg the plot
+  ggplot(aes(x = Relation_type, y = propn)) +
+  geom_bar(stat = 'identity', aes(fill = Accuracy)) +
+  facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type')
+
+# Add in the model's estimates as points + error bars
+(barplot_shallow_mult <- barplot_shallow +
+  geom_point(data = mult_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = mult_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1) +
+  NULL)
+```
+
+The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
+And because that difference is small, it's also underestimating the larger difference in Branching = Left.
+
+If only there were some way to tell the model that the effect of relation type can be different between the two levels of branching.
+
+Oh wait...
+
+
+# 2: Interactions
+
+## Shallow barplot with diff of diffs
+
+```{r shallow-diffs}
+shallow_endpts <- shallow %>% 
+  group_by(Relation_type, Branching) %>%
+  summarise(correct = mean(ACC)) %>% 
+  pivot_wider(names_from = Relation_type, values_from = correct)
+
+barplot_shallow +
+  geom_segment(data = shallow_endpts, 
+               size = 2,
+               aes(y = Unrelated, yend = Constituent, x = 1.5, xend = 1.5))
+```
+
+
+## Fit the model
+
+You'll also see this syntax for interactions: `Relation_type * Branching`, which secretly fits all three things we fit individually below.
+But I don't like secrets.
+
+```{r}
+acc_inter_bm <- brm(
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+```{r}
+summary(acc_inter_bm)
+```
+
+
+Print only the population-level effects:
+
+```{r}
+cat(capture.output(summary(acc_inter_bm))[8:13], sep = "\n")
+```
+
+To get the estims as a df:
+
+```{r}
+(inter_coefs <- summary(acc_inter_bm)$fixed)
+```
+
+### Interpreting coefs
+
+Get indiv estims for each coef:
+
+```{r}
+int_estim2    <- inter_coefs['Intercept', 'Estimate']
+reln_estim2   <- inter_coefs['Relation_typeConstituent', 'Estimate']
+branch_estim2 <- inter_coefs['BranchingRight', 'Estimate']
+inter_estim   <- inter_coefs['Relation_typeConstituent:BranchingRight', 'Estimate']
+```
+
+
+GelmanHill2007 p. 93 interpretation (with both possible mappings of interacting vars to VAR1 and VAR2):
+
+> Moving from VAR1_BASELINE to VAR1_NON-BASELINE of VAR1, the value INTERACTION_COEF is added to the coefficient for VAR2.
+We have already seen that the coefficient for VAR2 is VAR2_COEF at the baseline level of VAR1, and so we can understand the interaction as saying that the importance of VAR2 as a predictor [*increases* if signs of VAR2_COEF and INTERACTION_COEF are the same/*decreases* if signs of VAR2_COEF and INTERACTION_COEF are different(?)] when we move from VAR1_BASELINE to VAR1_NON-BASELINE.
+
+<!-- VAR1 = Relation_type -->
+1) Moving from `Unrelated` to `Constituent`, the value `r round(inter_estim, 2)` is added to the coefficient for `Branching`.
+We have already seen that the coefficient for `Branching` is `r round(branch_estim2, 2)` at the baseline level of `Relation_type`, and so we can understand the interaction as saying that the effect of `Branching` gets smaller when we move from `Unrelated` relation types to `Constituent` relation types.
+
+<!-- VAR1 = Branching -->
+2) Moving from `Left` to `Right`, the value `r round(inter_estim, 2)` is added to the coefficient for `Relation_type`.
+We have already seen that the coefficient for `Relation_type` is `r round(reln_estim2, 2)` at the baseline level of `Branching`, and so we can understand the interaction as saying that the effect of `Relation_type` gets smaller when we move from `Left` branching to `Right` branching structures.
+
+Interpretation (2) is the one that goes with the data that we'll see in the lecture (and it makes sense when looking at the plot, we can see it!).
+So that's the interpretation that we'll focus on for ease of storytelling for the lec.
+
+
+
+### Cond probs
+
+Put 'em together to get new conditional probability means:
+
+```{r}
+round(plogis(int_estim2), 2)                               # p acc(unrel, left)
+round(plogis(int_estim2 + branch_estim2), 2)               # p acc(unrel, right)
+round(plogis(int_estim2 + reln_estim2), 2)                 # p acc(const, left)
+round(plogis(int_estim2 + reln_estim2 + branch_estim2 + inter_estim), 2)  # p acc(const, right)
+```
+```{r inter-draws}
+inter_draws <- as_draws_df(acc_inter_bm)
+
+# Compute conditional log-odds
+inter_draws_long <- inter_draws %>% 
+  mutate(
+    Unrelated_Left  = b_Intercept,
+    Unrelated_Right = b_Intercept + b_BranchingRight,
+    Constituent_Left    = b_Intercept + b_Relation_typeConstituent,
+    Constituent_Right   = b_Intercept + b_BranchingRight + b_Relation_typeConstituent + `b_Relation_typeConstituent:BranchingRight`
+  ) %>% 
+  select(Unrelated_Left:Constituent_Right) %>% 
+  pivot_longer(everything(), names_to = 'pred_combo', values_to = 'logodds_samples') %>% 
+  separate(pred_combo, into = c('Relation_type', 'Branching')) %>% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right'))
+  )
+```
+
+```{r inter-draws-dens}
+inter_draws_long %>% 
+  ggplot(aes(x = plogis(logodds_samples), fill = Relation_type)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ Branching, nrow=2, labeller = labeller(Branching = label_both)) +
+  xlim(0, 1) +
+  labs(x = 'Probability',
+       y = 'Probability density',
+       title = 'Conditional posterior probability of "correct" response',
+       subtitle = 'Model with interaction',
+       fill = 'Relation type')
+```
+
+
+
+### 95% CrI in probability space
+
+```{r inter-cri}
+inter_cri <- inter_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+inter_cri
+```
+
+
+
+### Compare back to data
+
+Overlay these estimates on the actual data.
+Does this feel right?
+
+```{r}
+# Add in the model's estimates as points + error bars
+(barplot_shallow_inter <- barplot_shallow +
+  geom_point(data = inter_cri, aes(y = p_mean), size=2) +
+  geom_errorbar(data = inter_cri,
+                aes(y = p_mean, ymax = p_q95_hi, ymin = p_q95_lo),
+                width = 0,
+                size = 1) +
+  NULL)
+```
+

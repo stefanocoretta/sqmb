@@ -330,7 +330,7 @@ There will be no classes.
 
 ### Week 7: Binary outcomes
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -348,7 +348,7 @@ There will be no classes.
 -   Convert between log-odds, odds and probabilities.
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 -   [Lecture slides](slides/w07/).
@@ -357,9 +357,9 @@ There will be no classes.
     -   [takete_maluma.txt](data/takete_maluma.txt).
 :::
 
-### Week 8: Interactions between predictors
+### Week 8: Multiple predictors and interactions
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -373,11 +373,23 @@ There will be no classes.
 
 **Skills**
 
--   Join two or more data tables together using dplyr.
 -   Run and interpret models with multiple predictors.
 -   Interpret interactions between two predictors.
 -   Plot posterior and conditional probabilities from models with interactions.
+-   Practice transforming and back-transforming variables.
 :::
+
+::: {.callout-tip collapse="true"}
+#### Materials
+
+-   [Lecture slides](slides/w08/).
+-   [Workshop tutorial](tutorials/tutorial-w08.qmd).
+-   Workshop files (right-click and download):
+    -   [shallow.csv](data/shallow.csv).
+    -   [dur-ita-pol.csv](data/dur-ita-pol.csv).
+:::
+
+
 
 ### Week 9: Continuous predictors
 

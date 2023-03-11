@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S2)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Elizabeth Pankratz" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="../xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="../custom.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S2)
+]
+.subtitle[
+## Week 8 - Multiple predictors and interactions
+]
+.author[
+### Elizabeth Pankratz
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2023/03/07
+]
+
+---
+
+
+
+
+
+
+
+class: center middle reverse
+
+# Please fill out today's attendance form:
+
+`https://forms.office.com/e/A0X816LnUp`
+
+![:scale 30%](imgs/qr.png)
+
+&lt;!-- .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[ --&gt;
+&lt;!-- We will focus on **accuracy** (correct identification of real word: **correct/incorrect**) for L1 participants. ]--&gt;
+
+---
+layout: false
+layout: true
+
+## Summary from last time
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What are **binary outcomes?**
+
+- Outcomes with two discrete levels (e.g., yes/no, grammatical/ungrammatical, correct/incorrect).
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we **visualise** them?
+
+- As proportions.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** What **distribution** do binary outcomes follow?
+
+- A Bernoulli distribution with one parameter, `\(p\)`, the probability of success.
+- In brms: `family = bernoulli()`.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)**  How do we fit a model requiring a **continuous outcome space** using binary data?
+
+- We model the binary outcomes as being generated based on the probability of success `\(p\)`.
+- We transform this probability into log-odds, which is continuous.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret** the estimates of such a model?
+
+- The model's estimates are in log-odds space.
+- To interpret them, we convert back to probability space using `plogis()`.
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(6)** What are **credible intervals**?
+
+- Credible intervals are the difference between two quantiles.
+- For Bayesian modelling, they are the region in which, with some probability (usually 95%), the true value lies.
+]
+
+---
+layout:false
+
+## Five learning objectives for today
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What is a **factorial design?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we estimate and interpret the effects of **multiple predictors?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** How can such interactions between predictors be **built into our models?**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret model estimates** of interactions? 
+]
+
+---
+
+## What is a factorial design?
+
+&lt;br&gt;
+
+.pull-left[
+.center[
+.pull-left[![:scale 80%](imgs/tree_a.pdf)]
+
+.pull-right[![:scale 80%](imgs/tree_b.pdf)]
+]
+]
+
+--
+
+.pull-right[
+&lt;br&gt;
+.center[
+.f4[
+|    	    | B = B1     	| B = B2     	|
+|-------- |--------	|--------	|
+| **A = A1** 	| A1, B1 	| A1, B2 	|
+| **A = A2** 	| A2, B1 	| A2, B2 	|
+]]]
+
+--
+
+&lt;br&gt;&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+How can we analyse **both predictors** at the same time?
+]
+
+---
+layout:false
+layout: true
+
+## Running example: Morphological processing
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Lexical decision task:** Is the string you see a word in English or not?
+
+- Outcome variable: **Accuracy** (incorrect/correct)
+
+- Predictors: 
+
+  - **Relation_type** (Unrelated/Constituent)
+  
+  - **Branching** (Left (*[unripe]-ness*) /Right (*un-[graceful]*))
+]
+
+&lt;br&gt;
+
+--
+
+|                                 	| Branching = Left  	| Branching = Right  	|
+|---------------------------------	|-------------------	|--------------------	|
+| **Relation_type = Unrelated**   	| Unrelated, Left   	| Unrelated, Right   	|
+| **Relation_type = Constituent** 	| Constituent, Left 	| Constituent, Right 	|
+
+---
+
+
+```r
+shallow &lt;- shallow %&gt;% 
+  filter(Relation_type != 'NonConstituent') %&gt;% 
+  mutate(
+    Relation_type = factor(Relation_type, levels = c('Unrelated', 'Constituent')),
+    Branching     = factor(Branching, levels = c('Left', 'Right')),
+    Accuracy      = factor(Accuracy, levels = c('incorrect', 'correct'))
+  )
+```
+
+---
+layout:false
+
+## Visualising `Relation_type` and `Branching`
+
+&lt;img src="index_files/figure-html/barplot-shallow-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## We've seen multiple predictors before!
+
+&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
+
+.f3[
+`$$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$`
+]
+
+---
+layout:false
+layout:true
+
+## Setting up `Relation_type` and `Branching`
+
+---
+
+&lt;br&gt;
+
+|                                 	| Branching = Left  	| Branching = Right  	|
+|---------------------------------	|-------------------	|--------------------	|
+| **Relation_type = Unrelated**   	| Unrelated, Left   	| Unrelated, Right   	|
+| **Relation_type = Constituent** 	| Constituent, Left 	| Constituent, Right 	|
+
+&lt;br&gt;
+--
+
+
+| Relation_type 	| Branching 	|
+|---------------	|-----------	|
+| Unrelated     	| Left      	|
+| Unrelated     	| Right     	|
+| Constituent   	| Left      	|
+| Constituent   	| Right     	|
+
+---
+
+&lt;!-- my condolences to anyone trying to read this --&gt;
+
+| When: | Then coded as: |
+| --- | --- |
+| &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; |  
+
+&lt;!-- Here's how those two ensted tables look in markdown --&gt;
+&lt;!-- | Relation_type 	| Branching 	| --&gt;
+&lt;!-- |---------------	|-----------	| --&gt;
+&lt;!-- | Unrelated     	| Left      	| --&gt;
+&lt;!-- | Unrelated     	| Right     	| --&gt;
+&lt;!-- | Constituent   	| Left      	| --&gt;
+&lt;!-- | Constituent   	| Right     	| --&gt;
+
+&lt;!-- | Relation_type 	| Branching 	| --&gt;
+&lt;!-- |---------------	|-----------	| --&gt;
+&lt;!-- | 0             	| 0         	| --&gt;
+&lt;!-- | 0             	| 1         	| --&gt;
+&lt;!-- | 1             	| 0         	| --&gt;
+&lt;!-- | 1             	| 1         	| --&gt;
+
+&lt;br&gt;
+--
+
+Let's verify that this coding is what R will use:
+
+.pull-left[
+
+```r
+contrasts(shallow$Relation_type)
+```
+
+```
+##             Constituent
+## Unrelated             0
+## Constituent           1
+```
+]
+
+.pull-right[
+
+```r
+contrasts(shallow$Branching)
+```
+
+```
+##       Right
+## Left      0
+## Right     1
+```
+]
+
+---
+layout: false
+
+## What will the `\(\beta\)`s mean now?
+
+| When: | Then coded as: |
+| --- | --- |
+| &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | 
+&lt;br&gt;
+
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch)$$`
+&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_1 + \beta_2 &amp;\\
+\end{aligned}`
+$$
+
+---
+
+## The model we'll fit
+
+&lt;br&gt;
+&lt;br&gt;
+
+.f3[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+---
+
+
+```r
+acc_mult_bm &lt;- brm(
+* Accuracy ~ Relation_type + Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_mult_bm'
+)
+```
+
+--
+
+
+```r
+summary(acc_mult_bm)
+```
+
+```
+##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: Accuracy ~ Relation_type + Branching 
+##    Data: shallow (Number of observations: 692) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+---
+layout:true
+
+## Model estimates: `Intercept`
+
+---
+
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+--
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+---
+
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+---
+layout:false
+
+## Model estimates: `Relation_type`
+
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.69, 0.25) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\end{aligned}`
+$$
+]
+
+---
+
+## Model estimates: `Branching`
+
+
+```
+## Population-Level Effects: 
+##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                    1.08      0.17     0.75     1.43 1.00     4499     3212
+## Relation_typeConstituent     0.69      0.25     0.20     1.17 1.00     2877     2567
+## BranchingRight               1.44      0.27     0.91     1.99 1.00     2465     2441
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + \beta_1 \cdot relation + \beta_2 \cdot branch \\
+\beta_0 &amp; \sim Gaussian(1.08, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.69, 0.25) \\
+\beta_2 &amp; \sim Gaussian(1.44, 0.27) \\
+\end{aligned}`
+$$
+]
+
+
+---
+
+## Conditional posterior probability of log-odds of "correct" response
+
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0)  &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1)  &amp;&amp;= \beta_0 + \beta_1 + \beta_2 &amp;\\
+\end{aligned}`
+$$
+
+&lt;br&gt;
+--
+
+From the model: `\(\beta_0 = 1.08\)`, `\(\beta_1 = 0.69\)`, and `\(\beta_2 = 1.44\)`.
+
+&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp; &amp; 1.08 &amp;+ (0.69 \cdot 0) + (1.44 \cdot 0)  &amp;&amp;= 1.08  &amp;= 1.08 \text{ log-odds}\\
+\text{Unrelated, Right:}    &amp; &amp; 1.08 &amp;+ (0.69 \cdot 0) + (1.44 \cdot 1)  &amp;&amp;= 1.08 + 1.44 &amp;= 2.52 \text{ log-odds}\\
+\text{Constituent, Left:}   &amp; &amp; 1.08 &amp;+ (0.69 \cdot 1) + (1.44 \cdot 0)  &amp;&amp;= 1.08 + 0.69 &amp;= 1.77 \text{ log-odds}\\
+\text{Constituent, Right:}  &amp; &amp; 1.08 &amp;+ (0.69 \cdot 1) + (1.44 \cdot 1)  &amp;&amp;= 1.08 + 0.69 + 1.44 &amp;= 3.21 \text{ log-odds}\\
+\end{aligned}`
+$$
+
+???
+
+Ask: now, how move to probs?
+
+---
+
+
+
+
+
+
+
+&lt;img src="index_files/figure-html/mult-draws-dens-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/mult-draws-dens2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+layout:true
+
+## Do these estimates match the data?
+
+---
+
+&lt;img src="index_files/figure-html/barplot-shallow2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/barplot-shallow-mult-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+???
+
+The model assumes there's a difference in Branching = Right where there doesn't seem to be one.
+And because that difference is small, it's also underestimating the larger difference in Branching = Left.
+
+If only there were some way to tell the model that the effect of relation type can be different between the two levels of branching.
+
+Oh wait...
+
+---
+layout:false
+class: center middle reverse
+
+# Time for a wee break!
+
+### If you haven't yet, please fill in today's attendance form:
+
+`https://forms.office.com/e/A0X816LnUp`
+
+![:scale 30%](imgs/qr.png)
+
+---
+
+## How does the current model fall short?
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+The question we want to answer: 
+- **"Is the effect of `Relation_type` different when `Branching == Left` compared to when `Branching == Right`?"**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Our current model doesn't let effects differ between levels of other variables.
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+The solution: Include an **interaction** between these two predictors.
+]
+
+---
+layout:true
+
+## In other words: we want a _difference of differences_
+
+---
+
+&lt;img src="index_files/figure-html/barplot-shallow3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/shallow-diffs-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+layout: false
+
+## How do we make this happen?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Create a **new variable** that represents the interaction.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Assign that variable **its own `\(\beta\)` coefficient.**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Estimate `\(\beta\)` as usual.
+
+- This estimate tells us **how much one predictor's effect changes between levels of the other**.
+]
+
+
+---
+
+## Treatment coding, feat. interaction
+
+| When: | Then coded as: |
+| --- | --- |
+| &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Unrelated&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Left&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Constituent&lt;/td&gt; &lt;td&gt;Right&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; | &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;Relation_type&lt;/th&gt; &lt;th&gt;Branching&lt;/th&gt; &lt;th&gt;Relation_type:Branching&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;0 \* 0 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0 \* 1 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;0&lt;/td&gt; &lt;td&gt;1 \* 0 = 0&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1&lt;/td&gt; &lt;td&gt;1 \* 1 = 0&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;  |  
+
+&lt;br&gt;
+--
+
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)$$`
+
+&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &amp;&amp;= \beta_0 + \beta_1 + \beta_2 + \beta_3 &amp;\\
+\end{aligned}`
+$$
+
+---
+
+## What does the extra `\(\beta\)` give us?
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+When both variables are coded as 1 (non-baseline) in a model **with no interaction:**
+
+$$
+ \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) = \beta_0 + \beta_1 + \beta_2 \\
+$$
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+And in a model **with an interaction:**
+
+$$
+\beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) = \beta_0 + \beta_1 + \beta_2 + \beta_3 \\
+$$
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+`\(\beta_3\)` can **adjust** the effect of `\(\beta_1\)` or `\(\beta_2\)`.
+]
+
+---
+
+## The model we'll fit
+
+&lt;br&gt;
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 &amp; \sim Gaussian(\mu_0, \sigma_0) \\
+\beta_1 &amp; \sim Gaussian(\mu_1, \sigma_1) \\
+\beta_2 &amp; \sim Gaussian(\mu_2, \sigma_2) \\
+\beta_3 &amp; \sim Gaussian(\mu_3, \sigma_3) \\
+\end{aligned}`
+$$
+]
+
+---
+
+## How to specify a model with an interaction
+
+
+```r
+acc_inter_bm &lt;- brm(
+* Accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  family = bernoulli(),
+  data   = shallow,
+  backend = 'cmdstanr',
+  file = 'data/cache/acc_inter_bm'
+)
+```
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+A note on the syntax for specifying interactions in R:
+
+**`Relation_type + Branching + Relation_type:Branching`**
+
+is the same as
+
+**`Relation_type * Branching`**
+
+but more transparent about what's happening behind the scenes!
+]
+
+---
+
+&lt;br&gt;
+
+
+```r
+summary(acc_inter_bm)
+```
+
+```
+##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: Accuracy ~ Relation_type + Branching + Relation_type:Branching 
+##    Data: shallow (Number of observations: 692) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
+???
+
+`\(\beta_3\)`'s mean of -0.63 means that, when we move from Branching Left -&gt; Right, the effect of Relation_type is smaller.
+
+Or equivalently (but not how we're looking at it here), it means that, when we move from Relation_type Unrelated -&gt; Constituent, the effect of Branching is smaller.
+
+---
+
+&lt;br&gt;
+
+
+```
+## Population-Level Effects: 
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+```
+
+&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+\text{acc} &amp; \sim Bernoulli(p) \\
+logit(p) &amp; = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)\\
+\beta_0 &amp; \sim Gaussian(1.02, 0.17) \\
+\beta_1 &amp; \sim Gaussian(0.85, 0.29) \\
+\beta_2 &amp; \sim Gaussian(1.69, 0.36) \\
+\beta_3 &amp; \sim Gaussian(-0.63, 0.55) \\
+\end{aligned}`
+$$
+]
+
+---
+layout: true
+
+## How to interpret `\(\beta_3\)`
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- `\(\beta_3\)`'s mean of `\(-0.63\)` is a **_negative_ adjustment to the effect of `Relation_type`** when we move from `Branching == Left` (baseline) to `Branching == Right` (non-baseline).
+
+  - In other words, the model thinks the effect of `Relation_type` is _smaller_ in `Branching == Right` (non-baseline) than in `Branching == Left`.
+  
+  - The 95% CrI `\([-1.72, 0.42]\)` suggests a little uncertainty about the direction of the interaction.
+]
+
+--
+  
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Equivalently,** `\(\beta_3\)` is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+
+  - In other words, the model thinks the effect of `Branching` is (probably) smaller in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated`.
+]
+
+---
+
+.pull-left[
+&lt;img src="index_files/figure-html/barplot-symm1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/barplot-symm2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+layout:false
+
+## Conditional posterior probability of log-odds of "correct" response
+
+$$
+`\begin{aligned}
+\text{Unrelated, Left:}     &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0  &amp;\\
+\text{Unrelated, Right:}    &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Constituent, Left:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Constituent, Right:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &amp;&amp;= \beta_0 + \beta_1 + \beta_2 + \beta_3 &amp;\\
+\end{aligned}`
+$$
+
+&lt;br&gt;
+--
+
+From the model: `\(\beta_0 = 1.02\)`, `\(\beta_1 = 0.85\)`, `\(\beta_2 = 1.69\)`, and `\(\beta_3 = -0.63\)`.
+
+&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+\text{Unr., L:}     &amp;&amp; 1.02 &amp;+ (0.85 \cdot 0) + (1.69 \cdot 0) + (-0.63 \cdot 0) &amp;&amp;= 1.02  &amp;= 1.02 \text{ log-odds}\\
+\text{Unr., R:}    &amp;&amp; 1.02 &amp;+ (0.85 \cdot 0) + (1.69 \cdot 1) + (-0.63 \cdot 0) &amp;&amp;= 1.02 + 1.69 &amp;= 2.71 \text{ log-odds}\\
+\text{Con., L:}   &amp;&amp; 1.02 &amp;+ (0.85 \cdot 1) + (1.69 \cdot 0) + (-0.63 \cdot 0) &amp;&amp;= 1.02 + 0.85 &amp;= 1.87 \text{ log-odds}\\
+\text{Con., R:}  &amp;&amp; 1.02 &amp;+ (0.85 \cdot 1) + (1.69 \cdot 1) + (-0.63 \cdot 1) &amp;&amp;= 1.02 + 0.85 + 1.69 -0.63 &amp;= 2.93 \text{ log-odds}\\
+\end{aligned}`
+$$
+
+---
+
+
+
+&lt;img src="index_files/figure-html/inter-draws-dens-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Compare estimates with and without the interaction
+
+.pull-left[
+&lt;img src="index_files/figure-html/mult-draws-dens-L-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/inter-draws-dens-R-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## How well does the interaction model fit the data?
+
+
+
+&lt;img src="index_files/figure-html/barplot-shallow-inter-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.pull-left[
+&lt;img src="index_files/figure-html/mult-barplot-L-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/inter-barplot-R-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+layout: false
+layout: true
+
+## Learning objectives revisited
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What is a **factorial design?**
+- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we estimate and interpret the effects of **multiple predictors?**
+- A predictor's `\(\beta\)` is the effect of that predictor *when the other predictor's value is 0*.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+- We fit a model that contains an interaction term.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** How can such interactions between predictors be **built into our models?**
+- The interaction term is defined as the **product** of the two interacting predictors.
+- It gets its own `\(\beta\)` coefficient, which we estimate as usual.
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret model estimates** of interactions? 
+- The interaction term's `\(\beta\)` tells us **how much one predictor's effect changes between levels of the other**.
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

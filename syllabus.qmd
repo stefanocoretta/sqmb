@@ -379,7 +379,7 @@ There will be no classes.
 -   Practice transforming and back-transforming variables.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w08/).

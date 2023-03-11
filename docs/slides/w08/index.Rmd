@@ -710,7 +710,7 @@ Estimate $\beta$ as usual.
 
 | When: | Then coded as: |
 | --- | --- |
-| <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> <th>Relation_type:Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> <td>0 \* 0 = 0</td> </tr> <tr> <td>0</td> <td>1</td> <td>0 \* 1 = 0</td> </tr> <tr> <td>1</td> <td>0</td> <td>1 \* 0 = 0</td> </tr> <tr> <td>1</td> <td>1</td> <td>1 \* 1 = 0</td> </tr> </tbody> </table>  |  
+| <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> <th>Relation_type:Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> <td>0 \* 0 = 0</td> </tr> <tr> <td>0</td> <td>1</td> <td>0 \* 1 = 0</td> </tr> <tr> <td>1</td> <td>0</td> <td>1 \* 0 = 0</td> </tr> <tr> <td>1</td> <td>1</td> <td>1 \* 1 = 1</td> </tr> </tbody> </table>  |  
 
 <br>
 --
@@ -842,7 +842,7 @@ $$
 ---
 layout: true
 
-## How to interpret $\beta_3$
+## How to interpret $\beta_3 \sim Gaussian(-0.63, 0.55)$
 
 ---
 

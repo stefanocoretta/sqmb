@@ -1,0 +1,20 @@
+\documentclass[tikz]{standalone}
+
+\usepackage{tikz-qtree}
+
+\tikzset{nodes={font=\sffamily}}
+
+\begin{document}
+
+\begin{tikzpicture}[%
+  sibling distance=.5cm,
+  empty/.style={draw=none}]
+\Tree  
+[.A \edge node[auto=right] {};
+  [.A1 ]
+  [.A2 ]
+]
+
+\end{tikzpicture}
+
+\end{document}

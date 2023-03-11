@@ -40,6 +40,7 @@ library(brms)
 library(extraDistr)
 library(ggdist)
 library(glue)
+library(posterior)
 
 theme_update(text = element_text(size=14))
 
@@ -156,17 +157,31 @@ layout:false
 
 ## What is a factorial design?
 
-- TODO: tree of one factor with two levels, A
-- TODO: then another one, B
-
 <br>
 
+.pull-left[
+.center[
+.pull-left[![:scale 80%](imgs/tree_a.pdf)]
+
+.pull-right[![:scale 80%](imgs/tree_b.pdf)]
+]
+]
+
+--
+
+.pull-right[
+<br>
+.center[
+.f4[
 |    	    | B = B1     	| B = B2     	|
 |-------- |--------	|--------	|
 | **A = A1** 	| A1, B1 	| A1, B2 	|
 | **A = A2** 	| A2, B1 	| A2, B2 	|
-  
-<br>
+]]]
+
+--
+
+<br><br>
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 How can we analyse **both predictors** at the same time?
@@ -181,17 +196,20 @@ layout: true
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- **Lexical decision task:** Is the string you see a word in English or not?
-  - Outcome variable: **Accuracy (incorrect/correct)**.
+**Lexical decision task:** Is the string you see a word in English or not?
+
+- Outcome variable: **Accuracy** (incorrect/correct)
+
+- Predictors: 
+
+  - **Relation_type** (Unrelated/Constituent)
+  
+  - **Branching** (Left (*[unripe]-ness*) /Right (*un-[graceful]*))
 ]
 
-.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- Last week: **Relation_type**.
-- This week: **Relation_type (Unrelated/Constituent)**  and **Branching (Left/Right)**.
-]
+<br>
 
-(TODO: make graphic showing the two poss syntax trees)
-
+--
 
 |                                 	| Branching = Left  	| Branching = Right  	|
 |---------------------------------	|-------------------	|--------------------	|
@@ -258,6 +276,8 @@ layout:true
 | **Relation_type = Constituent** 	| Constituent, Left 	| Constituent, Right 	|
 
 <br>
+--
+
 
 | Relation_type 	| Branching 	|
 |---------------	|-----------	|
@@ -290,6 +310,7 @@ layout:true
 <!-- | 1             	| 1         	| -->
 
 <br>
+--
 
 Let's verify that this coding is what R will use:
 
@@ -317,6 +338,7 @@ layout: false
 
 $$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch)$$
 <br>
+--
 
 $$
 \begin{aligned}
@@ -357,6 +379,8 @@ acc_mult_bm <- brm(
   file = 'data/cache/acc_mult_bm'
 )
 ```
+
+--
 
 ```{r mult-summary-full, echo=TRUE}
 summary(acc_mult_bm)
@@ -457,7 +481,7 @@ $$
 
 ---
 
-## Conditional posterior log-odds
+## Conditional posterior probability of log-odds of "correct" response
 
 
 $$
@@ -470,10 +494,12 @@ $$
 $$
 
 <br>
+--
 
 From the model: $\beta_0 = 1.08$, $\beta_1 = 0.69$, and $\beta_2 = 1.44$.
 
 <br>
+--
 
 $$
 \begin{aligned}
@@ -509,6 +535,23 @@ mult_draws_long <- mult_draws %>%
     Branching     = factor(Branching, levels = c('Left', 'Right'))
   )
 ```
+
+
+```{r mult-cri}
+mult_cri <- mult_draws_long %>% 
+  group_by(Relation_type, Branching) %>% 
+  summarise(
+    # Calculate the lower and upper bounds of a 95% CrI + mean
+    q95_lo = round(quantile2(logodds_samples, probs = 0.025), 2),
+    q95_hi = round(quantile2(logodds_samples, probs = 0.975), 2),
+    mean_logodds = mean(logodds_samples),
+    # Transform into probabilities
+    p_q95_lo = round(plogis(q95_lo), 2),
+    p_q95_hi = round(plogis(q95_hi), 2),
+    p_mean   = round(plogis(mean_logodds), 2)
+  )
+```
+
 
 ```{r mult-draws-dens, out.width = "80%"}
 (mult_draws_dens <- mult_draws_long %>% 
@@ -593,15 +636,20 @@ class: center middle reverse
 
 ## How does the current model fall short?
 
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 The question we want to answer: 
 - **"Is the effect of `Relation_type` different when `Branching == Left` compared to when `Branching == Right`?"**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 Our current model doesn't let effects differ between levels of other variables.
 ]
+
+--
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 The solution: Include an **interaction** between these two predictors.
@@ -641,12 +689,18 @@ layout: false
 Create a **new variable** that represents the interaction.
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 Assign that variable **its own $\beta$ coefficient.**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**Estimate $\beta$ as usual** to get a sense of the difference of differences between predictors in our model.
+Estimate $\beta$ as usual.
+
+- This estimate tells us **how much one predictor's effect changes between levels of the other**.
 ]
 
 
@@ -659,10 +713,12 @@ Assign that variable **its own $\beta$ coefficient.**
 | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> </tr> </thead> <tbody> <tr> <td>Unrelated</td> <td>Left</td> </tr> <tr> <td>Unrelated</td> <td>Right</td> </tr> <tr> <td>Constituent</td> <td>Left</td> </tr> <tr> <td>Constituent</td> <td>Right</td> </tr> </tbody> </table> | <table> <thead> <tr> <th>Relation_type</th> <th>Branching</th> <th>Relation_type:Branching</th> </tr> </thead> <tbody> <tr> <td>0</td> <td>0</td> <td>0 \* 0 = 0</td> </tr> <tr> <td>0</td> <td>1</td> <td>0 \* 1 = 0</td> </tr> <tr> <td>1</td> <td>0</td> <td>1 \* 0 = 0</td> </tr> <tr> <td>1</td> <td>1</td> <td>1 \* 1 = 0</td> </tr> </tbody> </table>  |  
 
 <br>
+--
 
 $$logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)$$
 
 <br>
+--
 
 $$
 \begin{aligned}
@@ -692,6 +748,8 @@ $$
 \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) = \beta_0 + \beta_1 + \beta_2 + \beta_3 \\
 $$
 ]
+
+--
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 $\beta_3$ can **adjust** the effect of $\beta_1$ or $\beta_2$.
@@ -752,6 +810,12 @@ but more transparent about what's happening behind the scenes!
 summary(acc_inter_bm)
 ```
 
+???
+
+$\beta_3$'s mean of -0.63 means that, when we move from Branching Left -> Right, the effect of Relation_type is smaller.
+
+Or equivalently (but not how we're looking at it here), it means that, when we move from Relation_type Unrelated -> Constituent, the effect of Branching is smaller.
+
 ---
 
 <br>
@@ -776,8 +840,58 @@ $$
 ]
 
 ---
+layout: true
 
-## Conditional posterior log-odds
+## How to interpret $\beta_3$
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- $\beta_3$'s mean of $-0.63$ is a **_negative_ adjustment to the effect of `Relation_type`** when we move from `Branching == Left` (baseline) to `Branching == Right` (non-baseline).
+
+  - In other words, the model thinks the effect of `Relation_type` is _smaller_ in `Branching == Right` (non-baseline) than in `Branching == Left`.
+  
+  - The 95% CrI $[-1.72, 0.42]$ suggests a little uncertainty about the direction of the interaction.
+]
+
+--
+  
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+- **Equivalently,** $\beta_3$ is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+
+  - In other words, the model thinks the effect of `Branching` is (probably) smaller in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated`.
+]
+
+---
+
+.pull-left[
+```{r barplot-symm1, out.width = "100%", fig.height=6}
+shallow %>% 
+  ggplot(aes(x = Relation_type, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Branching, labeller = labeller(Branching = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Relation type',
+       title = 'Smaller effect of Relation_type in Branching = Right')
+```
+]
+
+.pull-right[
+```{r barplot-symm2, out.width = "100%", fig.height=6}
+shallow %>% 
+  ggplot(aes(x = Branching, fill = Accuracy)) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~ Relation_type, labeller = labeller(Relation_type = label_both)) +
+  labs(y = 'Proportion',
+       x = 'Branching',
+       title = "Smaller effect of Branching in Relation_type = Constituent")
+```
+]
+
+---
+layout:false
+
+## Conditional posterior probability of log-odds of "correct" response
 
 $$
 \begin{aligned}
@@ -789,10 +903,12 @@ $$
 $$
 
 <br>
+--
 
 From the model: $\beta_0 = 1.02$, $\beta_1 = 0.85$, $\beta_2 = 1.69$, and $\beta_3 = -0.63$.
 
 <br>
+--
 
 $$
 \begin{aligned}
@@ -852,7 +968,7 @@ mult_draws_long %>%
   labs(x = 'Probability',
        y = 'Probability density',
        # title = 'Conditional posterior probability distributions\nof "correct" response',
-       title = 'Without interaction',
+       title = 'From a model without an interaction',
        fill = 'Relation type') +
   theme(legend.position = 'bottom')
 
@@ -869,7 +985,7 @@ inter_draws_long %>%
   labs(x = 'Probability',
        y = 'Probability density',
        # title = 'Conditional posterior probability distributions\nof "correct" response',
-       title = 'With interaction',
+       title = 'From a model with an interaction',
        fill = 'Relation type') +
   theme(legend.position = 'bottom')
 
@@ -937,10 +1053,14 @@ layout: true
 - A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we estimate and interpret the effects of **multiple predictors?**
 - A predictor's $\beta$ is the effect of that predictor *when the other predictor's value is 0*.
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
@@ -955,9 +1075,9 @@ layout: true
 - It gets its own $\beta$ coefficient, which we estimate as usual.
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
-- Carefully!
 - The interaction term's $\beta$ tells us **how much one predictor's effect changes between levels of the other**.
-- More on interpretation coming up in the tutorial.
 ]

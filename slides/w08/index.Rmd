@@ -3,7 +3,7 @@ title: "Statistics and Quantitative Methods (S2)"
 subtitle: "Week 8 - Multiple predictors and interactions"
 author: "Elizabeth Pankratz"
 institute: "University of Edinburgh"
-date: "2023/03/07"
+date: "2023/03/14"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -133,21 +133,31 @@ layout:false
 
 ## Five learning objectives for today
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we estimate and interpret the effects of **multiple predictors?**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)** How can such interactions between predictors be **built into our models?**
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
@@ -185,6 +195,20 @@ layout:false
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 How can we analyse **both predictors** at the same time?
+]
+
+---
+
+## We've seen multiple predictors before!
+
+<br> <br> <br> <br> <br> 
+
+Last week's model with dummy variables:
+
+<br>
+
+.f3[
+$$logit(p) = \beta_0 + (\beta_1 \cdot relation_{ncons}) + (\beta_2 \cdot relation_{cons})$$
 ]
 
 ---
@@ -250,15 +274,7 @@ layout:false
 ```
 
 
----
 
-## We've seen multiple predictors before!
-
-<br> <br> <br> <br> <br> <br> <br>
-
-.f3[
-$$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$
-]
 
 ---
 layout:false
@@ -372,7 +388,7 @@ $$
 
 ```{r mult-fit, echo=TRUE}
 acc_mult_bm <- brm(
-  Accuracy ~ Relation_type + Branching, #<<
+  Accuracy ~ Relation_type + Branching,
   family = bernoulli(),
   data   = shallow,
   backend = 'cmdstanr',
@@ -703,6 +719,12 @@ Estimate $\beta$ as usual.
 - This estimate tells us **how much one predictor's effect changes between levels of the other**.
 ]
 
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**What does the new variable look like?**
+]
+
 
 ---
 
@@ -734,7 +756,7 @@ $$
 ## What does the extra $\beta$ give us?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-When both variables are coded as 1 (non-baseline) in a model **with no interaction:**
+With both variables at their non-baseline level (coded as 1) in a model **with no interaction:**
 
 $$
  \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) = \beta_0 + \beta_1 + \beta_2 \\
@@ -752,7 +774,9 @@ $$
 --
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-$\beta_3$ can **adjust** the effect of $\beta_1$ or $\beta_2$.
+$\beta_3$ can **adjust** the value of $\beta_1$ or $\beta_2$.
+
+In other words, it can **modulate the other effects.**
 ]
 
 ---
@@ -781,7 +805,7 @@ $$
 
 ```{r inter-fit, echo = TRUE}
 acc_inter_bm <- brm(
-  Accuracy ~ Relation_type + Branching + Relation_type:Branching,  #<<
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,
   family = bernoulli(),
   data   = shallow,
   backend = 'cmdstanr',
@@ -847,9 +871,11 @@ layout: true
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Interpretation 1:**
+
 - $\beta_3$'s mean of $-0.63$ is a **_negative_ adjustment to the effect of `Relation_type`** when we move from `Branching == Left` (baseline) to `Branching == Right` (non-baseline).
 
-  - In other words, the model thinks the effect of `Relation_type` is _smaller_ in `Branching == Right` (non-baseline) than in `Branching == Left`.
+  - In other words, the model thinks the effect of `Relation_type` is **smaller** in `Branching == Right` (non-baseline) than in `Branching == Left` (baseline).
   
   - The 95% CrI $[-1.72, 0.42]$ suggests a little uncertainty about the direction of the interaction.
 ]
@@ -857,9 +883,11 @@ layout: true
 --
   
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- **Equivalently,** $\beta_3$ is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+**Equivalently, interpretation 2:**
 
-  - In other words, the model thinks the effect of `Branching` is (probably) smaller in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated`.
+- $\beta_3$ is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+
+  - Or: the model thinks the effect of `Branching` is **(probably) smaller** in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated` (baseline).
 ]
 
 ---
@@ -1048,6 +1076,8 @@ layout: true
 
 ---
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
 - A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
@@ -1064,7 +1094,7 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
-- We fit a model that contains an interaction term.
+- We fit a model that contains an **interaction term** between those two predictors.
 ]
 
 ---
@@ -1079,5 +1109,6 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
-- The interaction term's $\beta$ tells us **how much one predictor's effect changes between levels of the other**.
+- The interaction term's $\beta$ tells us **how much one predictor's effect changes between the baseline and non-baseline levels of the other**.
+- Interactions are symmetrical, and so they have two equivalent interpretations.
 ]

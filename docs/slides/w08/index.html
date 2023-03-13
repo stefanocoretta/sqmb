@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2023/03/07
+### 2023/03/14
 ]
 
 ---
@@ -112,21 +112,31 @@ layout:false
 
 ## Five learning objectives for today
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we estimate and interpret the effects of **multiple predictors?**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(4)** How can such interactions between predictors be **built into our models?**
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
@@ -164,6 +174,20 @@ layout:false
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 How can we analyse **both predictors** at the same time?
+]
+
+---
+
+## We've seen multiple predictors before!
+
+&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; 
+
+Last week's model with dummy variables:
+
+&lt;br&gt;
+
+.f3[
+`$$logit(p) = \beta_0 + (\beta_1 \cdot relation_{ncons}) + (\beta_2 \cdot relation_{cons})$$`
 ]
 
 ---
@@ -216,15 +240,7 @@ layout:false
 &lt;img src="index_files/figure-html/barplot-shallow-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 
----
 
-## We've seen multiple predictors before!
-
-&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
-
-.f3[
-`$$logit(p) = \beta_0 + \beta_1 \cdot relation_{ncons} + \beta_2 \cdot relation_{cons}$$`
-]
 
 ---
 layout:false
@@ -353,7 +369,7 @@ $$
 
 ```r
 acc_mult_bm &lt;- brm(
-* Accuracy ~ Relation_type + Branching,
+  Accuracy ~ Relation_type + Branching,
   family = bernoulli(),
   data   = shallow,
   backend = 'cmdstanr',
@@ -644,6 +660,12 @@ Estimate `\(\beta\)` as usual.
 - This estimate tells us **how much one predictor's effect changes between levels of the other**.
 ]
 
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**What does the new variable look like?**
+]
+
 
 ---
 
@@ -675,7 +697,7 @@ $$
 ## What does the extra `\(\beta\)` give us?
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-When both variables are coded as 1 (non-baseline) in a model **with no interaction:**
+With both variables at their non-baseline level (coded as 1) in a model **with no interaction:**
 
 $$
  \beta_0 + (\beta_1 \cdot 1) + (\beta_2 \cdot 1) = \beta_0 + \beta_1 + \beta_2 \\
@@ -693,7 +715,9 @@ $$
 --
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
-`\(\beta_3\)` can **adjust** the effect of `\(\beta_1\)` or `\(\beta_2\)`.
+`\(\beta_3\)` can **adjust** the value of `\(\beta_1\)` or `\(\beta_2\)`.
+
+In other words, it can **modulate the other effects.**
 ]
 
 ---
@@ -723,7 +747,7 @@ $$
 
 ```r
 acc_inter_bm &lt;- brm(
-* Accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  Accuracy ~ Relation_type + Branching + Relation_type:Branching,
   family = bernoulli(),
   data   = shallow,
   backend = 'cmdstanr',
@@ -762,11 +786,16 @@ summary(acc_inter_bm)
 ##          total post-warmup draws = 4000
 ## 
 ## Population-Level Effects: 
-##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
-## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
-## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
-## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860
+##                                         Tail_ESS
+## Intercept                                   3109
+## Relation_typeConstituent                    2141
+## BranchingRight                              2325
+## Relation_typeConstituent:BranchingRight     2203
 ## 
 ## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -786,11 +815,11 @@ Or equivalently (but not how we're looking at it here), it means that, when we m
 
 ```
 ## Population-Level Effects: 
-##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445     3109
-## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527     2141
-## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131     2325
-## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860     2203
+##                                         Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## Intercept                                   1.02      0.17     0.69     1.38 1.00     3445
+## Relation_typeConstituent                    0.85      0.29     0.28     1.43 1.00     2527
+## BranchingRight                              1.69      0.36     1.04     2.42 1.00     2131
+## Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42 1.00     1860
 ```
 
 &lt;br&gt;
@@ -816,9 +845,11 @@ layout: true
 ---
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Interpretation 1:**
+
 - `\(\beta_3\)`'s mean of `\(-0.63\)` is a **_negative_ adjustment to the effect of `Relation_type`** when we move from `Branching == Left` (baseline) to `Branching == Right` (non-baseline).
 
-  - In other words, the model thinks the effect of `Relation_type` is _smaller_ in `Branching == Right` (non-baseline) than in `Branching == Left`.
+  - In other words, the model thinks the effect of `Relation_type` is **smaller** in `Branching == Right` (non-baseline) than in `Branching == Left` (baseline).
   
   - The 95% CrI `\([-1.72, 0.42]\)` suggests a little uncertainty about the direction of the interaction.
 ]
@@ -826,9 +857,11 @@ layout: true
 --
   
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-- **Equivalently,** `\(\beta_3\)` is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+**Equivalently, interpretation 2:**
 
-  - In other words, the model thinks the effect of `Branching` is (probably) smaller in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated`.
+- `\(\beta_3\)` is a **_negative_ adjustment to the effect of `Branching`** when we move from `Relation_type == Unrelated` (baseline) to `Relation_type == Constituent` (non-baseline).
+
+  - Or: the model thinks the effect of `Branching` is **(probably) smaller** in `Relation_type == Constituent` (non-baseline) than in `Relation_type == Unrelated` (baseline).
 ]
 
 ---
@@ -917,6 +950,8 @@ layout: true
 
 ---
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
 - A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
@@ -933,7 +968,7 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
-- We fit a model that contains an interaction term.
+- We fit a model that contains an **interaction term** between those two predictors.
 ]
 
 ---
@@ -948,7 +983,8 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(5)** How do we **interpret model estimates** of interactions? 
-- The interaction term's `\(\beta\)` tells us **how much one predictor's effect changes between levels of the other**.
+- The interaction term's `\(\beta\)` tells us **how much one predictor's effect changes between the baseline and non-baseline levels of the other**.
+- Interactions are symmetrical, and so they have two equivalent interpretations.
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

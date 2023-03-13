@@ -38,7 +38,7 @@ See below for details.
 
 **Data analysis report**
 
-- Given a data table and a research question, submit a short and concise data analysis report, including summary measures, plots, and a linear model. You can download everything you need from here: <https://github.com/uoelel/sqmb-s2>.
+- Given a data table and a research question, submit a short and concise data analysis report, including summary measures, plots, and a linear model. You can download everything you need from here: <https://github.com/uoelel/sqmb-f3>.
 
 - From the .Rmd file, you will render a PDF and submit it over Turnitin. You can find the link to Turnitin on Learn under Assessment \> Formative Assessment F3.
 

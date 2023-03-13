@@ -416,13 +416,13 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </section>
 <section id="interpreting-the-interaction" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-the-interaction">Interpreting the interaction</h3>
-<p><strong>In general, for treatment-coded predictors, a positive interaction coefficient represents a positive adjustment to one variable’s effect, when we move from (or in other words, when we compare) the other variable’s baseline level to its non-baseline level. And a negative interaction coefficient represents a negative adjustment.</strong></p>
-<p>As we observed in the lecture, this interaction’s mean estimate of <span class="math inline">\(-0.63\)</span> suggests that (equivalently):</p>
+<p><strong>In general, for treatment-coded predictors, a positive interaction coefficient represents a positive adjustment to one variable’s effect, when we move from the other variable’s baseline level to its non-baseline level (or in other words, when we compare the non-baseline level to the baseline). And a negative interaction coefficient represents a negative adjustment.</strong></p>
+<p>As we observed in the lecture, this interaction’s mean estimate of <span class="math inline">\(-0.63\)</span> suggests that, equivalently,</p>
 <ul>
-<li>there is a smaller effect of <code>Relation_type</code> in <code>Branching == Right</code> (non-baseline) when compared to <code>Branching == Left</code> (baseline);</li>
+<li>there is a smaller effect of <code>Relation_type</code> in <code>Branching == Right</code> (non-baseline) when compared to <code>Branching == Left</code> (baseline); and</li>
 <li>there is a smaller effect of <code>Branching</code> in <code>Relation_type == Constituent</code> (non-baseline) when compared to <code>Relation_type == Unrelated</code> (baseline).</li>
 </ul>
-<p>The 95% CrI of <span class="math inline">\([-1.72, 0.42]\)</span> suggests that the model thinks that a negative interaction is most probable (there is more probability mass on the negative side of zero than the positive side). However, since positive values also come into question, this suggests that the model is slightly uncertain about the direction of the interaction (but it definitely thinks a negative interaction is more probable).</p>
+<p>The 95% CrI of <span class="math inline">\([-1.72, 0.42]\)</span> suggests that the model thinks that a negative interaction is most probable (there is more probability mass on the negative side of zero than on the positive side). However, since positive values also come into question, this suggests that the model is slightly uncertain about the direction of the interaction.</p>
 </section>
 <section id="conditional-posterior-probability-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="conditional-posterior-probability-distributions">Conditional posterior probability distributions</h3>
@@ -441,7 +441,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
 <p>Each column that begins with <code>b_</code> represents a posterior probability distribution of one of our model’s <span class="math inline">\(\beta\)</span> parameters. (Or, more accurately, each column contains a number of <em>samples</em> from the posterior distribution.) Can you identify which column corresponds to which <span class="math inline">\(\beta\)</span>?</p>
-<p>To know how to combine these columns in order to get the correct conditional posterior probability distributions, we have to reason about how the 0/1 treatment coding affects the presence or absence of the <span class="math inline">\(\beta\)</span>s.</p>
+<p>To know how to combine these columns to get the correct conditional posterior probability distributions, we have to reason about how the 0/1 treatment coding affects the presence or absence of the <span class="math inline">\(\beta\)</span>s.</p>
 <p>The basic linear expression in this model is</p>
 <p><span class="math display">\[
 logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_3 \cdot relation \cdot branch)
@@ -485,10 +485,10 @@ logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_
 <li><code>predictors</code>, which contains what is currently in the column headers;</li>
 <li><code>sampled_logodds</code>, which contains all of the values that currently fill the four columns.</li>
 </ul>
-<div class="cell" data-hash="tutorial-w08_cache/html/acc-pivot_1bb234e0ed023c888d9a16dfdece20df">
+<div class="cell" data-hash="tutorial-w08_cache/html/acc-pivot_2dc763220a4592064d04d7b10c87f2a6">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>acc_draws_cond_long <span class="ot">&lt;-</span> acc_draws_cond <span class="sc">%&gt;%</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The columns to pivot (here, it's all of them):</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The range of columns to pivot:</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    Unrelated_Left<span class="sc">:</span>Constituent_Right,</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Name the column that will contain the current headers:</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">'predictors'</span>,</span>
@@ -508,8 +508,8 @@ logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_
 <p>Can you see how <code>acc_draws_cond_long</code> contains the same data as <code>acc_draws_cond</code>?</p>
 <p>Okay, just a couple tiny things left:</p>
 <ul>
-<li>We’re going to use a function from the tidyverse called <code>separate()</code> to split the <code>predictors</code> column up into two columns: one for <code>Relation_type</code>, and another for <code>Branching</code>. Have a look at <a href="https://tidyr.tidyverse.org/reference/separate.html">the documentation</a> if you’re curious.</li>
-<li>This is a new data frame, so R will apply its defaults for factor ordering unless we again set the factor levels manually.</li>
+<li>We’re going to use a function from the tidyverse called <code>separate()</code> to split the <code>predictors</code> column up into two columns: one for <code>Relation_type</code>, and another for <code>Branching</code>. Have a look at <a href="https://tidyr.tidyverse.org/reference/separate.html">the documentation</a> for <code>separate()</code> if you’re curious about the details.</li>
+<li><code>acc_draws_cond_long</code> is a new data frame, so R will apply its defaults for factor ordering unless we again set the factor levels manually.</li>
 </ul>
 <div class="cell" data-hash="tutorial-w08_cache/html/acc-draws-long-sep_8b97a7e939c70c416d940311ea1dc075">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>acc_draws_cond_long <span class="ot">&lt;-</span> acc_draws_cond_long <span class="sc">%&gt;%</span> </span>
@@ -545,7 +545,7 @@ logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_
 </div>
 <section id="compute-means-and-95-cris" class="level4">
 <h4 class="anchored" data-anchor-id="compute-means-and-95-cris">Compute means and 95% CrIs</h4>
-<p>We’ll also use <code>acc_draws_cond_long</code> to compute summary statistics of the posteriors. We can do this using some now-familiar machinery: <code>group_by()</code>, <code>summarise()</code>, <code>mean()</code>, and <code>quantile2()</code>.</p>
+<p>Before moving on to plotting, we’ll use <code>acc_draws_cond_long</code> to compute summary statistics of the posteriors. We can do this using some now-familiar machinery: <code>group_by()</code>, <code>summarise()</code>, <code>mean()</code>, and <code>quantile2()</code>.</p>
 <div class="cell" data-hash="tutorial-w08_cache/html/acc-summ_2face09470c851902499ca1418fcd8bc">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>acc_cond_summ <span class="ot">&lt;-</span> acc_draws_cond_long <span class="sc">%&gt;%</span> </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Relation_type, Branching) <span class="sc">%&gt;%</span> </span>
@@ -569,7 +569,7 @@ logit(p) = \beta_0 + (\beta_1 \cdot relation) + (\beta_2 \cdot branch) + (\beta_
 </div>
 </div>
 </div>
-<p>Because <code>summary()</code> also summarises with these posterior draws, a good sense check is to make sure <code>acc_cond_summ</code> matches the actual model summary. Specifically, in the model summary, the estimates for <code>Intercept</code> should match the summary measures here for the row in which <code>Relation_type == Unrelated</code> and <code>Branching == Left</code> (since those are the two baseline levels).</p>
+<p>A good sense check to make sure that we did this computation correctly is to compare it to the output of <code>summary()</code>. Because <code>summary()</code> also computes summary measures using posterior draws, we can compare the numbers in the model summary and in <code>acc_cond_summ</code> that we’d expect to be the same. Specifically, in the model summary, the estimates for <code>Intercept</code> should match the summary measures here for <code>Relation_type == Unrelated</code> and <code>Branching == Left</code> (since those are the two baseline levels).</p>
 <p>Let’s have a look:</p>
 <div class="cell" data-hash="tutorial-w08_cache/html/acc-summ-fixef_1a4698c0873cb5106d370efb8e3ef445">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">capture.output</span>(<span class="fu">summary</span>(acc_inter_bm))[<span class="dv">8</span><span class="sc">:</span><span class="dv">13</span>], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -608,7 +608,7 @@ Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42</co
 </div>
 </div>
 <p>Give it a shot. Creating this kind of plot is really worth practicing, because these are exactly the kinds of plots you’ll want to show in your reports and dissertations.</p>
-<p>OK, that’s it for our first model! Now we’ll turn to the second part of the tutorial: a more loosely-guided walkthrough of how to put what you’ve learned so far into practice.</p>
+<p>OK, that’s it for our first model! Now we’ll turn to the second part of the tutorial: a more loosely-guided walkthrough of how to put a few different things you’ve learned so far into practice.</p>
 </section>
 </section>
 </section>
@@ -648,10 +648,11 @@ Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42</co
 </section>
 <section id="visualise-and-process-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="visualise-and-process-the-data">Visualise (and process) the data</h3>
-<p>This section will consider what kinds of transformations and level re-orderings, if any, we’ll need to do to prepare the data for analysis. We’ll begin with the outcome variable, <code>v1_duration</code>.</p>
+<p>What kinds of transformations and level re-orderings, if any, will we need to do to prepare the data for analysis?</p>
+<p>We’ll begin with the outcome variable, <code>v1_duration</code>.</p>
 <section id="vowel-duration" class="level4">
 <h4 class="anchored" data-anchor-id="vowel-duration">Vowel duration</h4>
-<p>Let’s create a density plot to visualise how vowel duration is distributed.</p>
+<p>Let’s create a density plot to see how vowel duration is distributed.</p>
 <div class="cell" data-hash="tutorial-w08_cache/html/dur-voweldur_1854590231b6a81d5f9ea584a06f7b2d">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dur_ita_pol <span class="sc">%&gt;%</span> </span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> v1_duration)) <span class="sc">+</span></span>
@@ -665,7 +666,7 @@ Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42</co
 <p>Some observations:</p>
 <ul>
 <li>Vowel duration can only be positive.</li>
-<li>The distribution is slightly right-skewed (that is, it has a longer tail going off to the right).</li>
+<li>The distribution is slightly right-skewed (that is, it is asymmetrical and has a longer tail going off to the right).</li>
 </ul>
 <p>These two things suggest that this variable, taken as-is, should perhaps not be modelled using a Gaussian distribution. Rather, <strong>we’ll want to transform it.</strong></p>
 <p>We want to make this variable</p>
@@ -676,14 +677,14 @@ Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42</co
 <p>Which transformation that we’ve encountered before do you think would improve the situation?</p>
 <p>Before moving on:</p>
 <ol type="1">
-<li>Apply the transformation you’ve chosen to the <code>v1_duration</code> variable.</li>
+<li>Use <code>mutate()</code> to apply the transformation you’ve chosen to the <code>v1_duration</code> variable.</li>
 <li>Make a new density plot to see whether your transformation has worked.</li>
 </ol>
-<p><em>(For real! Pause here and work through it yourself first. The strongest learning comes by doing.)</em></p>
+<p><em>(For real! Pause here and work through it yourself first.)</em></p>
 <div class="cell" data-hash="tutorial-w08_cache/html/dur-voweldur-log_0a780bb15134729977851de4d87bb8a0">
 
 </div>
-<p>The transformation that we’ll use for the rest of this tutorial is the log transformation. (Is that the transformation you chose? If not, how does your choice of transformation compare?)</p>
+<p>Spoiler alert: The transformation that we’ll use for the rest of this tutorial is the log transformation. (Is that the transformation you chose? If not, how does your choice of transformation compare?)</p>
 <p>Here’s one way to log-transform <code>v1_duration</code>. The result, <code>log_v1_dur</code>, is what we’ll use as the outcome variable in our model below.</p>
 <div class="cell" data-hash="tutorial-w08_cache/html/dur-voweldur-log-mutate_5da0a200a2d4dc3ee2669d9db749f254">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dur_ita_pol <span class="ot">&lt;-</span> dur_ita_pol <span class="sc">%&gt;%</span> </span>
@@ -691,7 +692,7 @@ Relation_typeConstituent:BranchingRight    -0.63      0.55    -1.72     0.42</co
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_v1_dur =</span> <span class="fu">log</span>(v1_duration)</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>OK, let’s now have a look at how the categorical predictors stack up against vowel duration.</p>
+<p>OK, let’s now have a look at how the categorical predictors are associated with vowel duration.</p>
 </section>
 <section id="vowel-duration-by-phonation" class="level4">
 <h4 class="anchored" data-anchor-id="vowel-duration-by-phonation">Vowel duration by phonation</h4>
@@ -823,8 +824,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </section>
 <section id="conditional-posterior-probability-distributions-1" class="level3">
 <h3 class="anchored" data-anchor-id="conditional-posterior-probability-distributions-1">Conditional posterior probability distributions</h3>
-<p>These conditional posterior probability distributions are going to be over the log vowel duration, so the unit will be in log(ms). Similar to how we back-transformed the log-odds into probabilities above using <code>plogis()</code>, you’ll want to back-transform the log(ms) into ms by using the inverse of the <code>log()</code> function, which is <code>exp()</code>.</p>
-<p>Reproduce the workflow we went through above. This will involve:</p>
+<p>Reproduce the workflow we went through above with your new model. This will involve:</p>
 <ol type="1">
 <li>Getting the posterior draws from the model using <code>as_draws_df()</code>.</li>
 <li>Work out which columns correspond to which <span class="math inline">\(\beta\)</span>s.</li>
@@ -832,8 +832,9 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <li>Transform the resulting data frame into “long” format using <code>pivot_longer()</code>.</li>
 <li>Separate the column headers into two columns, one of which corresponds to <code>c2_phonation</code> and the other, <code>language</code>.</li>
 </ol>
-<p>Your data frame should have three columns: <code>c2_phonation</code>, <code>language</code>, and whatever you’ve chosen to name the column that contains all the posterior samples (perhaps something like <code>"sampled_logms"</code>).</p>
+<p>Your data frame should have three columns: <code>c2_phonation</code>, <code>language</code>, and whatever you’ve chosen to name the column that contains all the posterior samples (perhaps something like <code>sampled_logms</code>).</p>
 <p>Using this data, compute the mean and 95% CrIs of the conditional posterior probability distributions for every combination of <code>c2_phonation</code> and <code>language</code>, and generate density plots of the conditional posterior probability distributions.</p>
+<p>These conditional posterior probability distributions are going to be in log space, because we log-transformed the durations to make them modellable as Gaussian. So, like the way we back-transformed the log-odds into probabilities above using <code>plogis()</code>, you’ll also want to back-transform the log(ms) into ms by using the inverse of the <code>log()</code> function, which is <code>exp()</code>.</p>
 </section>
 </section>
 <section id="summary" class="level2">
@@ -852,10 +853,10 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </ul>
 <p><strong>Data processing and visualisation</strong></p>
 <ul>
-<li><p><code>separate()</code> can split up a single column into multiple ones, as long as every value in that column contains a separator, e.g., <code>_</code>.</p></li>
-<li><p>The same way that we back-transform log-odds into probabilities using <code>plogis()</code>, we back-transform log values into the original space using <code>exp()</code>.</p></li>
+<li><p><code>separate()</code> can split up a single column into multiple ones, as long as every value in that column contains the same separator, e.g., <code>_</code>.</p></li>
+<li><p>The same way that we back-transform log-odds into probabilities using <code>plogis()</code>, we can back-transform log values into the original space (here, ms) using <code>exp()</code>.</p></li>
 <li><p>Any operations that we use to create conditional posterior probability distributions must be done on the scale in which the model was fit (e.g., log-odds or log), not the scale of the original variable (e.g., probability or ms). Back-transformation into the original space should be the final step.</p></li>
-<li><p>To create density plots of multiple distributions, give ggplot the data in “long” format and let the <code>fill</code> aesthetic separate the data into differently-coloured densities (this also automatically creates a legend for each colour).</p></li>
+<li><p>To create density plots of multiple distributions, give ggplot the data in “long” format and let the <code>fill</code> aesthetic separate the data into differently-coloured densities. This also automatically creates a legend for each colour.</p></li>
 </ul>
 </div>
 </div>

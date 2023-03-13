@@ -263,16 +263,16 @@ If they don't, can you figure out why not?
 
 ### Interpreting the interaction
 
-**In general, for treatment-coded predictors, a positive interaction coefficient represents a positive adjustment to one variable's effect, when we move from (or in other words, when we compare) the other variable's baseline level to its non-baseline level.
+**In general, for treatment-coded predictors, a positive interaction coefficient represents a positive adjustment to one variable's effect, when we move from the other variable's baseline level to its non-baseline level (or in other words, when we compare the non-baseline level to the baseline).
 And a negative interaction coefficient represents a negative adjustment.**
 
-As we observed in the lecture, this interaction's mean estimate of $-0.63$ suggests that (equivalently):
+As we observed in the lecture, this interaction's mean estimate of $-0.63$ suggests that, equivalently,
 
-- there is a smaller effect of `Relation_type` in `Branching == Right` (non-baseline) when compared to `Branching == Left` (baseline); 
+- there is a smaller effect of `Relation_type` in `Branching == Right` (non-baseline) when compared to `Branching == Left` (baseline); and
 - there is a smaller effect of `Branching` in `Relation_type == Constituent` (non-baseline) when compared to `Relation_type == Unrelated` (baseline).
 
-The 95% CrI of $[-1.72, 0.42]$ suggests that the model thinks that a negative interaction is most probable (there is more probability mass on the negative side of zero than the positive side).
-However, since positive values also come into question, this suggests that the model is slightly uncertain about the direction of the interaction (but it definitely thinks a negative interaction is more probable).
+The 95% CrI of $[-1.72, 0.42]$ suggests that the model thinks that a negative interaction is most probable (there is more probability mass on the negative side of zero than on the positive side).
+However, since positive values also come into question, this suggests that the model is slightly uncertain about the direction of the interaction.
 
 
 ### Conditional posterior probability distributions
@@ -293,7 +293,7 @@ Each column that begins with `b_` represents a posterior probability distributio
 (Or, more accurately, each column contains a number of _samples_ from the posterior distribution.)
 Can you identify which column corresponds to which $\beta$?
 
-To know how to combine these columns in order to get the correct conditional posterior probability distributions, we have to reason about how the 0/1 treatment coding affects the presence or absence of the $\beta$s.
+To know how to combine these columns to get the correct conditional posterior probability distributions, we have to reason about how the 0/1 treatment coding affects the presence or absence of the $\beta$s.
 
 The basic linear expression in this model is
 
@@ -353,7 +353,7 @@ The goal is to have a data frame with the following columns:
 
 acc_draws_cond_long <- acc_draws_cond %>% 
   pivot_longer(
-    # The columns to pivot (here, it's all of them):
+    # The range of columns to pivot:
     Unrelated_Left:Constituent_Right,
     # Name the column that will contain the current headers:
     names_to = 'predictors',
@@ -367,8 +367,8 @@ Can you see how `acc_draws_cond_long` contains the same data as `acc_draws_cond`
 
 Okay, just a couple tiny things left:
 
-- We're going to use a function from the tidyverse called `separate()` to split the `predictors` column up into two columns: one for `Relation_type`, and another for `Branching`. Have a look at [the documentation](https://tidyr.tidyverse.org/reference/separate.html) if you're curious.
-- This is a new data frame, so R will apply its defaults for factor ordering unless we again set the factor levels manually.
+- We're going to use a function from the tidyverse called `separate()` to split the `predictors` column up into two columns: one for `Relation_type`, and another for `Branching`. Have a look at [the documentation](https://tidyr.tidyverse.org/reference/separate.html) for `separate()` if you're curious about the details.
+- `acc_draws_cond_long` is a new data frame, so R will apply its defaults for factor ordering unless we again set the factor levels manually.
 
 ```{r}
 #| label: acc-draws-long-sep
@@ -397,7 +397,7 @@ Take care to avoid this!
 
 #### Compute means and 95% CrIs
 
-We'll also use `acc_draws_cond_long` to compute summary statistics of the posteriors.
+Before moving on to plotting, we'll use `acc_draws_cond_long` to compute summary statistics of the posteriors.
 We can do this using some now-familiar machinery: `group_by()`, `summarise()`, `mean()`, and `quantile2()`.
 
 
@@ -418,8 +418,9 @@ acc_cond_summ <- acc_draws_cond_long %>%
 acc_cond_summ
 ```
 
-Because `summary()` also summarises with these posterior draws, a good sense check is to make sure `acc_cond_summ` matches the actual model summary.
-Specifically, in the model summary, the estimates for `Intercept` should match the summary measures here for the row in which `Relation_type == Unrelated` and `Branching == Left` (since those are the two baseline levels).
+A good sense check to make sure that we did this computation correctly is to compare it to the output of `summary()`.
+Because `summary()` also computes summary measures using posterior draws, we can compare the numbers in the model summary and in `acc_cond_summ` that we'd expect to be the same.
+Specifically, in the model summary, the estimates for `Intercept` should match the summary measures here for `Relation_type == Unrelated` and `Branching == Left` (since those are the two baseline levels).
 
 Let's have a look:
 
@@ -473,7 +474,7 @@ Give it a shot.
 Creating this kind of plot is really worth practicing, because these are exactly the kinds of plots you'll want to show in your reports and dissertations.
 
 OK, that's it for our first model!
-Now we'll turn to the second part of the tutorial: a more loosely-guided walkthrough of how to put what you've learned so far into practice.
+Now we'll turn to the second part of the tutorial: a more loosely-guided walkthrough of how to put a few different things you've learned so far into practice.
 
 
 ## Vowel duration in Italian and Polish
@@ -518,13 +519,14 @@ The model we'll build below will predict `v1_duration` as a function of `c2_phon
 
 ### Visualise (and process) the data
 
-This section will consider what kinds of transformations and level re-orderings, if any, we'll need to do to prepare the data for analysis.
+What kinds of transformations and level re-orderings, if any, will we need to do to prepare the data for analysis?
+
 We'll begin with the outcome variable, `v1_duration`.
 
 
 #### Vowel duration
 
-Let's create a density plot to visualise how vowel duration is distributed.
+Let's create a density plot to see how vowel duration is distributed.
 
 ```{r}
 #| label: dur-voweldur
@@ -539,7 +541,7 @@ dur_ita_pol %>%
 Some observations:
 
 - Vowel duration can only be positive.
-- The distribution is slightly right-skewed (that is, it has a longer tail going off to the right).
+- The distribution is slightly right-skewed (that is, it is asymmetrical and has a longer tail going off to the right).
 
 These two things suggest that this variable, taken as-is, should perhaps not be modelled using a Gaussian distribution.
 Rather, **we'll want to transform it.**
@@ -553,10 +555,10 @@ Which transformation that we've encountered before do you think would improve th
 
 Before moving on: 
 
-1. Apply the transformation you've chosen to the `v1_duration` variable.
+1. Use `mutate()` to apply the transformation you've chosen to the `v1_duration` variable.
 2. Make a new density plot to see whether your transformation has worked.
 
-*(For real! Pause here and work through it yourself first. The strongest learning comes by doing.)*
+*(For real! Pause here and work through it yourself first.)*
 
 
 ```{r}
@@ -571,6 +573,7 @@ dur_ita_pol %>%
 ```
 
 
+Spoiler alert:
 The transformation that we'll use for the rest of this tutorial is the log transformation.
 (Is that the transformation you chose? 
 If not, how does your choice of transformation compare?)
@@ -587,7 +590,7 @@ dur_ita_pol <- dur_ita_pol %>%
 ```
 
 
-OK, let's now have a look at how the categorical predictors stack up against vowel duration.
+OK, let's now have a look at how the categorical predictors are associated with vowel duration.
 
 
 ####  Vowel duration by phonation
@@ -770,10 +773,7 @@ This means that the model isn't at all certain about the direction of the intera
 
 ### Conditional posterior probability distributions
 
-These conditional posterior probability distributions are going to be over the log vowel duration, so the unit will be in log(ms).
-Similar to how we back-transformed the log-odds into probabilities above using `plogis()`, you'll want to back-transform the log(ms) into ms by using the inverse of the `log()` function, which is `exp()`.
-
-Reproduce the workflow we went through above.
+Reproduce the workflow we went through above with your new model.
 This will involve:
 
 1. Getting the posterior draws from the model using `as_draws_df()`.
@@ -782,9 +782,12 @@ This will involve:
 4. Transform the resulting data frame into "long" format using `pivot_longer()`.
 5. Separate the column headers into two columns, one of which corresponds to `c2_phonation` and the other, `language`.
 
-Your data frame should have three columns: `c2_phonation`, `language`, and whatever you've chosen to name the column that contains all the posterior samples (perhaps something like `"sampled_logms"`).
+Your data frame should have three columns: `c2_phonation`, `language`, and whatever you've chosen to name the column that contains all the posterior samples (perhaps something like `sampled_logms`).
 
 Using this data, compute the mean and 95% CrIs of the conditional posterior probability distributions for every combination of `c2_phonation` and `language`, and generate density plots of the conditional posterior probability distributions.
+
+These conditional posterior probability distributions are going to be in log space, because we log-transformed the durations to make them modellable as Gaussian.
+So, like the way we back-transformed the log-odds into probabilities above using `plogis()`, you'll also want to back-transform the log(ms) into ms by using the inverse of the `log()` function, which is `exp()`.
 
 
 ## Summary
@@ -802,13 +805,13 @@ Using this data, compute the mean and 95% CrIs of the conditional posterior prob
 
 **Data processing and visualisation**
 
-- `separate()` can split up a single column into multiple ones, as long as every value in that column contains a separator, e.g., `_`.
+- `separate()` can split up a single column into multiple ones, as long as every value in that column contains the same separator, e.g., `_`.
 
-- The same way that we back-transform log-odds into probabilities using `plogis()`, we back-transform log values into the original space using `exp()`.
+- The same way that we back-transform log-odds into probabilities using `plogis()`, we can back-transform log values into the original space (here, ms) using `exp()`.
 
 - Any operations that we use to create conditional posterior probability distributions must be done on the scale in which the model was fit (e.g., log-odds or log), not the scale of the original variable (e.g., probability or ms). Back-transformation into the original space should be the final step.
 
-- To create density plots of multiple distributions, give ggplot the data in "long" format and let the `fill` aesthetic separate the data into differently-coloured densities (this also automatically creates a legend for each colour).
+- To create density plots of multiple distributions, give ggplot the data in "long" format and let the `fill` aesthetic separate the data into differently-coloured densities. This also automatically creates a legend for each colour.
 
 
 :::

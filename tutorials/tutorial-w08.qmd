@@ -138,7 +138,9 @@ shallow %>%
 A couple hints:
 
 - To make `geom_bar()` display proportions instead of counts, you can write `geom_bar(position = 'fill')`.
-- To include the text "Branching" in the facet labels, give the function `facet_grid()` the following argument: `labeller = labeller(Branching = label_both)`. 
+- To include the text "Branching" in the facet labels, give the function `facet_grid()` the following arguments:
+  - First, `~ Branching`, to tell it to facet by branching,
+  - and then `labeller = labeller(Branching = label_both)`. 
 
 
 Notice that this plot reveals a _difference of differences_: The difference between `Relation_type == Unrelated` and `Relation_Type == Constituent` is bigger when `Branching == Left`, and smaller when `Branching == Right`.

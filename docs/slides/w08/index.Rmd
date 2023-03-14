@@ -1015,7 +1015,8 @@ inter_draws_long %>%
        # title = 'Conditional posterior probability distributions\nof "correct" response',
        title = 'From a model with an interaction',
        fill = 'Relation type') +
-  theme(legend.position = 'bottom')
+  theme(legend.position = 'bottom') +
+  ylim(0, 40)
 
 
 ```

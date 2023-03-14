@@ -294,7 +294,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A couple hints:</p>
 <ul>
 <li>To make <code>geom_bar()</code> display proportions instead of counts, you can write <code>geom_bar(position = 'fill')</code>.</li>
-<li>To include the text “Branching” in the facet labels, give the function <code>facet_grid()</code> the following argument: <code>labeller = labeller(Branching = label_both)</code>.</li>
+<li>To include the text “Branching” in the facet labels, give the function <code>facet_grid()</code> the following arguments:
+<ul>
+<li>First, <code>~ Branching</code>, to tell it to facet by branching,</li>
+<li>and then <code>labeller = labeller(Branching = label_both)</code>.</li>
+</ul></li>
 </ul>
 <p>Notice that this plot reveals a <em>difference of differences</em>: The difference between <code>Relation_type == Unrelated</code> and <code>Relation_Type == Constituent</code> is bigger when <code>Branching == Left</code>, and smaller when <code>Branching == Right</code>. <strong>It is this difference of differences that suggests that our model should probably include an interaction between these two variables.</strong></p>
 <p>Before we dive into the model, though, let’s verify that our variables are indeed going to be coded the way we want.</p>

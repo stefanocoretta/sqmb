@@ -328,12 +328,12 @@ Unrelated             0
 Constituent           1</code></pre>
 </div>
 </div>
-<p>Because we are using 0/1 treatment coding, the <span class="math inline">\(\beta\)</span> coefficient tells us the effect of moving from the baseline level to the non-baseline level. In this case, the baseline is <code>Unrelated</code>, coded as 0. This means that the <span class="math inline">\(\beta\)</span> coefficient will represent the estimated effect of moving from <code>Unrelated</code> to <code>Constituent</code>.</p>
+<p>Because we are using 0/1 treatment coding, <code>Relation_type</code>’s <span class="math inline">\(\beta\)</span> coefficient tells us the effect of moving from the baseline level to the non-baseline level. In this case, the baseline is <code>Unrelated</code>, coded as 0. This means that the <span class="math inline">\(\beta\)</span> coefficient will represent the estimated effect of moving from <code>Unrelated</code> to <code>Constituent</code>.</p>
 <p>In other words:</p>
 <ul>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>positive</strong> if greater accuracy is associated with <code>Relation_type == Constituent</code> than with <code>Relation_type == Unrelated</code>.</li>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>negative</strong> if lower accuracy is associated with <code>Relation_type == Constituent</code> than with <code>Relation_type == Unrelated</code>.</li>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be <strong>centered around zero</strong> if there is no clear association between accuracy and relation type.</li>
+<li><code>Relation_type</code>’s <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>positive</strong> if greater accuracy is associated with <code>Relation_type == Constituent</code> than with <code>Relation_type == Unrelated</code>.</li>
+<li>Its <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>negative</strong> if lower accuracy is associated with <code>Relation_type == Constituent</code> than with <code>Relation_type == Unrelated</code>.</li>
+<li>Its <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be <strong>centered around zero</strong> if there is no clear association between accuracy and relation type.</li>
 </ul>
 <p>Based on this information and on the bar plot above, do you expect that the coefficient’s posterior distribution will be largely positive, negative, or around zero?</p>
 </section>
@@ -347,12 +347,12 @@ Left      0
 Right     1</code></pre>
 </div>
 </div>
-<p>Here, the baseline is <code>Left</code>, so <span class="math inline">\(\beta\)</span> will represent the estimated effect of moving from <code>Left</code> to <code>Right</code>.</p>
+<p>Here, the baseline is <code>Left</code>, so the <span class="math inline">\(\beta\)</span> for <code>Branching</code> will represent the estimated effect of moving from <code>Left</code> to <code>Right</code>.</p>
 <p>In other words:</p>
 <ul>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>positive</strong> if greater accuracy is associated with <code>Branching == Right</code> than with <code>Branching == Left</code>.</li>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>negative</strong> if lower accuracy is associated with <code>Branching == Right</code> than with <code>Branching == Left</code>.</li>
-<li>The <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be <strong>centered around zero</strong> if there is no clear association between accuracy and branching.</li>
+<li><code>Branching</code>’s <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>positive</strong> if greater accuracy is associated with <code>Branching == Right</code> than with <code>Branching == Left</code>.</li>
+<li>Its <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be mostly or entirely <strong>negative</strong> if lower accuracy is associated with <code>Branching == Right</code> than with <code>Branching == Left</code>.</li>
+<li>Its <span class="math inline">\(\beta\)</span> coefficient’s 95% CrI will be <strong>centered around zero</strong> if there is no clear association between accuracy and branching.</li>
 </ul>
 <p>Again, based on this, what kind of expectations do you have about this coefficient’s posterior distribution?</p>
 <p>Let’s see if those expectations are borne out!</p>

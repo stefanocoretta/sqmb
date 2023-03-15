@@ -170,15 +170,15 @@ What does this mean for the estimates that the model will produce?
 contrasts(shallow$Relation_type)
 ```
 
-Because we are using 0/1 treatment coding, the $\beta$ coefficient tells us the effect of moving from the baseline level to the non-baseline level.
+Because we are using 0/1 treatment coding, `Relation_type`'s $\beta$ coefficient tells us the effect of moving from the baseline level to the non-baseline level.
 In this case, the baseline is `Unrelated`, coded as 0.
 This means that the $\beta$ coefficient will represent the estimated effect of moving from `Unrelated` to `Constituent`.
 
 In other words:
 
-- The $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
-- The $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
-- The $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and relation type.
+- `Relation_type`'s $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
+- Its $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Relation_type == Constituent` than with `Relation_type == Unrelated`.
+- Its $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and relation type.
 
 Based on this information and on the bar plot above, do you expect that the coefficient's posterior distribution will be largely positive, negative, or around zero?
 
@@ -189,13 +189,13 @@ Based on this information and on the bar plot above, do you expect that the coef
 contrasts(shallow$Branching)
 ```
 
-Here, the baseline is `Left`, so $\beta$ will represent the estimated effect of moving from `Left` to `Right`.
+Here, the baseline is `Left`, so the $\beta$ for `Branching` will represent the estimated effect of moving from `Left` to `Right`.
 
 In other words:
 
-- The $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Branching == Right` than with `Branching == Left`.
-- The $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Branching == Right` than with `Branching == Left`.
-- The $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and branching.
+- `Branching`'s $\beta$ coefficient's 95% CrI will be mostly or entirely **positive** if greater accuracy is associated with `Branching == Right` than with `Branching == Left`.
+- Its $\beta$ coefficient's 95% CrI will be mostly or entirely **negative** if lower accuracy is associated with `Branching == Right` than with `Branching == Left`.
+- Its $\beta$ coefficient's 95% CrI will be **centered around zero** if there is no clear association between accuracy and branching.
 
 Again, based on this, what kind of expectations do you have about this coefficient's posterior distribution?
 

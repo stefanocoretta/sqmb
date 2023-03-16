@@ -187,9 +187,32 @@ Let's see an example: `\(y = 4 + 2x\)`.
 
 ---
 
-&lt;!-- TODO: overlays! intercept &gt; change in x &gt; change in y --&gt;
+&lt;img src="index_files/figure-html/line-pos-slope2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-pos-slope3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-pos-slope4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
 
 &lt;img src="index_files/figure-html/line-neg-slope-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-neg-slope2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-neg-slope3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-neg-slope4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -286,7 +309,34 @@ And for continuous variables, `\(\beta_1\)` has the same interpretation as `\(b\
 
 ---
 
-## Let's build a model!
+## "For one unit increase"?
+
+$$
+`\begin{aligned}
+&amp; &amp; \beta_0 &amp;+ \beta_1 \cdot var \\ 
+\\
+\text{var = 0 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) &amp;&amp;= \beta_0\\
+\text{var = 1 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) &amp;&amp;= \beta_0 + \beta_2\\
+\text{var = 2 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 2) &amp;&amp;= \beta_0 + 2\beta_1\\
+\text{var = 3 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 3) &amp;&amp;= \beta_0 + 3\beta_1\\
+\end{aligned}`
+$$
+`$$\vdots$$`
+
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+Every time `\(var\)` increases by one unit, the outcome increases by one `\(\beta_1\)`. For example,
+
+- if `\(var\)` is distance in metres, then a unit is one metre.
+- if `\(var\)` is RT in milliseconds, then a unit is one millisecond.
+- if `\(var\)` is speech rate in syllables/second, then a unit is one syllable/second.
+]
+
+---
+
+## Let's build a model predicting vowel duration&lt;br&gt; by speech rate
 
 
 
@@ -305,11 +355,6 @@ And for continuous variables, `\(\beta_1\)` has the same interpretation as `\(b\
 
 ]
 
-
-.f6[
-(Data from `dur-ita-pol.csv`.)
-]
-
 ---
 
 ## Log vowel duration ~ Speech rate
@@ -324,6 +369,8 @@ The faster you talk, the shorter your vowels are gonna be.
 ---
 
 ## The model we'll fit
+
+&lt;br&gt;&lt;br&gt;
 
 .f3[
 $$
@@ -483,7 +530,7 @@ round(mean(dur_ita_pol$speech_rate_c))
 ???
 
 So we predict we'll see the same slope estimate.
-But a different intercdept estimate, since now the place where the line intersects with x = 0 is different.
+But a different intercept estimate, since now the place where the line intersects with x = 0 is different.
 
 ---
 
@@ -559,7 +606,7 @@ summary(dur_sr_c_bm)
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
-The take-away from Part 1: **Centering continuous variables is pretty much always a good idea.**
+**Centering continuous variables is pretty much always a good idea.**
 
 ]
 
@@ -610,34 +657,227 @@ dur_ita %&gt;%
 &lt;img src="index_files/figure-html/dur-ita-plot-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
----
+???
 
-fit the model
-
----
-
-interpret results
+say out loud somewhere in here that "a" = 0, "o" = 1.
 
 ---
 
-Two interpretations of the interaction's beta: 
+## The model we'll fit
 
-- `Intercept` a.k.a. `\(\beta_0\)`: mean log vowel duration when speech_rate_c is at its mean of 0 and when vowel == 'a' (baseline).
-- `speech_rate_c` a.k.a. `\(\beta_1\)`: change in the mean log vowel duration when increasing one unit of `speech_rate_c` (e.g., when going from 0 to 1), with vowel == 'a'.
-- `vowel0`, a.k.a., `\(\beta_2\)`: change in the mean log vowel duration when moving from vowel == 'a' to vowel == 'o' (with speech rate at its mean of zero).
-- `speech_rate_c:vowelo` a.k.a. `\(\beta_3\)`: a positive coefficient, meaning:
-  - 1) there is a positive adjustment to the effect of speech_rate_c when we move from vowel == 'a' (baseline) to vowel == 'o' (non-baseline). 
-    - because the effect of `speech_rate_c` is negative, a positive adjustment means that the effect is weaker (brings it closer to zero). 
-    - we can see this in the plot: the slope of vowel == 'a' is more strongly negative than the slope of vowel == 'o'.
-  - 2) there is a positive adjustment to the effect of moving from vowel == 'a' to vowel == 'o' when we increase one unit of `speech_rate_c`.
-    - because the effect of `vowel` is negative, a positive adjustment means that the effect is weaker (brings it closer to zero).
-    - we can see this in the plot: the difference between vowel == 'a' and vowel == 'o' gets smaller as we move from L to R on x axis of speech rate.
+&lt;br&gt;&lt;br&gt;
+
+.f4[
+$$
+`\begin{aligned}
+log(duration) &amp;\sim Gaussian(\mu, \sigma)\\
+\mu &amp;= \beta_0 + (\beta_1 \cdot speechrate) + (\beta_2 \cdot vowel) + (\beta_3 \cdot speechrate \cdot vowel) \\
+\beta_0 &amp;\sim Gaussian(\mu_0, \sigma_0)\\
+\beta_1 &amp;\sim Gaussian(\mu_1, \sigma_1)\\
+\beta_2 &amp;\sim Gaussian(\mu_2, \sigma_2)\\
+\beta_3 &amp;\sim Gaussian(\mu_3, \sigma_3)\\
+\sigma &amp;\sim TruncGaussian(\mu_4, \sigma_4)
+\end{aligned}`
+$$
+]
 
 ---
 
-reprise of the treatment coding algebra, now with continuous predictor
+
+```r
+dur_sr_vow_bm &lt;- brm(
+  log_v1_dur ~ speech_rate_c + vowel + speech_rate_c:vowel,
+  data = dur_ita,
+  family = gaussian(),
+  backend = 'cmdstanr', file = 'data/cache/dur_sr_vow_bm'
+)
+```
+
+
+
+```r
+summary(dur_sr_vow_bm)
+```
+
+```
+##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: log_v1_dur ~ speech_rate_c + vowel + speech_rate_c:vowel 
+##    Data: dur_ita (Number of observations: 599) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Population-Level Effects: 
+##                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                4.79      0.01     4.77     4.81 1.00     4722     2788
+## speech_rate_c           -0.26      0.01    -0.29    -0.24 1.00     3396     2920
+## vowelo                  -0.04      0.02    -0.07    -0.01 1.00     4693     2767
+## speech_rate_c:vowelo     0.04      0.02     0.00     0.07 1.00     3137     2518
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.18      0.01     0.17     0.19 1.00     3993     2366
+## 
+## Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).
+```
+
 
 ---
+
+## How to report `Intercept` ( `\(\beta_0\)` )
+
+
+```
+## Population-Level Effects: 
+##                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                4.79      0.01     4.77     4.81 1.00     4722     2788
+## speech_rate_c           -0.26      0.01    -0.29    -0.24 1.00     3396     2920
+## vowelo                  -0.04      0.02    -0.07    -0.01 1.00     4693     2767
+## speech_rate_c:vowelo     0.04      0.02     0.00     0.07 1.00     3137     2518
+```
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**`Intercept`:**
+
+- The mean log vowel duration when speech rate is at its mean of 0 and when the vowel is "a"&lt;br&gt; (coded as 0) is 4.79 (95% CrI: [4.77, 4.81]).
+
+]
+
+---
+
+## How to report `speech_rate_c` ( `\(\beta_1\)` ), `vowelo` ( `\(\beta_2\)` )
+
+
+```
+## Population-Level Effects: 
+##                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                4.79      0.01     4.77     4.81 1.00     4722     2788
+## speech_rate_c           -0.26      0.01    -0.29    -0.24 1.00     3396     2920
+## vowelo                  -0.04      0.02    -0.07    -0.01 1.00     4693     2767
+## speech_rate_c:vowelo     0.04      0.02     0.00     0.07 1.00     3137     2518
+```
+
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**`speech_rate_c`:**
+
+- When the vowel is "a" (coded as 0), the change in the mean log vowel duration &lt;br&gt; when speech rate increases by one syllable/second is –0.26 (95% CrI: [–0.29, –0.24]).
+
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+ **`vowelo`:**
+
+- When the centered speech rate is at its mean of 0, the change in the mean log vowel duration &lt;br&gt; when changing from the vowel "a" to the vowel "o" is –0.04 (95% CrI: [–0.07, –0.01]).
+
+]
+
+---
+layout: true
+
+## How to report `speech_rate_c:vowelo` ( `\(\beta_3\)` )
+
+---
+
+
+```
+## Population-Level Effects: 
+##                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept                4.79      0.01     4.77     4.81 1.00     4722     2788
+## speech_rate_c           -0.26      0.01    -0.29    -0.24 1.00     3396     2920
+## vowelo                  -0.04      0.02    -0.07    -0.01 1.00     4693     2767
+## speech_rate_c:vowelo     0.04      0.02     0.00     0.07 1.00     3137     2518
+```
+&lt;br&gt;
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**`speech_rate_c:vowelo`, interpretation 1:**
+
+- When we move from the vowel "a" (baseline) to "o" (non-baseline), there is a positive adjustment &lt;br&gt; (0.04 log ms, 95% CrI [0, 0.07]) to the effect of speech rate.
+
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**`speech_rate_c:vowelo`, interpretation 2:**
+
+- When we increase the speech rate by one syllable/second, there is a positive adjustment &lt;br&gt; (0.04 log ms, 95% CrI [0, 0.07]) to the effect of the vowel.
+]
+
+---
+
+.pull-left[
+&lt;img src="index_files/figure-html/dur-ita-plot2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**1: Positive adjustment to effect of speech rate when vowel "a" `\(\rightarrow\)` "o"**
+- The effect of `speech_rate_c` is negative, so a positive adjustment brings the effect closer to zero.
+- **The slope (effect) when vowel = "a" is more strongly negative than "o".**
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**2: Positive adjustment to effect of vowel when speech rate increases**
+- The effect of `vowel` is negative, so a positive adjustment brings the effect closer to zero.
+- **As speech rate increases, the difference (effect) between "a" and "o" decreases.**
+
+]
+
+]
+
+---
+layout: false
+layout: true
+
+## Conditional posterior probability distributions&lt;br&gt; of log vowel duration
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+With continuous variables, choose a few representative values to compute &lt;br&gt;conditional posterior distributions for. 
+For centered speech rate, e.g.,
+
+  - `\(-1\)`: one syllable/second below mean
+  - `\(0\)`: mean
+  - `\(1\)`: one syllable/second above mean
+
+]
+
+&lt;br&gt;
+--
+
+$$
+`\begin{aligned}
+\text{Speech rate = –1, vowel = “a”:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot -1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 - \beta_1 &amp;\\
+\text{Speech rate = –1, vowel = “o”:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot -1) + (\beta_2 \cdot 1) + (\beta_3 \cdot -1) &amp;&amp;= \beta_0 - \beta_1 + \beta_2 - \beta_3 &amp;\\
+\text{Speech rate = 0, vowel = “a”:}     &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0  &amp;\\
+\text{Speech rate = 0, vowel = “o”:}    &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 0) + (\beta_2 \cdot 1) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_2 &amp;\\
+\text{Speech rate = 1, vowel = “a”:}   &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 0) + (\beta_3 \cdot 0) &amp;&amp;= \beta_0 + \beta_1 &amp;\\
+\text{Speech rate = 1, vowel = “o”:}  &amp;&amp; \beta_0 &amp;+ (\beta_1 \cdot 1) + (\beta_2 \cdot 1) + (\beta_3 \cdot 1) &amp;&amp;= \beta_0 + \beta_1 + \beta_2 + \beta_3 &amp;\\
+\end{aligned}`
+$$
+
+???
+
+worth saying again that these betas corresp to columns in the posterior draws 
+
+---
+
+
+
+
+&lt;img src="index_files/figure-html/dur-draws-dens-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+layout: false
 
 ## Learning objectives revisited
 

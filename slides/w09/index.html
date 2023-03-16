@@ -90,7 +90,7 @@ layout: true
 ---
 layout:false
 
-## Learning objectives for today
+## Three learning objectives for today
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** How do we model variables that aren't categorical, but continuous?
@@ -101,7 +101,7 @@ layout:false
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(3)** How do we fit interactions involving continuous predictors?
+**(3)** How do we fit and interpret interactions involving continuous predictors?
 ]
 
 ---
@@ -549,7 +549,7 @@ summary(dur_sr_c_bm)
 
   - Before, uncentered: `\(\beta_0\)` = 5.88 (95% CrI: [5.78, 5.99]).
 
-**`speech_rate_c`, a.k.a. `\(\beta_1\)`, is unchanged:**
+**`speech_rate_c`, a.k.a. `\(\beta_1\)`, is the same as before:**
 
 - For one unit change in speech rate, log vowel duration changes by –0.24 (95% CrI: [–0.26, –0.22]).
 
@@ -567,18 +567,91 @@ The take-away from Part 1: **Centering continuous variables is pretty much alway
 
 Not going to show mathematical formulation of model with priors filled in—people can figure that out themselves. 
 
-Also not going to do the conditional posterior probability distribs yet.
-Perhaps in Part 2, perhaps in the tutorial.
+Also not going to do the conditional posterior probability distribs, for reasons of time.
+Perhaps in Part 2, prob gotta in the tutorial.
 
 ---
 class: center middle reverse
 
-# Part 2: Interactions &lt;br&gt; with a continuous predictor
+# Part 2: Interactions &lt;br&gt; involving a continuous predictor
 
 ---
-class: center middle reverse
+## Speech rate * Italian vowels "a" and "o" 
 
-# Break after Part 2
+
+
+.pull-left[
+
+
+```r
+# Subset the data
+dur_ita &lt;- dur_ita_pol %&gt;% 
+  filter(
+    language == 'Italian',
+    vowel %in% c('a', 'o')
+  )
+
+# Create this plot ---&gt;
+dur_ita %&gt;% 
+  ggplot(aes(x = speech_rate_c, 
+             y = log_v1_dur, 
+             colour = vowel, 
+             fill = vowel)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(
+    x = 'Centered speech rate (syll/sec)',
+    y = 'Vowel duration (log ms)'
+  )
+```
+]
+
+.pull-right[
+&lt;img src="index_files/figure-html/dur-ita-plot-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+fit the model
+
+---
+
+interpret results
+
+---
+
+Two interpretations of the interaction's beta: 
+
+- `Intercept` a.k.a. `\(\beta_0\)`: mean log vowel duration when speech_rate_c is at its mean of 0 and when vowel == 'a' (baseline).
+- `speech_rate_c` a.k.a. `\(\beta_1\)`: change in the mean log vowel duration when increasing one unit of `speech_rate_c` (e.g., when going from 0 to 1), with vowel == 'a'.
+- `vowel0`, a.k.a., `\(\beta_2\)`: change in the mean log vowel duration when moving from vowel == 'a' to vowel == 'o' (with speech rate at its mean of zero).
+- `speech_rate_c:vowelo` a.k.a. `\(\beta_3\)`: a positive coefficient, meaning:
+  - 1) there is a positive adjustment to the effect of speech_rate_c when we move from vowel == 'a' (baseline) to vowel == 'o' (non-baseline). 
+    - because the effect of `speech_rate_c` is negative, a positive adjustment means that the effect is weaker (brings it closer to zero). 
+    - we can see this in the plot: the slope of vowel == 'a' is more strongly negative than the slope of vowel == 'o'.
+  - 2) there is a positive adjustment to the effect of moving from vowel == 'a' to vowel == 'o' when we increase one unit of `speech_rate_c`.
+    - because the effect of `vowel` is negative, a positive adjustment means that the effect is weaker (brings it closer to zero).
+    - we can see this in the plot: the difference between vowel == 'a' and vowel == 'o' gets smaller as we move from L to R on x axis of speech rate.
+
+---
+
+reprise of the treatment coding algebra, now with continuous predictor
+
+---
+
+## Learning objectives revisited
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** How do we model variables that aren't categorical, but continuous?
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we interpret model estimates for continuous predictors?
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we fit and interpret interactions involving continuous predictors?
+]
 
 ---
 class: center middle reverse

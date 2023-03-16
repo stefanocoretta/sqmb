@@ -614,8 +614,7 @@ summary(dur_sr_c_bm)
 
 Not going to show mathematical formulation of model with priors filled in—people can figure that out themselves. 
 
-Also not going to do the conditional posterior probability distribs, for reasons of time.
-Perhaps in Part 2, prob gotta in the tutorial.
+Also not going to do the conditional posterior probability distribs—doesn't fit narratively.
 
 ---
 class: center middle reverse
@@ -881,23 +880,77 @@ layout: false
 
 ## Learning objectives revisited
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** How do we model variables that aren't categorical, but continuous?
+
+- They're already numeric, so they *can* go into the model as-is.
+- To interpret the intercept more easily, it's **usually good to centre them** by subtracting the mean.
+
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(2)** How do we interpret model estimates for continuous predictors?
+
+- In terms of **how much the outcome changes for one unit change** in the predictor.
+- This general statement actually applies to treatment coding too: **0 `\(\rightarrow\)` 1 is a unit change.**
 ]
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(3)** How do we fit and interpret interactions involving continuous predictors?
+
+- Pretty similarly to categorical predictors!
+- To compute conditional posterior probability distributions, it's useful to **choose a few values&lt;br&gt; from the continuous predictor** to evaluate (e.g., the mean and on either side of it).
 ]
 
 ---
 class: center middle reverse
 
-# The Grand Vision
+# Statistics and Quantitative Methods
 
+## The big picture
+
+---
+
+.center[
+![:scale 90%](../../img/inference.png)
+]
+
+---
+
+&lt;br&gt;
+
+.center[
+![:scale 100%](../../img/data-quant.png)
+]
+
+---
+
+## Topics this course has not covered 
+
+**(but has hopefully equipped you to tackle yourselves, if you want!)**
+
+- How to set and interpret group-level effects (a.k.a., varying effects, random effects)
+  - Adjustments to intercept and slope for, e.g., every participant.
+- How to select and set your own priors (we've been using the brms defaults).
+- Contrast coding beyond 0/1 treatment coding.
+- The Bayesian version of hypothesis testing using Bayes Factors.
+
+---
+
+## The Bayesian New Statistics
+
+???
+
+- Rather than testing "significance" and thus making binary yes/no decisions about the existence of effects, we care about how big effects are.
+- Bayesian models are a great tool for this: We lay out a range of possibilities (e.g., for a Bernoulli model, the probs of success), and use data to allocate different amounts of belief over the possibilities (i.e., to create the posterior probability distributions).
+
+---
 
 
     </textarea>

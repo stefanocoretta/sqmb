@@ -1,0 +1,132 @@
+---
+title: "Statistics and Quantitative Methods (S2)"
+subtitle: "Week 9 - Continuous predictors"
+author: "Elizabeth Pankratz"
+institute: "University of Edinburgh"
+date: "2023/03/21"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - ../xaringan-themer.css
+      - ../custom.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=7, fig.height=5, fig.retina=3,
+  out.width = "60%", fig.align = "center",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+knitr::opts_knit$set(root.dir = here::here())
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
+library(tidyverse)
+theme_set(theme_light())
+library(brms)
+library(extraDistr)
+library(ggdist)
+library(glue)
+library(posterior)
+
+theme_update(text = element_text(size=14))
+
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
+options(show.signif.stars = FALSE)
+my_seed <- 8878
+
+build <- function(){
+  rmarkdown::render('slides/w09/index.Rmd')
+}
+```
+
+```{r read-data}
+
+```
+
+
+class: center middle reverse
+
+# Please fill out today's attendance form:
+
+<!-- `https://forms.office.com/e/A0X816LnUp` -->
+
+<!-- ![:scale 30%](imgs/qr.png) -->
+
+<!-- .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[ -->
+<!-- We will focus on **accuracy** (correct identification of real word: **correct/incorrect**) for L1 participants. ]-->
+
+---
+layout: false
+layout: true
+
+## Summary from last time
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** What is a **factorial design?**
+- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we estimate and interpret the effects of **multiple predictors?**
+- A predictor's $\beta$ is the effect of that predictor *when the other predictor's value is 0*.
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we deal with situations when **one predictor's effect is different, depending on the value of the other predictor?**
+- We fit a model that contains an **interaction term** between those two predictors.
+]
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(4)** How can such interactions between predictors be **built into our models?**
+- The interaction term is defined as the **product** of the two interacting predictors.
+- It gets its own $\beta$ coefficient, which we estimate as usual.
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(5)** How do we **interpret model estimates** of interactions? 
+- The interaction term's $\beta$ tells us **how much one predictor's effect changes between the baseline and non-baseline levels of the other**.
+- Interactions are symmetrical, and so they have two equivalent interpretations.
+]
+
+---
+layout:false
+
+## Learning objectives for today
+
+---
+
+
+
+---
+
+# Break after Arc 1
+
+---
+
+# Break after Arc 2
+
+---
+
+## The Grand Vision
+
+
+

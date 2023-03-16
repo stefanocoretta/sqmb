@@ -54,11 +54,6 @@ build <- function(){
 }
 ```
 
-```{r read-data}
-
-```
-
-
 class: center middle reverse
 
 # Please fill out today's attendance form:
@@ -112,21 +107,553 @@ layout:false
 
 ## Learning objectives for today
 
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(1)** How do we model variables that aren't categorical, but continuous?
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(2)** How do we interpret model estimates for continuous predictors?
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we fit interactions involving continuous predictors?
+]
+
+---
+
+## Up to now: Categorical predictors, numerically coded
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+Categorical predictors from earlier in the course:
+
+- `Modality`, with levels `Taste` / `Smell`
+
+- `Relation_type`, with levels `Unrelated` / `Constituent` / `NonConstituent`
+
+- `Branching`, with levels `Left` / `Right`
+
+]
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+To make these predictors modellable, we treatment-coded them using 0s and 1s.
+
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+Good news: Continuous variables are already numeric!
+
+]
+
+???
+
+But, consequence: interpreting the model's estimates is a little different.
+
+---
+layout: true
+
+## How to interpret estimates from a continuous predictor?
+
+---
+
+--
+
+### A little excursion into math from school...
+
+--
+
+<!-- Our linear expressions so far: -->
+
+<!-- .f3[ -->
+<!-- $$ y = \beta_0 + \beta_1 \cdot x  $$] -->
+
+The basic equation for a line:
+
+.f3[
+$$
+y = c + m\cdot x
+$$
+]
+
+where
+
+$$
+\begin{aligned}
+y: &~~~ \text{outcome variable} \\
+c: &~~~ \text{intercept} \\
+m: &~~~ \text{slope} \\
+x: &~~~ \text{input variable} \\
+\end{aligned}
+$$
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+Let's see an example: $y = 4 + 2x$.
+]
+
+
+---
+
+<!-- TODO: overlays! intercept > change in x > change in y -->
+
+```{r line-pos-slope}
+palette <- RColorBrewer::brewer.pal(8, "Dark2")
+
+tibble(
+  x = 0:3,
+  y = 2*x + 4
+) %>% 
+  ggplot(aes(x=x, y=y, group=1)) +
+  geom_line(linewidth = 1.5) +
+  theme(panel.grid.minor.x = element_blank()) +
+  # one unit in x ("run")
+  geom_segment(x = 1, xend = 2, y = 6, yend = 6, colour = palette[3],
+               arrow = arrow(length = unit(0.3,"cm")),
+               linewidth = 1) +
+  geom_text(x = 1, y = 5.65,
+            label = 'For a change of 1 in x...',
+            colour = palette[3],
+            hjust = 0,
+            size = 5) +
+  # corresp change in y ("rise")
+  geom_segment(x = 2, xend = 2, y = 6, yend = 7.95, colour = palette[2],
+               arrow = arrow(length = unit(0.3,"cm")),
+               linewidth = 1) +
+  geom_text(x = 2.05, y = 7, 
+            label = '... the slope of the line\n is the change in y.',
+            colour = palette[2],
+            hjust = 0,
+            size = 5) +
+  # intercept (should sound familiar)
+  geom_text(x = 0.1, y = 4,
+            label = 'The y-intercept is the value of y when x = 0.',
+            colour = palette[1],
+            hjust = 0,
+            size = 5) +
+  geom_point(x = 0, y = 4,
+             colour = palette[1],
+             size = 5) +
+  labs(
+    title = 'y = 4 + 2x'
+  ) +
+  NULL
+```
+
+---
+
+<!-- TODO: overlays! intercept > change in x > change in y -->
+
+```{r line-neg-slope}
+tibble(
+  x = 0:3,
+  y = -2*x + 4
+) %>% 
+  ggplot(aes(x=x, y=y, group=1)) +
+  geom_line(size = 1.5) +
+  theme(panel.grid.minor.x = element_blank()) +
+  # one unit in x ("run")
+  geom_segment(x = 1, xend = 2, y = 2, yend = 2, colour = palette[3],
+               arrow = arrow(length = unit(0.3,"cm")),
+               size = 1) +
+  geom_text(x = 1, y = 2.4, 
+            label = 'For a change of 1 in x...', 
+            colour = palette[3],
+            hjust = 0,
+            size = 5) +
+  # corresp change in y ("rise")
+  geom_segment(x = 2, xend = 2, y = 2, yend = 0.05, colour = palette[2],
+               size = 1,
+               arrow = arrow(length = unit(0.3,"cm"))
+               ) +
+  geom_text(x = 2.05, y = 1, 
+            label = '... a negative slope\nmeans y decreases.', 
+            colour = palette[2],
+            hjust = 0,
+            size = 5) +
+  # intercept (should sound familiar)
+  geom_text(x = 0.1, y = 4,
+            label = 'The y-intercept is the value of y when x = 0.',
+            colour = palette[1],
+            hjust = 0,
+            size = 5) +
+  geom_point(x = 0, y = 4,
+             colour = palette[1],
+             size = 5) +
+  labs(
+    title = 'y = 4 + –2x'
+  ) +
+  NULL
+```
+
+
+---
+layout:false
+
+## So what?
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+Our linear models have the same form as the lines we saw in school.
+
+$$
+\begin{aligned}
+y ~ &=& b ~~ &+& m &\cdot x \\ 
+outcome ~ &=& intercept ~~ &+& slope &\cdot predictor \\
+outcome ~ &=& \beta_0 ~~ &+& \beta_1 &\cdot predictor \\
+\end{aligned}
+$$
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+$\beta_0$ corresponds to the line's $y$-intercept:
+
+**The outcome value when the input value (i.e., the predictor) equals zero.**
+
+]
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+And for continuous variables, $\beta_1$ has the same interpretation as $b$:
+
+**The change in the outcome that results from a change of 1 (a.k.a., one unit change)<br> in the predictor.**
+
+]
+
+---
+
+## Interpreting model estimates: A comparison
+
+.pull-left[
+.center[
+.f4[
+**0/1 treatment-coded predictors**
+]
+]
+]
+
+.pull-right[
+.center[
+.f4[
+**Continuous predictors**
+]
+]
+]
+
+--
+
+.pull-left[
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Intercept ( $\beta_0$ ):**
+
+- Estimated value of the outcome when predictor(s) equal to zero. 
+  - i.e., **at predictor's baseline/reference level**.
+]
+]
+
+.pull-right[
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Intercept ( $\beta_0$ ):**
+
+- Estimated value of the outcome when predictor(s) equal to zero. 
+  - **on the predictor's scale**, e.g., <br> 0 ms, 0 lbs, 0 metres.
+  <!-- - or if centered: 0 = the predictor's mean -->
+]
+]
+
+--
+
+.pull-left[
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Effects (other $\beta$s):**
+
+- Difference between estimated value of the outcome when predictor = 0 and when predictor = 1.
+]
+]
+
+.pull-right[
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**Effects (other $\beta$s):**
+
+- Difference between estimated value of the outcome **for one unit increase in predictor's value**.
+]
+]
+
+---
+
+## Let's build a model!
+
+```{r read-data}
+dur_ita_pol <- read_csv('data/dur-ita-pol.csv') %>% 
+  mutate(
+    log_v1_dur = log(v1_duration)
+  )
+```
+
+
+--
+
+.pull-left[
+
+```{r dens-dur, out.width = "100%", fig.height = 6}
+dur_ita_pol %>% 
+  ggplot(aes(x= log_v1_dur)) +
+  geom_density(fill = 'grey', alpha = 0.5) +
+  geom_rug() +
+  labs(x = 'Vowel duration (log ms)',
+       title = 'Outcome: Log vowel duration')
+```
+
+]
+
+.pull-right[
+
+```{r dens-sr, out.width = "100%", fig.height = 6}
+dur_ita_pol %>% 
+  ggplot(aes(x= speech_rate)) +
+  geom_density(fill = 'grey', alpha = 0.5) +
+  geom_rug() +
+  labs(x = 'Speech rate (syllables/sec)',
+       title = 'Predictor: Speech rate')
+```
+
+]
+
+
+.f6[
+(Data from `dur-ita-pol.csv`.)
+]
+
+---
+
+## Log vowel duration ~ Speech rate
+
+```{r scatter-dur-sr}
+(p_dur_sr <- dur_ita_pol %>% 
+   ggplot(aes(x = speech_rate, y = log_v1_dur)) +
+   geom_point() +
+   labs(
+     x = 'Speech rate (syllables/sec)',
+     y = 'Vowel duration (log ms)'
+   ) +
+   NULL)
+```
+
+???
+
+Makes sense.
+The faster you talk, the shorter your vowels are gonna be.
+
+---
+
+## The model we'll fit
+
+.f3[
+$$
+\begin{aligned}
+log(duration) &\sim Gaussian(\mu, \sigma)\\
+\mu &= \beta_0 + \beta_1 \cdot speechrate \\
+\beta_0 &\sim Gaussian(\mu_0, \sigma_0)\\
+\beta_1 &\sim Gaussian(\mu_1, \sigma_1)\\
+\sigma &\sim TruncGaussian(\mu_2, \sigma_2)
+\end{aligned}
+$$
+]
+
+---
+
+```{r fit1, echo = TRUE}
+dur_sr_bm <- brm(
+  log_v1_dur ~ speech_rate,
+  family = gaussian(),
+  data = dur_ita_pol,
+  backend = 'cmdstanr',
+  file = 'data/cache/dur_sr_bm'
+)
+```
+
+
+--
+
+```{r fit1-summ, echo = TRUE}
+summary(dur_sr_bm)
+```
+
+
+
+---
+
+## Interpreting $\beta_0$ and $\beta_1$
+
+```{r fit1-summ2}
+cat(capture.output(summary(dur_sr_bm))[8:12], sep = "\n")
+```
+
+<br>
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**`Intercept`, a.k.a. $\beta_0$:**
+
+- The mean log vowel duration when speech rate is equal to 0 is 5.88 (95% CrI: [5.78, 5.99]).
+
+**`speech_rate`, a.k.a. $\beta_1$:**
+
+- For one unit change in speech rate, log vowel duration changes by –0.24 (95% CrI: [–0.26, –0.22]).
+
+]
+
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**But ... what's a speech rate of zero?**
+
+]
+
+---
+
+## To interpret the intercept more sensibly:<br> Centre `speech_rate`
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+To centre a variable means to **transform it so that the mean of the centered version is zero.**
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+How?
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**Subtract the variable's mean from every observation:**
+]
+
+```{r centre, echo = TRUE}
+dur_ita_pol <- dur_ita_pol %>% 
+  mutate(
+    speech_rate_c = speech_rate - mean(speech_rate)
+  )
+```
+
+---
+
+## How does the centered version compare to the original?
+
+.pull-left[
+
+```{r scatter-dur-sr-2, out.width = "100%"}
+p_dur_sr +
+  labs(title = 'Speech rate is not centered')
+```
+
+```{r mean-noncentered, echo = TRUE}
+round(mean(dur_ita_pol$speech_rate), 2)
+```
+
+]
+
+.pull-right[
+
+```{r scatter-dur-sr-3, out.width = "100%"}
+dur_ita_pol %>% 
+   ggplot(aes(x = speech_rate_c, y = log_v1_dur)) +
+   geom_point() +
+   labs(
+     x = 'Centered speech rate (syllables/sec)',
+     y = 'Vowel duration (log ms)',
+     title = 'Speech rate is centered'
+   ) +
+   NULL
+```
+
+```{r mean-centered, echo = TRUE}
+round(mean(dur_ita_pol$speech_rate_c))
+```
+
+]
+
+???
+
+So we predict we'll see the same slope estimate.
+But a different intercdept estimate, since now the place where the line intersects with x = 0 is different.
+
+---
+
+```{r fit2, echo = TRUE}
+dur_sr_c_bm <- brm(
+  log_v1_dur ~ speech_rate_c,
+  family = gaussian(),
+  data = dur_ita_pol,
+  backend = 'cmdstanr',
+  file = 'data/cache/dur_sr_c_bm'
+)
+```
+
+--
+
+```{r fit2-summ, echo = TRUE}
+summary(dur_sr_c_bm)
+```
+
 ---
 
 
 
+## Interpreting the new $\beta_0$ and $\beta_1$
+
+```{r fit2-summ2}
+cat(capture.output(summary(dur_sr_c_bm))[8:12], sep = "\n")
+```
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+**`Intercept`, a.k.a. $\beta_0$:**
+
+- The mean log vowel duration when centered speech rate is equal to 0, <br>**i.e., when speech rate is at its mean value (which, thanks to the centering, is zero)**,<br> is 4.59 (95% CrI: [4.58, 4.61]).
+
+  - Before, uncentered: $\beta_0$ = 5.88 (95% CrI: [5.78, 5.99]).
+
+**`speech_rate_c`, a.k.a. $\beta_1$, is unchanged:**
+
+- For one unit change in speech rate, log vowel duration changes by –0.24 (95% CrI: [–0.26, –0.22]).
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+The take-away from Part 1: **Centering continuous variables is pretty much always a good idea.**
+
+]
+
+???
+
+Not going to show mathematical formulation of model with priors filled in—people can figure that out themselves. 
+
+Also not going to do the conditional posterior probability distribs yet.
+Perhaps in Part 2, perhaps in the tutorial.
+
 ---
+class: center middle reverse
 
-# Break after Arc 1
-
----
-
-# Break after Arc 2
+# Part 2: Interactions <br> with a continuous predictor
 
 ---
+class: center middle reverse
 
-## The Grand Vision
+# Break after Part 2
+
+---
+class: center middle reverse
+
+# The Grand Vision
 
 
 

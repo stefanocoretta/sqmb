@@ -145,6 +145,20 @@ Good news: **Continuous variables are already numeric!**
 But, consequence: interpreting the model's estimates is a little different.
 
 ---
+
+## Examples of continuous predictors
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- **reaction time** in milliseconds
+
+- **age** in years
+
+- **speech rate** in syllables per second
+
+]
+
+---
 layout: true
 
 ## How to interpret estimates from a continuous predictor?
@@ -166,7 +180,7 @@ The basic equation for a line:
 
 .f3[
 $$
-y = c + m\cdot x
+y = b + m\cdot x
 $$
 ]
 
@@ -175,7 +189,7 @@ where
 $$
 `\begin{aligned}
 y: &amp;~~~ \text{outcome variable} \\
-c: &amp;~~~ \text{intercept} \\
+b: &amp;~~~ \text{intercept} \\
 m: &amp;~~~ \text{slope} \\
 x: &amp;~~~ \text{input variable} \\
 \end{aligned}`
@@ -342,7 +356,7 @@ $$
 $$
 `\begin{aligned}
 \text{var = 0 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 0) &amp;&amp;= \beta_0\\
-\text{var = 1 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) &amp;&amp;= \beta_0 + \beta_2\\
+\text{var = 1 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 1) &amp;&amp;= \beta_0 + \beta_1\\
 \text{var = 2 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 2) &amp;&amp;= \beta_0 + 2\beta_1\\
 \text{var = 3 :}   &amp; &amp; \beta_0 &amp;+ (\beta_1 \cdot 3) &amp;&amp;= \beta_0 + 3\beta_1\\
 \end{aligned}`
@@ -490,6 +504,12 @@ summary(dur_sr_bm)
 **But ... what's a speech rate of zero?**
 
 ]
+
+---
+
+## A speech rate of zero is far outside the data observed
+
+&lt;img src="index_files/figure-html/scatter-dur-sr-vline-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1039,6 +1059,9 @@ Photo by &lt;a href="https://unsplash.com/@gallarotti?utm_source=unsplash&amp;ut
 - Rather than testing "significance" and thus making binary yes/no decisions about the existence of effects, we care about how big effects are.
 - Bayesian models are a great tool for this: We lay out a range of possibilities (e.g., for a Bernoulli model, the probs of success), and use data to allocate different amounts of belief over the possibilities (i.e., to create the posterior probability distributions).
 By using an approach based on estimating effect sizes and being explicit about uncertainty, you're on the cutting edge of modern statistical analysis
+
+Even if you don't do Bayes down the road, many of the skills you've learned here are general and applicable to frequentist models as well.
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

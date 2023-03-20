@@ -160,6 +160,20 @@ Good news: **Continuous variables are already numeric!**
 But, consequence: interpreting the model's estimates is a little different.
 
 ---
+
+## Examples of continuous predictors
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+
+- **reaction time** in milliseconds
+
+- **age** in years
+
+- **speech rate** in syllables per second
+
+]
+
+---
 layout: true
 
 ## How to interpret estimates from a continuous predictor?
@@ -181,7 +195,7 @@ The basic equation for a line:
 
 .f3[
 $$
-y = c + m\cdot x
+y = b + m\cdot x
 $$
 ]
 
@@ -190,7 +204,7 @@ where
 $$
 \begin{aligned}
 y: &~~~ \text{outcome variable} \\
-c: &~~~ \text{intercept} \\
+b: &~~~ \text{intercept} \\
 m: &~~~ \text{slope} \\
 x: &~~~ \text{input variable} \\
 \end{aligned}
@@ -456,7 +470,7 @@ $$
 $$
 \begin{aligned}
 \text{var = 0 :}   & & \beta_0 &+ (\beta_1 \cdot 0) &&= \beta_0\\
-\text{var = 1 :}   & & \beta_0 &+ (\beta_1 \cdot 1) &&= \beta_0 + \beta_2\\
+\text{var = 1 :}   & & \beta_0 &+ (\beta_1 \cdot 1) &&= \beta_0 + \beta_1\\
 \text{var = 2 :}   & & \beta_0 &+ (\beta_1 \cdot 2) &&= \beta_0 + 2\beta_1\\
 \text{var = 3 :}   & & \beta_0 &+ (\beta_1 \cdot 3) &&= \beta_0 + 3\beta_1\\
 \end{aligned}
@@ -604,6 +618,17 @@ cat(capture.output(summary(dur_sr_bm))[8:12], sep = "\n")
 **But ... what's a speech rate of zero?**
 
 ]
+
+---
+
+## A speech rate of zero is far outside the data observed
+
+```{r scatter-dur-sr-vline}
+p_dur_sr +
+  geom_vline(xintercept = 0, 
+             linewidth = 2,
+             colour = 'red')
+```
 
 ---
 

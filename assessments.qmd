@@ -46,16 +46,18 @@ See below for details.
 
 ## Summative assessments
 
-::: {.callout-important collapse="false" icon="false"}
+::: {.callout-tip collapse="false" icon="false"}
 ## Summative 1 - Thu 30 March
 
 **Due on Thursday 30 March at noon**
 
 The first summative contains a series of guided exercises. 
 You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
+
+You may find helpful information in the FAQ post on Piazza [here](https://piazza.com/class/lcns7m75s8pdw/post/63).
 :::
 
-::: {.callout-important collapse="true" icon="false"}
+::: {.callout-tip collapse="true" icon="false"}
 ## Summative 2 - Thu 27 April
 
 **Due on Thursday 27 April at noon**

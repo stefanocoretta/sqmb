@@ -359,7 +359,7 @@ There will be no classes.
 
 ### Week 8: Multiple predictors and interactions
 
-::: {.callout-important collapse="false"}
+::: {.callout-important collapse="true"}
 #### Learning Objectives
 
 **Questions**
@@ -379,7 +379,7 @@ There will be no classes.
 -   Practice transforming and back-transforming variables.
 :::
 
-::: {.callout-tip collapse="false"}
+::: {.callout-tip collapse="true"}
 #### Materials
 
 -   [Lecture slides](slides/w08/).
@@ -401,19 +401,33 @@ There will be no classes.
 
 :::
 
-### Week 9: Continuous predictors
+### Week 9: Continuous predictors and interactions
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
-TBD
+**Questions**
+
+- How do we model predictors that aren't categorical, but continuous?
+- How do we interpret model estimates for continuous predictors?
+- How do we fit and interpret interactions involving continuous predictors?
+
+
+**Skills**
+
+-   Centre continuous predictors.
+-   Run and interpret models with continuous predictors.
+-   Interpret interactions that are categorical * continuous (in the lecture) and continuous * continuous (in the tutorial).
 
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
-TBD
+-   [Lecture slides](slides/w09/).
+-   [Workshop tutorial](tutorials/tutorial-w09.qmd).
+-   Workshop files (right-click and download):
+    -   [si.csv](data/si.csv).
 
 :::
 
@@ -425,6 +439,8 @@ TBD
 **Due on Thursday 30 March at noon**
 
 The first summative contains a series of guided exercises. You can find the summative materials and exercises here: <https://github.com/uoelel/sqmb-s1>.
+
+You may find helpful information in the FAQ post on Piazza [here](https://piazza.com/class/lcns7m75s8pdw/post/63).
 :::
 
 ### Thursday 27 April

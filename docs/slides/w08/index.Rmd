@@ -1081,7 +1081,7 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
-- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
+- A design with multiple categorical predictors in which data is gathered for **every combination** of those predictors' levels.
 ]
 
 --

@@ -1,6 +1,6 @@
 ---
 title: "Statistics and Quantitative Methods (S2)"
-subtitle: "Week 9 - Continuous predictors"
+subtitle: "Week 9 - Continuous predictors and interactions"
 author: "Elizabeth Pankratz"
 institute: "University of Edinburgh"
 date: "2023/03/21"
@@ -58,9 +58,9 @@ class: center middle reverse
 
 # Please fill out today's attendance form:
 
-<!-- `https://forms.office.com/e/A0X816LnUp` -->
+`https://forms.office.com/e/NC24KPHgRv`
 
-<!-- ![:scale 30%](imgs/qr.png) -->
+![:scale 30%](imgs/qr.png)
 
 <!-- .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[ -->
 <!-- We will focus on **accuracy** (correct identification of real word: **correct/incorrect**) for L1 participants. ]-->
@@ -75,7 +75,7 @@ layout: true
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **(1)** What is a **factorial design?**
-- A design with multiple predictors in which data is gathered for **every combination** of those predictors' levels.
+- A design with multiple categorical predictors in which data is gathered for **every combination** of those predictors' levels.
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
@@ -107,16 +107,22 @@ layout:false
 
 ## Three learning objectives for today
 
-.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(1)** How do we model variables that aren't categorical, but continuous?
-]
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(2)** How do we interpret model estimates for continuous predictors?
+**(1)** How do we model predictors that aren't categorical, but **continuous?**
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(3)** How do we fit and interpret interactions involving continuous predictors?
+**(2)** How do we **interpret model estimates** for continuous predictors?
+]
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
+**(3)** How do we fit and interpret **interactions involving continuous predictors?**
 ]
 
 ---
@@ -127,23 +133,25 @@ layout:false
 
 Categorical predictors from earlier in the course:
 
-- `Modality`, with levels `Taste` / `Smell`
+- **`Modality`**, with levels `Taste` / `Smell`.
 
-- `Relation_type`, with levels `Unrelated` / `Constituent` / `NonConstituent`
+- **`Relation_type`**, with levels `Unrelated` / `Constituent` / `NonConstituent`.
 
-- `Branching`, with levels `Left` / `Right`
+- **`Branching`**, with levels `Left` / `Right`.
 
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-To make these predictors modellable, we treatment-coded them using 0s and 1s.
+**To make these predictors modellable,** we treatment-coded them using 0s and 1s.
 
 ]
 
+--
+
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
-Good news: Continuous variables are already numeric!
+Good news: **Continuous variables are already numeric!**
 
 ]
 
@@ -189,14 +197,14 @@ x: &~~~ \text{input variable} \\
 $$
 <br>
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 Let's see an example: $y = 4 + 2x$.
 ]
 
 
 ---
-
-<!-- TODO: overlays! intercept > change in x > change in y -->
 
 ```{r line-pos-slope}
 palette <- RColorBrewer::brewer.pal(8, "Dark2")
@@ -333,6 +341,9 @@ p_pos_slope +
 layout:false
 
 ## So what?
+
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
 Our linear models have the same form as the lines we saw in school.
@@ -346,6 +357,8 @@ outcome ~ &=& \beta_0 ~~ &+& \beta_1 &\cdot predictor \\
 $$
 ]
 
+--
+
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
 $\beta_0$ corresponds to the line's $y$-intercept:
@@ -354,9 +367,11 @@ $\beta_0$ corresponds to the line's $y$-intercept:
 
 ]
 
+--
+
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
-And for continuous variables, $\beta_1$ has the same interpretation as $b$:
+And $\beta_1$ has the same interpretation as $m$:
 
 **The change in the outcome that results from a change of 1 (a.k.a., one unit change)<br> in the predictor.**
 
@@ -393,6 +408,8 @@ And for continuous variables, $\beta_1$ has the same interpretation as $b$:
 ]
 ]
 
+--
+
 .pull-right[
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **Intercept ( $\beta_0$ ):**
@@ -413,6 +430,8 @@ And for continuous variables, $\beta_1$ has the same interpretation as $b$:
 ]
 ]
 
+--
+
 .pull-right[
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **Effects (other $\beta$s):**
@@ -423,12 +442,19 @@ And for continuous variables, $\beta_1$ has the same interpretation as $b$:
 
 ---
 
-## "For one unit increase"?
+## "Difference in outcome for one unit increase"?
+
+--
+
+$$
+\beta_0 + \beta_1 \cdot var
+$$
+
+--
+<br>
 
 $$
 \begin{aligned}
-& & \beta_0 &+ \beta_1 \cdot var \\ 
-\\
 \text{var = 0 :}   & & \beta_0 &+ (\beta_1 \cdot 0) &&= \beta_0\\
 \text{var = 1 :}   & & \beta_0 &+ (\beta_1 \cdot 1) &&= \beta_0 + \beta_2\\
 \text{var = 2 :}   & & \beta_0 &+ (\beta_1 \cdot 2) &&= \beta_0 + 2\beta_1\\
@@ -437,11 +463,12 @@ $$
 $$
 $$\vdots$$
 
+--
 <br>
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-Every time $var$ increases by one unit, the outcome increases by one $\beta_1$. For example,
+**Every time $var$ increases by one unit, the outcome increases by one $\beta_1$.** For example,
 
 - if $var$ is distance in metres, then a unit is one metre.
 - if $var$ is RT in milliseconds, then a unit is one millisecond.
@@ -450,7 +477,7 @@ Every time $var$ increases by one unit, the outcome increases by one $\beta_1$. 
 
 ---
 
-## Let's build a model predicting vowel duration<br> by speech rate
+## Let's build a model predicting vowel duration<br> by speech rate (from `dur-ita-pol.csv`)
 
 ```{r read-data}
 dur_ita_pol <- read_csv('data/dur-ita-pol.csv') %>% 
@@ -561,13 +588,15 @@ cat(capture.output(summary(dur_sr_bm))[8:12], sep = "\n")
 
 **`Intercept`, a.k.a. $\beta_0$:**
 
-- The mean log vowel duration when speech rate is equal to 0 is 5.88 (95% CrI: [5.78, 5.99]).
+- The mean log vowel duration when speech rate is equal to zero is 5.88 (95% CrI: [5.78, 5.99]).
 
 **`speech_rate`, a.k.a. $\beta_1$:**
 
 - For one unit change in speech rate, log vowel duration changes by –0.24 (95% CrI: [–0.26, –0.22]).
 
 ]
+
+--
 
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
@@ -670,21 +699,23 @@ summary(dur_sr_c_bm)
 
 
 
-## Interpreting the new $\beta_0$ and $\beta_1$
+## Interpreting the new $\beta_0$ and $\beta_1$ after centering
 
 ```{r fit2-summ2}
 cat(capture.output(summary(dur_sr_c_bm))[8:12], sep = "\n")
 ```
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
 **`Intercept`, a.k.a. $\beta_0$:**
 
-- The mean log vowel duration when centered speech rate is equal to 0, <br>**i.e., when speech rate is at its mean value (which, thanks to the centering, is zero)**,<br> is 4.59 (95% CrI: [4.58, 4.61]).
+- When centered speech rate is equal to zero, **i.e., when speech rate is at its mean value,** <br> the mean log vowel duration is 4.59 (95% CrI: [4.58, 4.61]).
 
   - Before, uncentered: $\beta_0$ = 5.88 (95% CrI: [5.78, 5.99]).
 
-**`speech_rate_c`, a.k.a. $\beta_1$, is the same as before:**
+**`speech_rate_c`, a.k.a. $\beta_1$**, is the same as before:
 
 - For one unit change in speech rate, log vowel duration changes by –0.24 (95% CrI: [–0.26, –0.22]).
 
@@ -694,7 +725,7 @@ cat(capture.output(summary(dur_sr_c_bm))[8:12], sep = "\n")
 
 .bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
-**Centering continuous variables is pretty much always a good idea.**
+**Centering continuous variables is pretty much always a good idea** to ease interpretation of the intercept.
 
 ]
 
@@ -711,6 +742,8 @@ class: center middle reverse
 
 ---
 ## Speech rate * Italian vowels "a" and "o" 
+
+--
 
 ```{r dur-ita}
 dur_ita <- dur_ita_pol %>% 
@@ -790,12 +823,13 @@ $$
 ```{r fit3, echo = TRUE}
 dur_sr_vow_bm <- brm(
   log_v1_dur ~ speech_rate_c + vowel + speech_rate_c:vowel,
-  data = dur_ita,
   family = gaussian(),
+  data = dur_ita,
   backend = 'cmdstanr', file = 'data/cache/dur_sr_vow_bm'
 )
 ```
 
+--
 
 ```{r fit3-summ, echo = TRUE}
 summary(dur_sr_vow_bm)
@@ -809,13 +843,15 @@ summary(dur_sr_vow_bm)
 ```{r fit3-summ2}
 cat(capture.output(summary(dur_sr_vow_bm))[8:13], sep = "\n")
 ```
+
 <br>
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-**`Intercept`:**
+**`Intercept`**, a.k.a. $\beta_0$:
 
-- The mean log vowel duration when speech rate is at its mean of 0 and when the vowel is "a"<br> (coded as 0) is 4.79 (95% CrI: [4.77, 4.81]).
+- When centered speech rate is at its mean of zero and when the vowel is "a" (coded as zero), <br> the mean log vowel duration is 4.79 (95% CrI: [4.77, 4.81]).
 
 ]
 
@@ -828,20 +864,23 @@ cat(capture.output(summary(dur_sr_vow_bm))[8:13], sep = "\n")
 ```
 
 <br>
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-**`speech_rate_c`:**
+**`speech_rate_c`**, a.k.a. $\beta_1$:
 
-- When the vowel is "a" (coded as 0), the change in the mean log vowel duration <br> when speech rate increases by one syllable/second is –0.26 (95% CrI: [–0.29, –0.24]).
+- When the vowel is "a" (coded as zero), when speech rate increases by one syllable/second, <br> the change in the mean log vowel duration is –0.26 (95% CrI: [–0.29, –0.24]).
 
 ]
 
+--
+
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
- **`vowelo`:**
+ **`vowelo`**, a.k.a. $\beta_2$:
 
-- When the centered speech rate is at its mean of 0, the change in the mean log vowel duration <br> when changing from the vowel "a" to the vowel "o" is –0.04 (95% CrI: [–0.07, –0.01]).
+- With centered speech rate at its mean of zero, when changing from the vowel "a" to the vowel "o", <br> the change in the mean log vowel duration is –0.04 (95% CrI: [–0.07, –0.01]).
 
 ]
 
@@ -856,18 +895,19 @@ layout: true
 cat(capture.output(summary(dur_sr_vow_bm))[8:13], sep = "\n")
 ```
 <br>
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**`speech_rate_c:vowelo`, interpretation 1:**
+**`speech_rate_c:vowelo`**, a.k.a. $\beta_3$, interpretation 1:
 
-- When we move from the vowel "a" (baseline) to "o" (non-baseline), there is a positive adjustment <br> (0.04 log ms, 95% CrI [0, 0.07]) to the effect of speech rate.
+- When we move from the vowel "a" (baseline) to "o" (non-baseline), there is a positive adjustment <br> to the effect of speech rate of 0.04 (95% CrI [0, 0.07]).
 
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**`speech_rate_c:vowelo`, interpretation 2:**
+**`speech_rate_c:vowelo`**, a.k.a. $\beta_3$, interpretation 2:
 
-- When we increase the speech rate by one syllable/second, there is a positive adjustment <br> (0.04 log ms, 95% CrI [0, 0.07]) to the effect of the vowel.
+- When we increase the speech rate by one syllable/second, there is a positive adjustment <br> to the effect of the vowel of 0.04 (95% CrI [0, 0.07]).
 ]
 
 ---
@@ -878,12 +918,14 @@ p_dur_ita
 ```
 ]
 
+--
+
 .pull-right[
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 **1: Positive adjustment to effect of speech rate when vowel "a" $\rightarrow$ "o"**
 - The effect of `speech_rate_c` is negative, so a positive adjustment brings the effect closer to zero.
-- **The slope (effect) when vowel = "a" is more strongly negative than "o".**
+- **The slope (effect) when vowel = "o" is a bit weaker than for "a".**
 ]
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
@@ -900,12 +942,15 @@ layout: false
 layout: true
 
 ## Conditional posterior probability distributions<br> of log vowel duration
+
 ---
+
+--
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
 
-With continuous variables, choose a few representative values to compute <br>conditional posterior distributions for. 
-For centered speech rate, e.g.,
+With continuous variables, we can **choose a few representative values** to compute conditional posterior distributions for. 
+Here, we'll do:
 
   - $-1$: one syllable/second below mean
   - $0$: mean
@@ -977,9 +1022,9 @@ layout: false
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(1)** How do we model variables that aren't categorical, but continuous?
+**(1)** How do we model predictors that aren't categorical, but **continuous?**
 
-- They're already numeric, so they *can* go into the model as-is.
+- They're already numeric, so strictly speaking, they *can* go into the model as-is.
 - To interpret the intercept more easily, it's **usually good to centre them** by subtracting the mean.
 
 ]
@@ -987,7 +1032,7 @@ layout: false
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(2)** How do we interpret model estimates for continuous predictors?
+**(2)** How do we **interpret model estimates** for continuous predictors?
 
 - In terms of **how much the outcome changes for one unit change** in the predictor.
 - This general statement actually applies to treatment coding too: **0 $\rightarrow$ 1 is a unit change.**
@@ -996,16 +1041,22 @@ layout: false
 --
 
 .bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt2[
-**(3)** How do we fit and interpret interactions involving continuous predictors?
+**(3)** How do we fit and interpret **interactions involving continuous predictors?**
 
 - Pretty similarly to categorical predictors!
-- To compute conditional posterior probability distributions, it's useful to **choose a few values<br> from the continuous predictor** to evaluate (e.g., the mean and on either side of it).
+- To compute conditional posterior probability distributions, it's useful to **choose individual values<br> from the continuous predictor** to evaluate (e.g., the mean, mean + 1, mean – 1).
 ]
 
 ---
 class: center middle reverse
 
-# Statistics and Quantitative Methods
+## Statistics and Quantitative Methods: The Finale
+
+Please fill out the **SATS-36 questionnaire** again (best done on a computer):
+
+`https://forms.office.com/e/0UkDKTHWhp`
+
+![:scale 30%](imgs/sats-qr.png)
 
 ---
 
@@ -1022,26 +1073,63 @@ class: center middle reverse
 ]
 
 ---
+class: center middle reverse
 
-## Topics this course has not covered 
+# Stats can be hard.
 
-**(but has hopefully equipped you to tackle yourselves, if you want!)**
 
-- How to set and interpret group-level effects (a.k.a., varying effects, random effects)
-  - Adjustments to intercept and slope for, e.g., every participant.
-- How to select and set your own priors (we've been using the brms defaults).
-- Contrast coding beyond 0/1 treatment coding.
-- The Bayesian version of hypothesis testing using Bayes Factors.
+### You don't have to know absolutely everything all the time.
+
+
+It's OK to look up information as you need it.
+
+It's OK to ask for help.
+
+
+
+
 
 ---
 
-## The Bayesian New Statistics
+## Future avenues you're now ready to explore
+
+**You can...**
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+... take into account individual differences by **estimating slope and intercept adjustments** for, e.g., every participant in an experiment.
+  - So-called **"random effects"** (the frequentist term) or **"group-level effects"** (the Bayesian term).
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+... explore Bayesian hypothesis testing using **Bayes Factors.**
+
+]
+
+--
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+... incorporate existing knowledge into your models by **setting your own priors**.
+
+]
+
+---
+background-image: url(../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
+background-size: cover
+
 
 ???
 
+Photo by <a href="https://unsplash.com/@gallarotti?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Francesco Gallarotti</a> on <a href="https://unsplash.com/s/photos/new?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+
 - Rather than testing "significance" and thus making binary yes/no decisions about the existence of effects, we care about how big effects are.
 - Bayesian models are a great tool for this: We lay out a range of possibilities (e.g., for a Bernoulli model, the probs of success), and use data to allocate different amounts of belief over the possibilities (i.e., to create the posterior probability distributions).
-
----
-
-
+By using an approach based on estimating effect sizes and being explicit about uncertainty, you're on the cutting edge of modern statistical analysis

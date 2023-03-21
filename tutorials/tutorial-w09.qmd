@@ -354,7 +354,7 @@ Now, write code to fit a model called `si_freq_bm` using `brm()`.
 - Use the appropriate family for this kind of outcome variable.
 - The source of the data is the data frame `si`.
 - Use the backend `cmdstanr`.
-- Save the model using the `file` argument. (Note: **The first time you run a model with this argument, that's the version of the model that will be saved and loaded every time after.** Beware of this if you run a model first that's different from your final one!)
+- Save the model using the `file` argument. (Note: **The first time you run a model with this argument, that's the version of the model that will be saved and loaded every time after.** Beware of this if you use the same `file` argument to run a model that's different from the final one you'll want to run!)
 
 ```{r}
 #| label: si-freq-bm-ex
@@ -468,7 +468,7 @@ si_freq_draws_cond %>%
 
 You could report the values in the last three columns as follows:
 
-> The probability of making a scalar inference when log frequency is at its mean of zero is 33% (95% CrI: [31%, 35%)].
+> The probability of making a scalar inference when log frequency is at its mean of zero is 33% (95% CrI: [31%, 35%]).
 When log frequency increases to one unit above its mean, the probability of making a scalar inference increases to 41% (95% CrI: [38%, 44%]).
 
 Since we're only reporting two values of `logfreq_c` here, giving this report in writing is relatively straightforward.
@@ -704,7 +704,14 @@ I chose those values because they cover a fair amount of `semdist_c`'s range.
 In your own practice, you can choose other values based on what seems representative of your predictor.
 
 For now, we'll keep evaluating log frequency at 0 and 1 (though in principle, you could use other values for that predictor too).
-Then, substituting in every combination of these values for our predictors gives us the following:
+
+The linear expression that we're evaluating for different predictor values looks like this:
+
+$$
+\beta_0 + (\beta_1 \cdot logfreq\_c) + (\beta_2 \cdot semdist\_c) + (\beta_3 \cdot logfreq\_c \cdot semdist\_c)
+$$
+
+Substituting in every combination of our chosen predictor values gives us the following:
 
 $$
 \begin{aligned}
@@ -774,22 +781,22 @@ Now we can really see the difference between differences: the effect of log freq
 
 - If you have a 0/1-coded outcome variable, you can use the `mean()` function to to get the proportion of 1s in that variable.
 
-- Combining `group_by() %>% mutate()` (instead of `group_by() %>% summarise()`) adds a new column containing the summary information without losing any of the existing columns.
+- Using `group_by() %>% mutate()` (instead of `group_by() %>% summarise()`) adds a new column containing the summary information without losing any of the existing columns.
 
 
 **Visualisation**
 
-- `geom_text()` creates a scatter plot like `geom_point()` does, but it uses text labels instead of points.
+- `geom_text()` creates a scatter plot like `geom_point()` does, but it uses text labels instead of points (you have to tell it which text to use in `aes()`).
 
-- Even though we visualise binary outcomes as proportions, we still fit the Bernoulli model to the original variable containing values of 0 and 1.
+- Even though we visualise binary outcomes as proportions, we still fit the Bernoulli model to the original variable that contains values of 0 and 1.
 
 
 **Modelling**
 
-- With a continuous predictor, the $\beta$ coefficient that the model estimates represents the change in the outcome variable that is associated with one unit change of the predictor.
+- With a continuous predictor, the $\beta$ coefficient that the model estimates represents the change in the outcome variable that is associated with one unit change (in fact, one unit increase) in the predictor.
 
-- When two continuous predictors A and B interact, then the $\beta$ coefficient estimated for the interaction term corresponds to the change in predictor A's effect that accompanies a unit change in predictor B (and equivalently, the change in predictor B's effect that accompanies a unit change in A).
+- When two continuous predictors A and B interact, then the $\beta$ coefficient estimated for the interaction term corresponds to the change in predictor A's effect that accompanies a unit increase in predictor B (and equivalently, the change in predictor B's effect that accompanies a unit increase in A).
 
-- When reporting a model's estimates, you should always report and interpret the population-level coefficients' means and 95% CrIs. It's also generally a good idea to compute the conditional posterior probability distributions, because with these, you can report and/or visualise for all conditions of interest what the model thinks the outcome variable's values will be.
+- When reporting a model's estimates, you should always report and interpret the population-level coefficients' means and 95% CrIs. It's also generally a good idea to compute the conditional posterior probability distributions, because with these, you can report and/or visualise for all conditions of interest what the model thinks the outcome variable's mean values will be.
 
 :::

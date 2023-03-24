@@ -57,14 +57,17 @@ You can find the summative materials and exercises here: <https://github.com/uoe
 You may find helpful information in the FAQ post on Piazza [here](https://piazza.com/class/lcns7m75s8pdw/post/63).
 :::
 
-::: {.callout-tip collapse="true" icon="false"}
+::: {.callout-tip collapse="false" icon="false"}
 ## Summative 2 - Thu 27 April
 
 **Due on Thursday 27 April at noon**
 
-The second summative will be in the form of a data analysis report. 
-We will provide a number of data sets paired with hypotheses.
-You will choose one data set/hypothesis pair and, with it, conduct the full workflow of a Bayesian data analysis.
+In the second summative assessment, you will:
 
-You can find the list of data sets here: TBA.
+- select a dataset and its associated research questions,
+- analyse the data using one linear model, and
+- write a report about the data, the model, and your findings.
+
+You can find more information about the assessment on GitHub here: <https://github.com/uoelel/sqmb-s2>
+
 :::

@@ -25,7 +25,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 1: Quantitative methods and uncertainty
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -58,7 +58,7 @@ Examples from different branches of linguistics will be used to provide you with
 -   Please, follow the instructions for **Step 1 and 2** here: <https://posit.co/download/rstudio-desktop/>.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w01/).
@@ -89,7 +89,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 2: Data wrangling
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -107,7 +107,7 @@ Examples from different branches of linguistics will be used to provide you with
 -   Use R scripts to save and reuse code.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w02/).
@@ -127,7 +127,7 @@ Examples from different branches of linguistics will be used to provide you with
 
 ### Week 3: Data visualisation
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -157,7 +157,7 @@ From Week 4 on, we will need to use software that unfortunately is not currently
 You can find the full instructions here: [set-up instructions](setup.qmd).
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w03/).
@@ -205,7 +205,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 
 ### Week 4: Statistical modeling basics
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -235,7 +235,7 @@ From Week 4 on, we will need to use software that unfortunately is not currently
 You can find the full instructions here: [set-up instructions](setup.qmd).
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w04/).
@@ -269,7 +269,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 -   The GitHub Classroom invitation link can be found on Learn.
 :::
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -287,7 +287,7 @@ You can find the full instructions here: [set-up instructions](setup.qmd).
 -   Reporting of model specification and results.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w05/).
@@ -330,7 +330,7 @@ There will be no classes.
 
 ### Week 7: Binary outcomes
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -348,7 +348,7 @@ There will be no classes.
 -   Convert between log-odds, odds and probabilities.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w07/).
@@ -359,7 +359,7 @@ There will be no classes.
 
 ### Week 8: Multiple predictors and interactions
 
-::: {.callout-important collapse="true"}
+::: {.callout-important collapse="false"}
 #### Learning Objectives
 
 **Questions**
@@ -379,7 +379,7 @@ There will be no classes.
 -   Practice transforming and back-transforming variables.
 :::
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 #### Materials
 
 -   [Lecture slides](slides/w08/).
